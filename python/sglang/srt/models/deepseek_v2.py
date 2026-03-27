@@ -163,8 +163,13 @@ if _use_aiter:
 
 if _is_cuda:
     from sgl_kernel import dsv3_fused_a_gemm
-    from sglang.jit_kernel.dsv3_router_gemm import dsv3_router_gemm as _jit_dsv3_router_gemm
-    from sglang.jit_kernel.dsv3_router_gemm import can_use_dsv3_router_gemm as _can_use_dsv3_router_gemm
+
+    from sglang.jit_kernel.dsv3_router_gemm import (
+        can_use_dsv3_router_gemm as _can_use_dsv3_router_gemm,
+    )
+    from sglang.jit_kernel.dsv3_router_gemm import (
+        dsv3_router_gemm as _jit_dsv3_router_gemm,
+    )
 elif _is_npu:
     from sglang.srt.hardware_backend.npu.modules.deepseek_v2_attention_mla_npu import (
         forward_dsa_core_npu,
