@@ -1654,6 +1654,11 @@ class TokenizerManager(TokenizerCommunicatorMixin, TokenizerManagerMultiItemMixi
                             scheduler_time_stats, completion_tokens
                         )
                     )
+                    # extend_tokens for TTFT prediction data collection.
+                    if not isinstance(recv_obj, BatchEmbeddingOutput):
+                        cached_tokens = recv_obj.cached_tokens[i]
+                        prompt_tokens = recv_obj.prompt_tokens[i]
+                        meta_info["extend_tokens"] = max(0, prompt_tokens - cached_tokens)
 
                 del self.rid_to_state[rid]
 

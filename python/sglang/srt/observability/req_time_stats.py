@@ -424,6 +424,11 @@ class APIServerReqTimeStats(ReqTimeStatsBase):
         decode_latency = self.get_decode_latency()
         if decode_latency > 0.0 and completion_tokens > 0:
             meta_info["decode_throughput"] = completion_tokens / decode_latency
+
+        # TTFT for TTFT prediction data collection.
+        if self.first_token_time and self.created_time:
+            meta_info["ttft"] = self.first_token_time - self.created_time
+
         return meta_info
 
     def convert_to_gen_ai_span_attrs(self):
