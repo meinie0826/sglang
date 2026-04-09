@@ -6,7 +6,7 @@
 # Changed: --max-running-request -> --max-running-requests
 # TTFT data collection enabled via --export-metrics-to-file
 
-MODEL_PATH=${MODEL_PATH:-"/path/to/glm5-nvfp4"}
+MODEL_PATH=${MODEL_PATH:-"/media/ssd1/glm-5-nvfp4"}
 METRICS_DIR=${METRICS_DIR:-"/tmp/sglang_metrics"}
 
 mkdir -p "${METRICS_DIR}"
