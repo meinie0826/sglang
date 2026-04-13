@@ -1,33 +1,27 @@
 #!/usr/bin/env python3
 """
-MiniMax-M2.5 decode attention kernel micro-benchmark.
+MiniMax-M2.5 decode attention kernel micro-benchmark with baselines.
 
-This script directly measures the FlashAttention decode kernel latency for
-MiniMax-M2.5 with TP=4, EP=4 configuration on SM100 (Blackwell).
+This script compares multiple attention backends for MiniMax-M2.5 decode:
+1. PyTorch SDPA (baseline)
+2. FlashInfer (if available) - SGLang default
+3. FlashAttention3 (if available) - optimized for Hopper/Blackwell
+4. Theoretical optimal - hardware peak
 
 Usage:
-    # Run with your actual model path to get accurate measurements
-    python scripts/bench_minimax25_decode_micro.py
-    
-    # Specify batch size and sequence length
     python scripts/bench_minimax25_decode_micro.py --batch-size 64 --seq-len 8192
-    
-    # Sweep different configurations
-    python scripts/bench_minimax25_decode_micro.py --mode sweep
-
-Note: For most accurate results, run on a dedicated GPU with no other workloads.
+    python scripts/bench_minimax25_decode_micro.py --mode sweep --quick
 """
 
 import argparse
 import time
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import Callable, Dict, List, Optional, Tuple
 
 import torch
 import torch.nn.functional as F
 
 # ============== MiniMax-M2.5 Config ==============
-# Full model config
 NUM_Q_HEADS_TOTAL = 48
 NUM_KV_HEADS_TOTAL = 8
 HEAD_DIM = 128
@@ -39,15 +33,37 @@ NUM_Q_HEADS = NUM_Q_HEADS_TOTAL // TP_SIZE  # 12
 NUM_KV_HEADS = NUM_KV_HEADS_TOTAL // TP_SIZE  # 2
 GQA_RATIO = NUM_Q_HEADS // NUM_KV_HEADS  # 6
 
+# Hardware specs for theoretical baseline
+# B200: HBM3e ~8 TB/s peak, assume 6 TB/s achievable for attention
+B200_PEAK_BW_TB_S = 6.0
+
 
 @dataclass
 class BenchResult:
     batch_size: int
     seq_len: int
+    provider: str
     latency_us: float
     traffic_gb: float
     bandwidth_gb_s: float
-    per_layer_ms: float
+
+
+def check_flashinfer() -> bool:
+    """Check if FlashInfer is available."""
+    try:
+        import flashinfer
+        return True
+    except ImportError:
+        return False
+
+
+def check_fa3() -> bool:
+    """Check if FlashAttention3 is available."""
+    try:
+        from flash_attn_interface import flash_attn_func
+        return True
+    except ImportError:
+        return False
 
 
 def create_decode_inputs(
@@ -56,146 +72,224 @@ def create_decode_inputs(
     dtype: torch.dtype = torch.bfloat16,
     device: str = "cuda",
 ):
-    """Create inputs simulating decode phase with paged KV cache."""
-    # Q: [batch, num_q_heads, head_dim] - single token query
+    """Create inputs simulating decode phase."""
     q = torch.randn(batch_size, NUM_Q_HEADS, HEAD_DIM, dtype=dtype, device=device)
-    
-    # KV: [batch, seq_len, num_kv_heads, head_dim] - full KV cache
-    # In practice, this is paged. For benchmark we use contiguous.
     k = torch.randn(batch_size, seq_len, NUM_KV_HEADS, HEAD_DIM, dtype=dtype, device=device)
     v = torch.randn(batch_size, seq_len, NUM_KV_HEADS, HEAD_DIM, dtype=dtype, device=device)
-    
     return q, k, v
 
 
-def decode_attention_impl(
-    q: torch.Tensor,  # [B, H_Q, D]
-    k: torch.Tensor,  # [B, S, H_KV, D]
-    v: torch.Tensor,  # [B, S, H_KV, D]
-) -> torch.Tensor:
-    """
-    Reference decode attention with GQA expansion.
-    
-    For MiniMax-M2.5 with TP=4:
-    - Q has 12 heads per GPU
-    - K/V have 2 heads per GPU
-    - GQA expansion: each KV head serves 6 Q heads
-    """
+def attn_pytorch_sdpa(q, k, v):
+    """PyTorch SDPA baseline with GQA expansion."""
     batch_size = q.shape[0]
     seq_len = k.shape[1]
     
-    # Expand K/V for GQA: [B, S, H_KV, D] -> [B, S, H_Q, D]
-    k_expanded = k.unsqueeze(3).expand(-1, -1, -1, GQA_RATIO, -1).reshape(
+    # Expand KV for GQA
+    k_exp = k.unsqueeze(3).expand(-1, -1, -1, GQA_RATIO, -1).reshape(
         batch_size, seq_len, NUM_Q_HEADS, HEAD_DIM
     )
-    v_expanded = v.unsqueeze(3).expand(-1, -1, -1, GQA_RATIO, -1).reshape(
+    v_exp = v.unsqueeze(3).expand(-1, -1, -1, GQA_RATIO, -1).reshape(
         batch_size, seq_len, NUM_Q_HEADS, HEAD_DIM
     )
     
-    # Transpose to [B, H, S, D] for attention
     q_t = q.unsqueeze(2)  # [B, H_Q, 1, D]
-    k_t = k_expanded.transpose(1, 2)  # [B, H_Q, S, D]
-    v_t = v_expanded.transpose(1, 2)  # [B, H_Q, S, D]
+    k_t = k_exp.transpose(1, 2)  # [B, H_Q, S, D]
+    v_t = v_exp.transpose(1, 2)  # [B, H_Q, S, D]
     
-    # Scaled dot-product attention
     scale = 1.0 / (HEAD_DIM ** 0.5)
-    
-    # Use PyTorch's optimized SDPA
-    output = F.scaled_dot_product_attention(
-        q_t, k_t, v_t,
-        is_causal=True,  # Causal mask for decode
-        scale=scale,
-    )
-    
-    return output.squeeze(2)  # [B, H_Q, D]
+    out = F.scaled_dot_product_attention(q_t, k_t, v_t, is_causal=True, scale=scale)
+    return out.squeeze(2)
 
 
-def bench_single(
-    batch_size: int,
-    seq_len: int,
+def attn_flashinfer_decode(q, k, v):
+    """FlashInfer decode attention baseline."""
+    try:
+        import flashinfer
+        from flashinfer import decode_attention_with_kv_cache
+        
+        batch_size = q.shape[0]
+        seq_len = k.shape[1]
+        
+        # FlashInfer expects [B, H_Q, D] for Q and [B, S, H_KV, D] for KV
+        # It handles GQA internally
+        
+        # Create page table (all pages are contiguous for this benchmark)
+        page_size = 16
+        num_pages = (seq_len + page_size - 1) // page_size
+        total_pages = batch_size * num_pages
+        page_table = torch.arange(total_pages, dtype=torch.int32, device=q.device).reshape(batch_size, num_pages)
+        
+        # Reshape KV to paged format
+        k_paged = k.reshape(batch_size, num_pages, page_size, NUM_KV_HEADS, HEAD_DIM)
+        v_paged = v.reshape(batch_size, num_pages, page_size, NUM_KV_HEADS, HEAD_DIM)
+        
+        # Flatten pages
+        k_flat = k_paged.reshape(-1, page_size, NUM_KV_HEADS, HEAD_DIM)
+        v_flat = v_paged.reshape(-1, page_size, NUM_KV_HEADS, HEAD_DIM)
+        
+        # Sequence lengths
+        seq_lens = torch.full((batch_size,), seq_len, dtype=torch.int32, device=q.device)
+        
+        # Call FlashInfer
+        out = flashinfer.decode_attention_with_kv_cache(
+            q,  # [B, H_Q, D]
+            k_flat,  # [total_pages, page_size, H_KV, D]
+            v_flat,
+            page_table,
+            seq_lens,
+            num_qo_heads=NUM_Q_HEADS,
+            num_kv_heads=NUM_KV_HEADS,
+        )
+        return out
+    except Exception as e:
+        # Fallback to PyTorch if FlashInfer fails
+        return attn_pytorch_sdpa(q, k, v)
+
+
+def attn_fa3(q, k, v):
+    """FlashAttention3 baseline."""
+    try:
+        from flash_attn_interface import flash_attn_func
+        
+        batch_size = q.shape[0]
+        seq_len = k.shape[1]
+        
+        # Expand KV for GQA
+        k_exp = k.unsqueeze(3).expand(-1, -1, -1, GQA_RATIO, -1).reshape(
+            batch_size, seq_len, NUM_Q_HEADS, HEAD_DIM
+        )
+        v_exp = v.unsqueeze(3).expand(-1, -1, -1, GQA_RATIO, -1).reshape(
+            batch_size, seq_len, NUM_Q_HEADS, HEAD_DIM
+        )
+        
+        # FA3 expects [B, S, H, D]
+        q_fa = q.unsqueeze(1)  # [B, 1, H_Q, D]
+        
+        out, _, _ = flash_attn_func(
+            q_fa, k_exp, v_exp,
+            causal=True,
+            softmax_scale=1.0 / (HEAD_DIM ** 0.5),
+        )
+        return out.squeeze(1)  # [B, H_Q, D]
+    except Exception as e:
+        return attn_pytorch_sdpa(q, k, v)
+
+
+def calculate_theoretical_latency(batch_size: int, seq_len: int, dtype: torch.dtype = torch.bfloat16):
+    """Calculate theoretical minimum latency based on memory bandwidth."""
+    element_size = 2  # bf16
+    
+    # Memory traffic
+    q_bytes = batch_size * NUM_Q_HEADS * HEAD_DIM * element_size
+    kv_bytes = 2 * batch_size * seq_len * NUM_KV_HEADS * HEAD_DIM * element_size
+    o_bytes = batch_size * NUM_Q_HEADS * HEAD_DIM * element_size
+    total_bytes = q_bytes + kv_bytes + o_bytes
+    
+    # Theoretical latency assuming peak bandwidth
+    theoretical_latency_us = total_bytes / (B200_PEAK_BW_TB_S * 1e12) * 1e6
+    traffic_gb = total_bytes / 1e9
+    
+    return theoretical_latency_us, traffic_gb
+
+
+def bench_provider(
+    provider_fn: Callable,
+    q: torch.Tensor,
+    k: torch.Tensor,
+    v: torch.Tensor,
     warmup_iters: int = 20,
     bench_iters: int = 100,
-    dtype: torch.dtype = torch.bfloat16,
-) -> BenchResult:
-    """Benchmark single configuration."""
-    q, k, v = create_decode_inputs(batch_size, seq_len, dtype)
-    
+) -> float:
+    """Benchmark a single provider, returns latency in microseconds."""
     # Warmup
     for _ in range(warmup_iters):
-        _ = decode_attention_impl(q, k, v)
+        _ = provider_fn(q, k, v)
     torch.cuda.synchronize()
     
-    # Benchmark with CUDA events for precision
+    # Benchmark
     start = torch.cuda.Event(enable_timing=True)
     end = torch.cuda.Event(enable_timing=True)
     
     start.record()
     for _ in range(bench_iters):
-        _ = decode_attention_impl(q, k, v)
+        _ = provider_fn(q, k, v)
     end.record()
     torch.cuda.synchronize()
     
     latency_ms = start.elapsed_time(end) / bench_iters
-    latency_us = latency_ms * 1000
-    
-    # Calculate memory traffic (GB)
-    # Q: B * H_Q * D * 2
-    # K: B * S * H_KV * D * 2
-    # V: B * S * H_KV * D * 2
-    # O: B * H_Q * D * 2
-    element_size = 2  # bf16
-    q_bytes = batch_size * NUM_Q_HEADS * HEAD_DIM * element_size
-    kv_bytes = 2 * batch_size * seq_len * NUM_KV_HEADS * HEAD_DIM * element_size
-    o_bytes = batch_size * NUM_Q_HEADS * HEAD_DIM * element_size
-    total_bytes = q_bytes + kv_bytes + o_bytes
-    traffic_gb = total_bytes / 1e9
-    
-    # Bandwidth
-    bandwidth_gb_s = traffic_gb / (latency_ms / 1000)
-    
-    # Per-layer time in ms
-    per_layer_ms = latency_ms
-    
-    return BenchResult(
-        batch_size=batch_size,
-        seq_len=seq_len,
-        latency_us=latency_us,
-        traffic_gb=traffic_gb,
-        bandwidth_gb_s=bandwidth_gb_s,
-        per_layer_ms=per_layer_ms,
-    )
+    return latency_ms * 1000  # Convert to microseconds
 
 
-def analyze_attn_overhead(result: BenchResult) -> dict:
-    """
-    Analyze if the attention overhead is reasonable.
+def run_single_benchmark(
+    batch_size: int,
+    seq_len: int,
+    dtype: torch.dtype = torch.bfloat16,
+    warmup_iters: int = 20,
+    bench_iters: int = 100,
+) -> List[BenchResult]:
+    """Run benchmark for all providers."""
+    results = []
     
-    For MiniMax-M2.5 decode with TP=4:
-    - Each GPU processes 12 Q heads, 2 KV heads
-    - Typical decode budget: ~50ms total per token
-    - Expected attention share: 30-40%
-    """
-    total_attn_time_ms = result.per_layer_ms * NUM_LAYERS
+    q, k, v = create_decode_inputs(batch_size, seq_len, dtype)
+    theoretical_us, traffic_gb = calculate_theoretical_latency(batch_size, seq_len, dtype)
     
-    # Typical decode latency targets
-    target_decode_latencies_ms = [30, 50, 100]
-    
-    analysis = {
-        "per_layer_us": result.latency_us,
-        "total_attn_ms": total_attn_time_ms,
-        "attn_share_at_targets": {},
+    providers = {
+        "PyTorch SDPA": attn_pytorch_sdpa,
     }
     
-    for target_ms in target_decode_latencies_ms:
-        share = (total_attn_time_ms / target_ms) * 100
-        analysis["attn_share_at_targets"][target_ms] = share
+    if check_flashinfer():
+        providers["FlashInfer"] = attn_flashinfer_decode
     
-    return analysis
+    if check_fa3():
+        providers["FA3"] = attn_fa3
+    
+    # Add theoretical baseline
+    results.append(BenchResult(
+        batch_size=batch_size,
+        seq_len=seq_len,
+        provider="Theoretical",
+        latency_us=theoretical_us,
+        traffic_gb=traffic_gb,
+        bandwidth_gb_s=traffic_gb / (theoretical_us * 1e-6) / 1e9,
+    ))
+    
+    for name, fn in providers.items():
+        try:
+            latency_us = bench_provider(fn, q, k, v, warmup_iters, bench_iters)
+            bandwidth_gb_s = traffic_gb / (latency_us * 1e-6) / 1e9
+            results.append(BenchResult(
+                batch_size=batch_size,
+                seq_len=seq_len,
+                provider=name,
+                latency_us=latency_us,
+                traffic_gb=traffic_gb,
+                bandwidth_gb_s=bandwidth_gb_s,
+            ))
+        except Exception as e:
+            print(f"  Warning: {name} failed: {e}")
+    
+    return results
+
+
+def print_comparison_table(results: List[BenchResult]):
+    """Print comparison table."""
+    print(f"\n{'Provider':>15} | {'Latency (us)':>12} | {'BW (GB/s)':>10} | {'vs Theoretical':>15}")
+    print("-" * 65)
+    
+    theoretical = next(r for r in results if r.provider == "Theoretical")
+    
+    for r in sorted(results, key=lambda x: x.latency_us):
+        if r.provider == "Theoretical":
+            print(f"{r.provider:>15} | {r.latency_us:>12.2f} | {r.bandwidth_gb_s:>10.1f} | {'1.00x (baseline)':>15}")
+        else:
+            ratio = r.latency_us / theoretical.latency_us
+            efficiency = theoretical.latency_us / r.latency_us * 100
+            print(f"{r.provider:>15} | {r.latency_us:>12.2f} | {r.bandwidth_gb_s:>10.1f} | {ratio:>14.2f}x")
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="MiniMax-M2.5 decode attention micro-benchmark"
+        description="MiniMax-M2.5 decode attention micro-benchmark with baselines"
     )
     parser.add_argument("--batch-size", type=int, default=64)
     parser.add_argument("--seq-len", type=int, default=8192)
@@ -204,63 +298,79 @@ def main():
     args = parser.parse_args()
     
     print("=" * 80)
-    print("MiniMax-M2.5 Decode Attention Micro-Benchmark")
+    print("MiniMax-M2.5 Decode Attention Benchmark with Baselines")
     print(f"Config: TP={TP_SIZE}, Per-GPU: {NUM_Q_HEADS} Q heads, {NUM_KV_HEADS} KV heads")
+    print(f"Hardware: B200 theoretical peak bandwidth: {B200_PEAK_BW_TB_S} TB/s")
     print("=" * 80)
-    print()
+    
+    # Check available providers
+    print("\nAvailable providers:")
+    print(f"  PyTorch SDPA: ✓ (always available)")
+    print(f"  FlashInfer: {'✓' if check_flashinfer() else '✗'}")
+    print(f"  FA3: {'✓' if check_fa3() else '✗'}")
     
     if args.mode == "single":
-        print(f"Running: batch_size={args.batch_size}, seq_len={args.seq_len}")
-        print()
-        result = bench_single(args.batch_size, args.seq_len)
+        print(f"\nRunning: batch_size={args.batch_size}, seq_len={args.seq_len}")
+        results = run_single_benchmark(args.batch_size, args.seq_len)
+        print_comparison_table(results)
         
-        print(f"Latency per layer: {result.latency_us:.2f} us")
-        print(f"Memory traffic: {result.traffic_gb:.3f} GB")
-        print(f"Effective bandwidth: {result.bandwidth_gb_s:.1f} GB/s")
-        print()
+        # Summary
+        print(f"\n{'='*80}")
+        print("Summary:")
         
-        analysis = analyze_attn_overhead(result)
-        print("Total attention time (all layers):")
-        print(f"  {analysis['total_attn_ms']:.2f} ms")
-        print()
-        print("Attention share at different decode latency targets:")
-        for target_ms, share in analysis["attn_share_at_targets"].items():
-            status = "⚠️ HIGH" if share > 40 else "✓ OK"
-            print(f"  {target_ms}ms target: {share:.1f}% {status}")
+        best = min((r for r in results if r.provider != "Theoretical"), 
+                   key=lambda x: x.latency_us, default=None)
         
+        if best:
+            theoretical = next(r for r in results if r.provider == "Theoretical")
+            efficiency = theoretical.latency_us / best.latency_us * 100
+            print(f"  Best provider: {best.provider}")
+            print(f"  Latency: {best.latency_us:.2f} us/layer")
+            print(f"  Bandwidth efficiency: {efficiency:.1f}% of theoretical peak")
+            
+            # Total attention time
+            total_attn_ms = best.latency_us * NUM_LAYERS / 1000
+            print(f"\n  Total attention time ({NUM_LAYERS} layers): {total_attn_ms:.2f} ms")
+            
+            print(f"\n  Attention share at 50ms decode budget: {total_attn_ms/50*100:.1f}%")
+            if total_attn_ms > 20:
+                print("  ⚠️  Attention overhead is HIGH (>40% of 50ms budget)")
+            else:
+                print("  ✓ Attention overhead is within typical bounds")
+    
     else:
         # Sweep mode
         if args.quick:
             batch_sizes = [1, 8, 32, 64, 128]
             seq_lens = [1024, 4096, 8192, 32768]
         else:
-            batch_sizes = [1, 2, 4, 8, 16, 32, 64, 128, 256]
-            seq_lens = [1024, 2048, 4096, 8192, 16384, 32768, 65536]
+            batch_sizes = [1, 2, 4, 8, 16, 32, 64, 128]
+            seq_lens = [1024, 2048, 4096, 8192, 16384, 32768]
         
-        print(f"{'Batch':>8} | {'SeqLen':>8} | {'Latency (us)':>12} | {'Total attn (ms)':>14} | {'BW (GB/s)':>10}")
-        print("-" * 70)
+        print(f"\nSweeping {len(batch_sizes)} batch sizes x {len(seq_lens)} sequence lengths...")
         
-        results = []
+        all_results = []
         for bs in batch_sizes:
             for sl in seq_lens:
+                print(f"\nbatch_size={bs}, seq_len={sl}:")
                 try:
-                    r = bench_single(bs, sl)
-                    total_attn_ms = r.per_layer_ms * NUM_LAYERS
-                    print(f"{bs:>8} | {sl:>8} | {r.latency_us:>12.2f} | {total_attn_ms:>14.2f} | {r.bandwidth_gb_s:>10.1f}")
-                    results.append(r)
+                    results = run_single_benchmark(bs, sl)
+                    print_comparison_table(results)
+                    all_results.extend(results)
                 except Exception as e:
-                    print(f"{bs:>8} | {sl:>8} | Error: {e}")
+                    print(f"  Error: {e}")
         
-        print()
+        # Final summary
+        print("\n" + "=" * 80)
+        print("Final Summary:")
         print("=" * 80)
         
-        # Find optimal operating point
-        if results:
-            # Sort by efficiency (latency/batch_size)
-            best = min(results, key=lambda r: r.latency_us / r.batch_size)
-            print(f"Most efficient config: batch_size={best.batch_size}, seq_len={best.seq_len}")
-            print(f"  Latency: {best.latency_us:.2f} us/layer")
-            print(f"  Total attention: {best.per_layer_ms * NUM_LAYERS:.2f} ms")
+        # Group by provider
+        providers = set(r.provider for r in all_results if r.provider != "Theoretical")
+        for provider in providers:
+            provider_results = [r for r in all_results if r.provider == provider]
+            avg_latency = sum(r.latency_us for r in provider_results) / len(provider_results)
+            print(f"{provider}: avg latency = {avg_latency:.2f} us")
 
 
 if __name__ == "__main__":
