@@ -11,6 +11,11 @@ Compare MiniMax-M2.5 against other popular MoE models:
 
 This helps understand if MiniMax-M2.5's 40% attention overhead is abnormal.
 
+Note on attention backends:
+- FA3: SM90 (Hopper H100/H200) only
+- FA4: SM100 (Blackwell B200/B300/GB200) only
+- FlashInfer: SM80+ (all modern NVIDIA GPUs)
+
 Usage:
     python scripts/bench_cross_model_attn_compare.py --batch-size 64 --seq-len 8192
     python scripts/bench_cross_model_attn_compare.py --mode sweep --quick
