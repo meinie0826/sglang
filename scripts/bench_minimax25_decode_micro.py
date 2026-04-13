@@ -4,13 +4,14 @@ MiniMax-M2.5 decode attention kernel micro-benchmark with baselines.
 
 This script compares multiple attention backends for MiniMax-M2.5 decode:
 1. PyTorch SDPA (baseline)
-2. FlashInfer (BatchDecodeWithPagedKVCacheWrapper)
-3. FlashAttention4 (SM100 only - Blackwell B200/B300/GB200)
-4. Theoretical optimal - hardware peak
+2. FlashAttention4 (SM100 only - Blackwell B200/B300/GB200)
+3. Theoretical optimal - hardware peak
+
+Note: FlashInfer is excluded because it doesn't support GQA ratio=6
+(only supports 1, 2, 4, 8 which are powers of 2)
 
 Hardware support:
 - FA4: SM100 (Blackwell B200/B300/GB200) only
-- FlashInfer: SM80+ (all modern NVIDIA GPUs)
 
 Usage:
     python scripts/bench_minimax25_decode_micro.py --batch-size 64 --seq-len 8192
@@ -62,21 +63,12 @@ def is_sm100() -> bool:
     return major == 10
 
 
-def check_flashinfer() -> bool:
-    """Check if FlashInfer is available."""
-    try:
-        import flashinfer
-        return True
-    except ImportError:
-        return False
-
-
 def check_fa4() -> bool:
     """Check if FlashAttention4 is available (SM100 only)."""
     if not is_sm100():
         return False
     try:
-        from flash_attn.cute.interface import flash_attn_func
+        from flash_attn.cute.interface import flash_attn_with_kvcache
         return True
     except ImportError:
         return False
@@ -102,7 +94,7 @@ def attn_pytorch_sdpa(q, k, v):
     batch_size = q.shape[0]
     seq_len_k = k.shape[1]
     
-    # Expand K/V for GQA
+    # Expand K/V for GQA: [B, S, H_KV, D] -> [B, S, H_Q, D]
     k_exp = k.unsqueeze(3).expand(-1, -1, -1, GQA_RATIO, -1).reshape(
         batch_size, seq_len_k, NUM_Q_HEADS, HEAD_DIM
     )
@@ -120,116 +112,27 @@ def attn_pytorch_sdpa(q, k, v):
     return out.transpose(1, 2)  # [B, 1, H_Q, D]
 
 
-def create_flashinfer_wrapper(batch_size: int, seq_len: int, dtype: torch.dtype, device: str):
-    """Create and configure FlashInfer decode wrapper."""
-    import flashinfer
+def attn_fa4_decode(q, k_cache, v_cache):
+    """FlashAttention4 decode using flash_attn_with_kvcache.
     
-    page_size = 16
-    num_pages_per_seq = (seq_len + page_size - 1) // page_size
-    total_pages = batch_size * num_pages_per_seq
-    
-    # Allocate workspace buffer (128 MB recommended)
-    workspace_buffer = torch.empty(128 * 1024 * 1024, dtype=torch.uint8, device=device)
-    
-    # Create wrapper
-    wrapper = flashinfer.BatchDecodeWithPagedKVCacheWrapper(
-        workspace_buffer,
-        kv_layout="NHD",
-        use_cuda_graph=False,
-    )
-    
-    # Create page indices
-    page_indices = torch.arange(total_pages, dtype=torch.int32, device=device).reshape(
-        batch_size, num_pages_per_seq
-    )
-    
-    # Indptr: [0, num_pages_per_seq, 2*num_pages_per_seq, ...]
-    indptr = torch.arange(0, total_pages + 1, num_pages_per_seq, dtype=torch.int32, device=device)
-    
-    # Flatten page indices
-    indices = page_indices.flatten()
-    
-    # Last page lengths
-    last_page_len = torch.full((batch_size,), seq_len % page_size or page_size, dtype=torch.int32, device=device)
-    
-    # Plan
-    wrapper.plan(
-        indptr=indptr,
-        indices=indices,
-        last_page_len=last_page_len,
-        num_qo_heads=NUM_Q_HEADS,
-        num_kv_heads=NUM_KV_HEADS,
-        head_dim=HEAD_DIM,
-        page_size=page_size,
-        pos_encoding_mode="NONE",
-        data_type=dtype,
-    )
-    
-    return wrapper
-
-
-def attn_flashinfer_decode(q, k, v, wrapper=None):
-    """FlashInfer decode attention using BatchDecodeWithPagedKVCacheWrapper."""
-    try:
-        import flashinfer
-        
-        batch_size = q.shape[0]
-        seq_len = k.shape[1]
-        
-        # Create wrapper if not provided
-        if wrapper is None:
-            wrapper = create_flashinfer_wrapper(batch_size, seq_len, q.dtype, q.device)
-        
-        # Reshape KV to paged format
-        page_size = 16
-        num_pages = (seq_len + page_size - 1) // page_size
-        
-        # Pad KV to full pages
-        padded_len = num_pages * page_size
-        if padded_len > seq_len:
-            k_padded = F.pad(k, (0, 0, 0, 0, 0, padded_len - seq_len))
-            v_padded = F.pad(v, (0, 0, 0, 0, 0, padded_len - seq_len))
-        else:
-            k_padded, v_padded = k, v
-        
-        # Reshape to [batch, num_pages, page_size, H_KV, D]
-        k_pages = k_padded.reshape(batch_size, num_pages, page_size, NUM_KV_HEADS, HEAD_DIM)
-        v_pages = v_padded.reshape(batch_size, num_pages, page_size, NUM_KV_HEADS, HEAD_DIM)
-        
-        # Concatenate all pages: [total_pages, page_size, H_KV, D]
-        k_cache = k_pages.reshape(-1, page_size, NUM_KV_HEADS, HEAD_DIM)
-        v_cache = v_pages.reshape(-1, page_size, NUM_KV_HEADS, HEAD_DIM)
-        
-        paged_kv_cache = (k_cache, v_cache)
-        
-        # Run - q needs to be [B, H_Q, D]
-        q_input = q.squeeze(1)  # [B, H_Q, D]
-        out = wrapper.run(q_input, paged_kv_cache)
-        
-        return out.unsqueeze(1)  # [B, 1, H_Q, D]
-    except Exception as e:
-        # Fallback to SDPA
-        return attn_pytorch_sdpa(q, k, v)
-
-
-def attn_fa4(q, k, v):
-    """FlashAttention4 decode (SM100 Blackwell only)."""
-    from flash_attn.cute.interface import flash_attn_func
+    FA4 automatically handles GQA when nheads != nheads_k.
+    """
+    from flash_attn.cute.interface import flash_attn_with_kvcache
     
     batch_size = q.shape[0]
-    seq_len = k.shape[1]
+    seq_len = k_cache.shape[1]
     
-    # FA4 handles GQA internally when num_heads differ
-    # But we need to expand for the current interface
-    k_exp = k.unsqueeze(3).expand(-1, -1, -1, GQA_RATIO, -1).reshape(
-        batch_size, seq_len, NUM_Q_HEADS, HEAD_DIM
-    )
-    v_exp = v.unsqueeze(3).expand(-1, -1, -1, GQA_RATIO, -1).reshape(
-        batch_size, seq_len, NUM_Q_HEADS, HEAD_DIM
-    )
+    # cache_seqlens: [B] tensor with sequence lengths
+    cache_seqlens = torch.full((batch_size,), seq_len, dtype=torch.int32, device=q.device)
     
-    out, lse = flash_attn_func(
-        q, k_exp, v_exp,
+    # FA4 decode with KV cache
+    # q: [B, 1, H_Q, D]
+    # k_cache, v_cache: [B, S, H_KV, D] - FA4 handles GQA internally
+    out = flash_attn_with_kvcache(
+        q=q,
+        k_cache=k_cache,
+        v_cache=v_cache,
+        cache_seqlens=cache_seqlens,
         causal=True,
         softmax_scale=1.0 / (HEAD_DIM ** 0.5),
     )
@@ -241,6 +144,10 @@ def calculate_theoretical_latency(batch_size: int, seq_len: int, dtype: torch.dt
     element_size = 2  # bf16
     
     # Memory traffic (bytes) - decode attention
+    # Q: B * 1 * H_Q * D * 2
+    # K: B * S * H_KV * D * 2
+    # V: B * S * H_KV * D * 2
+    # O: B * 1 * H_Q * D * 2
     q_bytes = batch_size * 1 * NUM_Q_HEADS * HEAD_DIM * element_size
     kv_bytes = 2 * batch_size * seq_len * NUM_KV_HEADS * HEAD_DIM * element_size
     o_bytes = batch_size * 1 * NUM_Q_HEADS * HEAD_DIM * element_size
@@ -259,15 +166,11 @@ def bench_provider(
     v: torch.Tensor,
     warmup_iters: int = 20,
     bench_iters: int = 100,
-    wrapper=None,
 ) -> float:
     """Benchmark a single provider, returns latency in microseconds."""
     # Warmup
     for _ in range(warmup_iters):
-        if wrapper is not None:
-            _ = provider_fn(q, k, v, wrapper)
-        else:
-            _ = provider_fn(q, k, v)
+        _ = provider_fn(q, k, v)
     torch.cuda.synchronize()
     
     # Benchmark
@@ -276,10 +179,7 @@ def bench_provider(
     
     start.record()
     for _ in range(bench_iters):
-        if wrapper is not None:
-            _ = provider_fn(q, k, v, wrapper)
-        else:
-            _ = provider_fn(q, k, v)
+        _ = provider_fn(q, k, v)
     end.record()
     torch.cuda.synchronize()
     
@@ -315,28 +215,16 @@ def run_single_benchmark(
     
     # PyTorch SDPA (always available)
     providers = {
-        "PyTorch SDPA": (attn_pytorch_sdpa, None),
+        "PyTorch SDPA": attn_pytorch_sdpa,
     }
-    
-    # FlashInfer with pre-created wrapper
-    flashinfer_wrapper = None
-    if check_flashinfer():
-        try:
-            flashinfer_wrapper = create_flashinfer_wrapper(batch_size, seq_len, dtype, 'cuda')
-            providers["FlashInfer"] = (
-                lambda q, k, v, w=flashinfer_wrapper: attn_flashinfer_decode(q, k, v, w),
-                flashinfer_wrapper
-            )
-        except Exception as e:
-            print(f"  FlashInfer wrapper creation failed: {e}")
     
     # FA4 (SM100 only)
     if check_fa4():
-        providers["FA4"] = (attn_fa4, None)
+        providers["FA4"] = attn_fa4_decode
     
-    for name, (fn, wrapper) in providers.items():
+    for name, fn in providers.items():
         try:
-            latency_us = bench_provider(fn, q, k, v, warmup_iters, bench_iters, wrapper)
+            latency_us = bench_provider(fn, q, k, v, warmup_iters, bench_iters)
             bandwidth_gb_s = traffic_gb / (latency_us * 1e-6) / 1e9
             results.append(BenchResult(
                 batch_size=batch_size,
@@ -381,14 +269,14 @@ def main():
     
     print("=" * 80)
     print("MiniMax-M2.5 Decode Attention Benchmark with Baselines")
-    print(f"Config: TP={TP_SIZE}, Per-GPU: {NUM_Q_HEADS} Q heads, {NUM_KV_HEADS} KV heads")
+    print(f"Config: TP={TP_SIZE}, Per-GPU: {NUM_Q_HEADS} Q heads, {NUM_KV_HEADS} KV heads (GQA ratio={GQA_RATIO})")
     print(f"Hardware: SM{major}{minor}")
     print("=" * 80)
     
     # Check available providers
     print("\nAvailable providers:")
     print(f"  PyTorch SDPA: ✓ (always available)")
-    print(f"  FlashInfer: {'✓' if check_flashinfer() else '✗'}")
+    print(f"  FlashInfer: ✗ (doesn't support GQA ratio=6)")
     print(f"  FA4: {'✓ (SM100 Blackwell)' if check_fa4 else '✗' + (' (requires SM100)' if major != 10 else '')}")
     
     if args.mode == "single":
