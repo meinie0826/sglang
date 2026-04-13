@@ -5,7 +5,7 @@ MiniMax-M2.5 decode attention kernel micro-benchmark with baselines.
 This script compares multiple attention backends for MiniMax-M2.5 decode:
 1. PyTorch SDPA (baseline)
 2. FlashInfer (if available) - SGLang default
-3. FlashAttention3 (SM90 only - H100/H200)
+3. FlashAttention3 (SM90 only - Hopper H100/H200)
 4. FlashAttention4 (SM100 only - Blackwell B200/B300/GB200)
 5. Theoretical optimal - hardware peak
 
@@ -15,14 +15,14 @@ Usage:
 
 Hardware support:
 - FA3: SM90 (Hopper H100/H200) only
-- FA4: SM100 (Blackwell B200/B300/GB200) only
+- FA4: SM100 (Blackwell B200/B300/GB200) only  
 - FlashInfer: SM80+ (all modern NVIDIA GPUs)
 """
 
 import argparse
 import time
 from dataclasses import dataclass
-from typing import Callable, Dict, List, Optional, Tuple
+from typing import Callable, Dict, List, Optional
 
 import torch
 import torch.nn.functional as F
@@ -40,7 +40,6 @@ NUM_KV_HEADS = NUM_KV_HEADS_TOTAL // TP_SIZE  # 2
 GQA_RATIO = NUM_Q_HEADS // NUM_KV_HEADS  # 6
 
 # Hardware specs for theoretical baseline
-# B200: HBM3e ~8 TB/s peak, assume 6 TB/s achievable for attention
 B200_PEAK_BW_TB_S = 6.0
 
 
@@ -54,7 +53,7 @@ class BenchResult:
     bandwidth_gb_s: float
 
 
-def get_device_capability() -> Tuple[int, int]:
+def get_device_capability() -> tuple:
     """Get CUDA device capability (major, minor)."""
     return torch.cuda.get_device_capability()
 
@@ -85,7 +84,7 @@ def check_fa3() -> bool:
     if not is_sm90():
         return False
     try:
-        from sgl_kernel import flash_attn_with_kvcache
+        from flash_attn import flash_attn_func
         return True
     except ImportError:
         pass
@@ -102,11 +101,17 @@ def check_fa4() -> bool:
     if not is_sm100():
         return False
     try:
-        # FA4 uses the same interface as FA3 in sgl_kernel
-        from sgl_kernel import flash_attn_with_kvcache
+        from flash_attn_4 import flash_attn_func
         return True
     except ImportError:
-        return False
+        pass
+    try:
+        # Alternative import path
+        import flash_attn_4
+        return hasattr(flash_attn_4, 'flash_attn_func')
+    except ImportError:
+        pass
+    return False
 
 
 def create_decode_inputs(
@@ -116,7 +121,7 @@ def create_decode_inputs(
     device: str = "cuda",
 ):
     """Create inputs simulating decode phase."""
-    q = torch.randn(batch_size, NUM_Q_HEADS, HEAD_DIM, dtype=dtype, device=device)
+    q = torch.randn(batch_size, 1, NUM_Q_HEADS, HEAD_DIM, dtype=dtype, device=device)
     k = torch.randn(batch_size, seq_len, NUM_KV_HEADS, HEAD_DIM, dtype=dtype, device=device)
     v = torch.randn(batch_size, seq_len, NUM_KV_HEADS, HEAD_DIM, dtype=dtype, device=device)
     return q, k, v
@@ -124,6 +129,73 @@ def create_decode_inputs(
 
 def attn_pytorch_sdpa(q, k, v):
     """PyTorch SDPA baseline with GQA expansion."""
+    batch_size = q.shape[0]
+    seq_len_k = k.shape[1]
+    
+    # Expand K/V for GQA
+    k_exp = k.unsqueeze(3).expand(-1, -1, -1, GQA_RATIO, -1).reshape(
+        batch_size, seq_len_k, NUM_Q_HEADS, HEAD_DIM
+    )
+    v_exp = v.unsqueeze(3).expand(-1, -1, -1, GQA_RATIO, -1).reshape(
+        batch_size, seq_len_k, NUM_Q_HEADS, HEAD_DIM
+    )
+    
+    # [B, H, S, D]
+    q_t = q.transpose(1, 2)  # [B, H_Q, 1, D]
+    k_t = k_exp.transpose(1, 2)  # [B, H_Q, S, D]
+    v_t = v_exp.transpose(1, 2)  # [B, H_Q, S, D]
+    
+    scale = 1.0 / (HEAD_DIM ** 0.5)
+    out = F.scaled_dot_product_attention(q_t, k_t, v_t, is_causal=True, scale=scale)
+    return out.transpose(1, 2)  # [B, 1, H_Q, D]
+
+
+def attn_flashinfer_decode(q, k, v):
+    """FlashInfer decode attention."""
+    try:
+        import flashinfer
+        
+        batch_size = q.shape[0]
+        seq_len = k.shape[1]
+        
+        # FlashInfer uses paged KV cache
+        page_size = 16
+        num_pages = (seq_len + page_size - 1) // page_size
+        total_pages = batch_size * num_pages
+        
+        page_table = torch.arange(total_pages, dtype=torch.int32, device=q.device).reshape(
+            batch_size, num_pages
+        )
+        
+        k_paged = k.reshape(batch_size, num_pages, page_size, NUM_KV_HEADS, HEAD_DIM)
+        v_paged = v.reshape(batch_size, num_pages, page_size, NUM_KV_HEADS, HEAD_DIM)
+        k_flat = k_paged.reshape(-1, page_size, NUM_KV_HEADS, HEAD_DIM)
+        v_flat = v_paged.reshape(-1, page_size, NUM_KV_HEADS, HEAD_DIM)
+        
+        seq_lens = torch.full((batch_size,), seq_len, dtype=torch.int32, device=q.device)
+        
+        # Use batch decode API
+        out = flashinfer.batch_decode_with_padded_kv_cache(
+            q.squeeze(1),  # [B, H_Q, D]
+            k_flat,
+            v_flat,
+            kv_lengths=seq_lens,
+            num_qo_heads=NUM_Q_HEADS,
+            num_kv_heads=NUM_KV_HEADS,
+        )
+        return out.unsqueeze(1)  # [B, 1, H_Q, D]
+    except Exception as e:
+        print(f"FlashInfer error: {e}, falling back to SDPA")
+        return attn_pytorch_sdpa(q, k, v)
+
+
+def attn_fa3(q, k, v):
+    """FlashAttention3 decode (SM90 Hopper only)."""
+    try:
+        from flash_attn import flash_attn_func
+    except ImportError:
+        from flash_attn_interface import flash_attn_func
+    
     batch_size = q.shape[0]
     seq_len = k.shape[1]
     
@@ -135,156 +207,50 @@ def attn_pytorch_sdpa(q, k, v):
         batch_size, seq_len, NUM_Q_HEADS, HEAD_DIM
     )
     
-    q_t = q.unsqueeze(2)  # [B, H_Q, 1, D]
-    k_t = k_exp.transpose(1, 2)  # [B, H_Q, S, D]
-    v_t = v_exp.transpose(1, 2)  # [B, H_Q, S, D]
-    
-    scale = 1.0 / (HEAD_DIM ** 0.5)
-    out = F.scaled_dot_product_attention(q_t, k_t, v_t, is_causal=True, scale=scale)
-    return out.squeeze(2)
-
-
-def attn_flashinfer_decode(q, k, v):
-    """FlashInfer decode attention."""
-    try:
-        import flashinfer
-        
-        batch_size = q.shape[0]
-        seq_len = k.shape[1]
-        
-        # FlashInfer expects paged KV cache
-        page_size = 16
-        num_pages = (seq_len + page_size - 1) // page_size
-        total_pages = batch_size * num_pages
-        
-        # Create page table
-        page_table = torch.arange(total_pages, dtype=torch.int32, device=q.device).reshape(
-            batch_size, num_pages
-        )
-        
-        # Reshape KV to paged format
-        k_paged = k.reshape(batch_size, num_pages, page_size, NUM_KV_HEADS, HEAD_DIM)
-        v_paged = v.reshape(batch_size, num_pages, page_size, NUM_KV_HEADS, HEAD_DIM)
-        
-        # Flatten to [total_pages, page_size, H_KV, D]
-        k_flat = k_paged.reshape(-1, page_size, NUM_KV_HEADS, HEAD_DIM)
-        v_flat = v_paged.reshape(-1, page_size, NUM_KV_HEADS, HEAD_DIM)
-        
-        # Sequence lengths
-        seq_lens = torch.full((batch_size,), seq_len, dtype=torch.int32, device=q.device)
-        
-        # Use decode attention with KV cache
-        # Note: FlashInfer API may vary by version
-        out = flashinfer.batch_decode_with_padded_kv_cache(
-            q,
-            k_flat,
-            v_flat,
-            kv_lengths=seq_lens,
-            num_qo_heads=NUM_Q_HEADS,
-            num_kv_heads=NUM_KV_HEADS,
-        )
-        return out
-    except Exception as e:
-        # Fallback to SDPA
-        return attn_pytorch_sdpa(q, k, v)
-
-
-def attn_fa3(q, k, v):
-    """FlashAttention3 decode (SM90 Hopper only)."""
-    try:
-        from sgl_kernel import flash_attn_with_kvcache
-        
-        batch_size = q.shape[0]
-        seq_len = k.shape[1]
-        
-        # Create paged KV cache
-        page_size = 128
-        num_pages = (seq_len + page_size - 1) // page_size
-        total_pages = batch_size * num_pages
-        
-        # Page table
-        page_table = torch.arange(total_pages, dtype=torch.int32, device=q.device).reshape(
-            batch_size, num_pages
-        )
-        
-        # Reshape KV
-        k_paged = k.reshape(batch_size, num_pages, page_size, NUM_KV_HEADS, HEAD_DIM)
-        v_paged = v.reshape(batch_size, num_pages, page_size, NUM_KV_HEADS, HEAD_DIM)
-        k_flat = k_paged.reshape(-1, page_size, NUM_KV_HEADS, HEAD_DIM)
-        v_flat = v_paged.reshape(-1, page_size, NUM_KV_HEADS, HEAD_DIM)
-        
-        # Cache sequence lengths
-        cache_seqlens = torch.full((batch_size,), seq_len, dtype=torch.int32, device=q.device)
-        
-        # Query shape: [batch_size, seqlen, nheads, headdim]
-        q_fa = q.unsqueeze(1)  # [B, 1, H_Q, D]
-        
-        out = flash_attn_with_kvcache(
-            q_fa,
-            k_flat,
-            v_flat,
-            cache_seqlens=cache_seqlens,
-            page_table=page_table,
-            causal=True,
-            softmax_scale=1.0 / (HEAD_DIM ** 0.5),
-        )
-        return out.squeeze(1)
-    except Exception as e:
-        return attn_pytorch_sdpa(q, k, v)
+    # flash_attn_func: [B, S, H, D]
+    out, _, _ = flash_attn_func(
+        q, k_exp, v_exp,
+        causal=True,
+        softmax_scale=1.0 / (HEAD_DIM ** 0.5),
+    )
+    return out
 
 
 def attn_fa4(q, k, v):
     """FlashAttention4 decode (SM100 Blackwell only)."""
     try:
-        # FA4 uses same interface as FA3 in sgl_kernel
-        from sgl_kernel import flash_attn_with_kvcache
-        
-        batch_size = q.shape[0]
-        seq_len = k.shape[1]
-        
-        # FA4 requires page_size=128 for non-MLA models
-        page_size = 128
-        num_pages = (seq_len + page_size - 1) // page_size
-        total_pages = batch_size * num_pages
-        
-        # Page table
-        page_table = torch.arange(total_pages, dtype=torch.int32, device=q.device).reshape(
-            batch_size, num_pages
-        )
-        
-        # Reshape KV
-        k_paged = k.reshape(batch_size, num_pages, page_size, NUM_KV_HEADS, HEAD_DIM)
-        v_paged = v.reshape(batch_size, num_pages, page_size, NUM_KV_HEADS, HEAD_DIM)
-        k_flat = k_paged.reshape(-1, page_size, NUM_KV_HEADS, HEAD_DIM)
-        v_flat = v_paged.reshape(-1, page_size, NUM_KV_HEADS, HEAD_DIM)
-        
-        cache_seqlens = torch.full((batch_size,), seq_len, dtype=torch.int32, device=q.device)
-        
-        q_fa = q.unsqueeze(1)
-        
-        out = flash_attn_with_kvcache(
-            q_fa,
-            k_flat,
-            v_flat,
-            cache_seqlens=cache_seqlens,
-            page_table=page_table,
-            causal=True,
-            softmax_scale=1.0 / (HEAD_DIM ** 0.5),
-            ver=4,  # Explicitly use FA4
-        )
-        return out.squeeze(1)
-    except Exception as e:
-        return attn_pytorch_sdpa(q, k, v)
+        from flash_attn_4 import flash_attn_func
+    except ImportError:
+        raise ImportError("flash_attn_4 not installed. Install with: pip install flash-attn-4")
+    
+    batch_size = q.shape[0]
+    seq_len = k.shape[1]
+    
+    # FA4 handles GQA internally if num_heads differ
+    # But we still need to expand for the interface
+    k_exp = k.unsqueeze(3).expand(-1, -1, -1, GQA_RATIO, -1).reshape(
+        batch_size, seq_len, NUM_Q_HEADS, HEAD_DIM
+    )
+    v_exp = v.unsqueeze(3).expand(-1, -1, -1, GQA_RATIO, -1).reshape(
+        batch_size, seq_len, NUM_Q_HEADS, HEAD_DIM
+    )
+    
+    out, lse = flash_attn_func(
+        q, k_exp, v_exp,
+        causal=True,
+        softmax_scale=1.0 / (HEAD_DIM ** 0.5),
+    )
+    return out
 
 
 def calculate_theoretical_latency(batch_size: int, seq_len: int, dtype: torch.dtype = torch.bfloat16):
     """Calculate theoretical minimum latency based on memory bandwidth."""
     element_size = 2  # bf16
     
-    # Memory traffic
-    q_bytes = batch_size * NUM_Q_HEADS * HEAD_DIM * element_size
+    # Memory traffic (bytes)
+    q_bytes = batch_size * 1 * NUM_Q_HEADS * HEAD_DIM * element_size
     kv_bytes = 2 * batch_size * seq_len * NUM_KV_HEADS * HEAD_DIM * element_size
-    o_bytes = batch_size * NUM_Q_HEADS * HEAD_DIM * element_size
+    o_bytes = batch_size * 1 * NUM_Q_HEADS * HEAD_DIM * element_size
     total_bytes = q_bytes + kv_bytes + o_bytes
     
     theoretical_latency_us = total_bytes / (B200_PEAK_BW_TB_S * 1e12) * 1e6
@@ -330,6 +296,9 @@ def run_single_benchmark(
 ) -> List[BenchResult]:
     """Run benchmark for all available providers."""
     results = []
+    
+    major, minor = get_device_capability()
+    print(f"  GPU: SM{major}{minor}")
     
     q, k, v = create_decode_inputs(batch_size, seq_len, dtype)
     theoretical_us, traffic_gb = calculate_theoretical_latency(batch_size, seq_len, dtype)
@@ -391,7 +360,6 @@ def print_comparison_table(results: List[BenchResult]):
             print(f"{r.provider:>15} | {r.latency_us:>12.2f} | {r.bandwidth_gb_s:>10.1f} | {'1.00x (baseline)':>15}")
         else:
             ratio = r.latency_us / theoretical.latency_us
-            efficiency = theoretical.latency_us / r.latency_us * 100
             print(f"{r.provider:>15} | {r.latency_us:>12.2f} | {r.bandwidth_gb_s:>10.1f} | {ratio:>14.2f}x")
 
 
@@ -417,8 +385,8 @@ def main():
     print("\nAvailable providers:")
     print(f"  PyTorch SDPA: ✓ (always available)")
     print(f"  FlashInfer: {'✓' if check_flashinfer() else '✗'}")
-    print(f"  FA3: {'✓ (SM90 only)' if check_fa3() else '✗' + (' (requires SM90, current SM' + str(major) + ')' if major != 9 else '')}")
-    print(f"  FA4: {'✓ (SM100 only)' if check_fa4() else '✗' + (' (requires SM100, current SM' + str(major) + ')' if major != 10 else '')}")
+    print(f"  FA3: {'✓ (SM90 Hopper)' if check_fa3() else '✗' + (' (requires SM90, current SM' + str(major) + ')' if major != 9 else '')}")
+    print(f"  FA4: {'✓ (SM100 Blackwell)' if check_fa4() else '✗' + (' (requires SM100, current SM' + str(major) + ')' if major != 10 else '')}")
     
     if args.mode == "single":
         print(f"\nRunning: batch_size={args.batch_size}, seq_len={args.seq_len}")
