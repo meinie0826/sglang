@@ -223,16 +223,20 @@ def create_trtllm_state(batch_size: int, seq_len: int, dtype: torch.dtype, devic
 
 
 def calculate_theoretical_latency(batch_size: int, seq_len: int, dtype: torch.dtype = torch.bfloat16):
-    element_size = 2
+    element_size = 2  # bf16
     q_bytes = batch_size * 1 * NUM_Q_HEADS * HEAD_DIM * element_size
     kv_bytes = 2 * batch_size * seq_len * NUM_KV_HEADS * HEAD_DIM * element_size
     o_bytes = batch_size * 1 * NUM_Q_HEADS * HEAD_DIM * element_size
     total_bytes = q_bytes + kv_bytes + o_bytes
-    
+
     traffic_gb = total_bytes / 1e9
+    kv_gb = kv_bytes / 1e9
     theoretical_latency_us = traffic_gb / B200_PEAK_BW_TB_S / 1e3 * 1e6  # us
-    
-    return theoretical_latency_us, traffic_gb
+
+    # FLOPs: 2 * B * S * H_Q * D (matmul QK^T and AV, approximate)
+    flops = 2 * 2 * batch_size * seq_len * NUM_Q_HEADS * HEAD_DIM
+
+    return theoretical_latency_us, traffic_gb, kv_gb, flops
 
 
 def bench_provider(
@@ -283,8 +287,9 @@ def run_single_benchmark(
     print(f"  GPU: SM{major}{minor}")
     
     q, k, v = create_decode_inputs(batch_size, seq_len, dtype)
-    theoretical_us, traffic_gb = calculate_theoretical_latency(batch_size, seq_len, dtype)
-    
+    theoretical_us, traffic_gb, kv_gb, flops = calculate_theoretical_latency(batch_size, seq_len, dtype)
+    print(f"  KV traffic: {kv_gb*1024:.1f} MB  |  Total traffic: {traffic_gb*1024:.1f} MB  |  FLOPs: {flops/1e9:.2f} GFLOPs")
+
     # Theoretical baseline
     results.append(BenchResult(
         batch_size=batch_size,
@@ -353,7 +358,7 @@ def main():
     )
     parser.add_argument("--batch-size", type=int, default=64)
     parser.add_argument("--seq-len", type=int, default=8192)
-    parser.add_argument("--mode", type=str, default="single", choices=["single", "sweep"])
+    parser.add_argument("--mode", type=str, default="single", choices=["single", "seq_sweep", "sweep"])
     parser.add_argument("--quick", action="store_true")
     args = parser.parse_args()
     
@@ -375,39 +380,47 @@ def main():
         print(f"\nRunning: batch_size={args.batch_size}, seq_len={args.seq_len}")
         results = run_single_benchmark(args.batch_size, args.seq_len)
         print_comparison_table(results)
-        
-        print(f"\n{'='*80}")
-        print("Summary:")
-        
-        best = min((r for r in results if r.provider != "Theoretical"), 
+
+        best = min((r for r in results if r.provider != "Theoretical"),
                    key=lambda x: x.latency_us, default=None)
-        
         if best:
             theoretical = next(r for r in results if r.provider == "Theoretical")
             efficiency = theoretical.latency_us / best.latency_us * 100
-            print(f"  Best provider: {best.provider}")
-            print(f"  Latency: {best.latency_us:.2f} us/layer")
-            print(f"  Bandwidth efficiency: {efficiency:.1f}% of theoretical peak")
-            
             total_attn_ms = best.latency_us * NUM_LAYERS / 1000
-            print(f"\n  Total attention time ({NUM_LAYERS} layers): {total_attn_ms:.2f} ms")
-            
-            print(f"\n  Attention share at 50ms decode budget: {total_attn_ms/50*100:.1f}%")
-            if total_attn_ms > 20:
-                print("  ⚠️  Attention overhead is HIGH (>40% of 50ms budget)")
-            else:
-                print("  ✓ Attention overhead is within typical bounds")
-    
-    else:
+            print(f"\nSummary: best={best.provider}  latency={best.latency_us:.1f}us  "
+                  f"BW_eff={efficiency:.1f}%  total_attn={total_attn_ms:.2f}ms ({total_attn_ms/50*100:.1f}% of 50ms budget)")
+
+    elif args.mode == "seq_sweep":
+        # Fix batch_size, sweep seq_len from 8k to 32k
+        seq_lens = [8192, 12288, 16384, 20480, 24576, 28672, 32768]
+        print(f"\nSeq sweep (batch_size={args.batch_size}): {seq_lens}")
+        print(f"{'seq_len':>10} | {'Provider':>12} | {'Latency(us)':>12} | {'BW(GB/s)':>10} | {'vs_Theo':>8} | {'KV(MB)':>8}")
+        print("-" * 75)
+        for sl in seq_lens:
+            _, _, kv_gb, _ = calculate_theoretical_latency(args.batch_size, sl)
+            results = run_single_benchmark(args.batch_size, sl)
+            theo = next(r for r in results if r.provider == "Theoretical")
+            for r in results:
+                if r.provider == "Theoretical":
+                    tag = "(peak)"
+                    ratio_str = "  baseline"
+                else:
+                    ratio = r.latency_us / theo.latency_us
+                    ratio_str = f"{ratio:>8.2f}x"
+                    tag = ""
+                print(f"{sl:>10} | {r.provider+tag:>12} | {r.latency_us:>12.2f} | "
+                      f"{r.bandwidth_gb_s:>10.1f} | {ratio_str:>8} | {kv_gb*1024:>8.1f}")
+
+    else:  # sweep
         if args.quick:
             batch_sizes = [1, 8, 32, 64, 128]
             seq_lens = [1024, 4096, 8192, 32768]
         else:
             batch_sizes = [1, 2, 4, 8, 16, 32, 64, 128]
             seq_lens = [1024, 2048, 4096, 8192, 16384, 32768]
-        
+
         print(f"\nSweeping {len(batch_sizes)} batch sizes x {len(seq_lens)} sequence lengths...")
-        
+
         all_results = []
         for bs in batch_sizes:
             for sl in seq_lens:
@@ -418,17 +431,6 @@ def main():
                     all_results.extend(results)
                 except Exception as e:
                     print(f"  Error: {e}")
-        
-        print("\n" + "=" * 80)
-        print("Final Summary:")
-        print("=" * 80)
-        
-        providers = set(r.provider for r in all_results if r.provider != "Theoretical")
-        for provider in providers:
-            provider_results = [r for r in all_results if r.provider == provider]
-            if provider_results:
-                avg_latency = sum(r.latency_us for r in provider_results) / len(provider_results)
-                print(f"{provider}: avg latency = {avg_latency:.2f} us")
 
 
 if __name__ == "__main__":
