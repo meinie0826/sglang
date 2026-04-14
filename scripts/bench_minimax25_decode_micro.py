@@ -207,7 +207,8 @@ def attn_fa4_decode(q, k_cache, v_cache):
     
     # Cumulative sequence lengths
     cu_seqlens_q = torch.arange(0, batch_size + 1, dtype=torch.int32, device=q.device)
-    cu_seqlens_k = torch.arange(0, batch_size + 1, seq_len, dtype=torch.int32, device=q.device)
+    # [0, seq_len, 2*seq_len, ..., batch_size*seq_len] - shape: (batch_size+1,)
+    cu_seqlens_k = torch.arange(0, (batch_size + 1) * seq_len, seq_len, dtype=torch.int32, device=q.device)
     
     # Reshape for varlen
     q_input = q.squeeze(1)  # [B, H_Q, D]
