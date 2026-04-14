@@ -66,6 +66,15 @@ def check_flashinfer() -> bool:
         return False
 
 
+def check_trtllm_gen() -> bool:
+    """TRTLLM-GEN kernel: production backend for SM100 (fmhaSm100fKernel)."""
+    try:
+        import flashinfer.decode
+        return hasattr(flashinfer.decode, "trtllm_batch_decode_with_kv_cache")
+    except ImportError:
+        return False
+
+
 def check_fa4() -> bool:
     if not is_sm100():
         return False
@@ -230,6 +239,84 @@ def attn_fa4_decode(q, k_cache, v_cache):
     return out.unsqueeze(1)
 
 
+def create_trtllm_paged_kv_cache(k, v, page_size=16):
+    """Convert dense KV [B, S, H, D] -> paged format [num_pages, H, page_size, D] for TRTLLM-GEN."""
+    batch_size = k.shape[0]
+    seq_len = k.shape[1]
+    num_pages_per_seq = (seq_len + page_size - 1) // page_size
+    padded_len = num_pages_per_seq * page_size
+
+    if padded_len > seq_len:
+        k = F.pad(k, (0, 0, 0, 0, 0, padded_len - seq_len))
+        v = F.pad(v, (0, 0, 0, 0, 0, padded_len - seq_len))
+
+    # [B, S_pad, H, D] -> [B, num_pages, page_size, H, D] -> [B*num_pages, H, page_size, D]
+    k_pages = k.reshape(batch_size, num_pages_per_seq, page_size, NUM_KV_HEADS, HEAD_DIM)
+    v_pages = v.reshape(batch_size, num_pages_per_seq, page_size, NUM_KV_HEADS, HEAD_DIM)
+    # permute: [B*P, H, page_size, D]
+    k_cache = k_pages.reshape(-1, page_size, NUM_KV_HEADS, HEAD_DIM).permute(0, 2, 1, 3).contiguous()
+    v_cache = v_pages.reshape(-1, page_size, NUM_KV_HEADS, HEAD_DIM).permute(0, 2, 1, 3).contiguous()
+    return k_cache, v_cache, num_pages_per_seq
+
+
+def attn_trtllm_gen_decode(q, k, v, trtllm_state=None):
+    """TRTLLM-GEN decode using flashinfer.decode.trtllm_batch_decode_with_kv_cache.
+    
+    This is the production kernel: fmhaSm100fKernel (SM100/Blackwell only).
+    KV cache layout: [num_pages, num_kv_heads, page_size, head_dim]
+    """
+    import flashinfer.decode
+
+    batch_size = q.shape[0]
+    seq_len = k.shape[1]
+    page_size = 16
+
+    if trtllm_state is None:
+        workspace_buffer = torch.zeros(512 * 1024 * 1024, dtype=torch.uint8, device=q.device)
+        k_cache, v_cache, num_pages_per_seq = create_trtllm_paged_kv_cache(k, v, page_size)
+    else:
+        workspace_buffer, k_cache, v_cache, num_pages_per_seq = trtllm_state
+
+    # block_tables: [B, num_pages_per_seq] - page indices for each sequence
+    # Sequences are packed contiguously: seq i uses pages [i*num_pages_per_seq, (i+1)*num_pages_per_seq)
+    block_tables = torch.arange(
+        batch_size * num_pages_per_seq, dtype=torch.int32, device=q.device
+    ).reshape(batch_size, num_pages_per_seq)
+
+    # seq_lens: [B] - actual sequence lengths
+    seq_lens = torch.full((batch_size,), seq_len, dtype=torch.int32, device=q.device)
+
+    kv_cache = (k_cache, v_cache)
+
+    # q: [B, H_Q, D] for trtllm kernel
+    q_input = q.squeeze(1).contiguous()  # [B, H_Q, D]
+
+    scale = 1.0 / (HEAD_DIM ** 0.5)
+    o = flashinfer.decode.trtllm_batch_decode_with_kv_cache(
+        query=q_input,
+        kv_cache=kv_cache,
+        workspace_buffer=workspace_buffer,
+        block_tables=block_tables,
+        seq_lens=seq_lens,
+        max_seq_len=seq_len,
+        bmm1_scale=scale,
+        bmm2_scale=1.0,
+        window_left=-1,
+        out_dtype=q.dtype,
+    )
+
+    return o.unsqueeze(1)  # [B, 1, H_Q, D]
+
+
+def create_trtllm_state(batch_size: int, seq_len: int, dtype: torch.dtype, device: str):
+    """Pre-allocate TRTLLM workspace and KV cache for benchmarking."""
+    workspace_buffer = torch.zeros(512 * 1024 * 1024, dtype=torch.uint8, device=device)
+    k = torch.randn(batch_size, seq_len, NUM_KV_HEADS, HEAD_DIM, dtype=dtype, device=device)
+    v = torch.randn(batch_size, seq_len, NUM_KV_HEADS, HEAD_DIM, dtype=dtype, device=device)
+    k_cache, v_cache, num_pages_per_seq = create_trtllm_paged_kv_cache(k, v)
+    return workspace_buffer, k_cache, v_cache, num_pages_per_seq
+
+
 def calculate_theoretical_latency(batch_size: int, seq_len: int, dtype: torch.dtype = torch.bfloat16):
     element_size = 2
     q_bytes = batch_size * 1 * NUM_Q_HEADS * HEAD_DIM * element_size
@@ -323,6 +410,17 @@ def run_single_benchmark(
     # FA4 (SM100 only)
     if check_fa4():
         providers["FA4"] = (attn_fa4_decode, None)
+
+    # TRTLLM-GEN (production backend for SM100: fmhaSm100fKernel)
+    if check_trtllm_gen():
+        try:
+            trtllm_state = create_trtllm_state(batch_size, seq_len, dtype, 'cuda')
+            providers["TRTLLM-GEN"] = (
+                lambda q, k, v, s=trtllm_state: attn_trtllm_gen_decode(q, k, v, s),
+                trtllm_state,
+            )
+        except Exception as e:
+            print(f"  TRTLLM-GEN state creation failed: {e}")
     
     for name, (fn, wrapper) in providers.items():
         try:
@@ -378,7 +476,8 @@ def main():
     print("\nAvailable providers:")
     print(f"  PyTorch SDPA: ✓ (always available)")
     print(f"  FlashInfer: {'✓' if check_flashinfer() else '✗'}")
-    print(f"  FA4: {'✓ (SM100 Blackwell)' if check_fa4 else '✗' + (' (requires SM100)' if major != 10 else '')}")
+    print(f"  TRTLLM-GEN: {'✓ (SM100 production kernel)' if check_trtllm_gen() else '✗'}")
+    print(f"  FA4: {'✓ (SM100 Blackwell)' if check_fa4() else '✗' + (' (requires SM100)' if major != 10 else '')}")
     
     if args.mode == "single":
         print(f"\nRunning: batch_size={args.batch_size}, seq_len={args.seq_len}")
