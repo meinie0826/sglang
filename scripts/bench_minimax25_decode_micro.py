@@ -411,11 +411,25 @@ def main():
                         help="KV cache page size. Production uses 64 (P64 in kernel name)")
     parser.add_argument("--mode", type=str, default="single", choices=["single", "seq_sweep", "sweep"])
     parser.add_argument("--quick", action="store_true")
+    parser.add_argument("--ncu", action="store_true",
+                        help="NCU mode: skip all other providers, run TRTLLM-GEN once for kernel profiling")
     args = parser.parse_args()
 
     kv_dtype = torch.float8_e4m3fn if args.kv_dtype == "fp8" else torch.bfloat16
 
     major, minor = get_device_capability()
+
+    # NCU mode: run TRTLLM-GEN once for kernel profiling, skip everything else
+    if args.ncu:
+        import flashinfer.decode
+        q_dtype = torch.bfloat16
+        q, k, v = create_decode_inputs(args.batch_size, args.seq_len, args.q_len, q_dtype, kv_dtype)
+        trtllm_state = create_trtllm_state(args.batch_size, args.seq_len, args.q_len, kv_dtype, args.page_size, "cuda")
+        torch.cuda.synchronize()
+        # single run - ncu will capture this
+        attn_trtllm_gen_decode(q, k, v, trtllm_state)
+        torch.cuda.synchronize()
+        return
 
     print("=" * 80)
     print("MiniMax-M2.5 Decode Attention Benchmark with Baselines")
