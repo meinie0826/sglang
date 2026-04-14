@@ -323,7 +323,7 @@ def run_single_benchmark(
     for name, (fn, wrapper) in providers.items():
         try:
             latency_us = bench_provider(fn, q, k, v, warmup_iters, bench_iters, wrapper)
-            bandwidth_gb_s = traffic_gb / (latency_us * 1e-6) / 1e9
+            bandwidth_gb_s = traffic_gb / (latency_us * 1e-6)  # GB/s
             results.append(BenchResult(
                 batch_size=batch_size,
                 seq_len=seq_len,
