@@ -36,7 +36,8 @@ NUM_KV_HEADS = NUM_KV_HEADS_TOTAL // TP_SIZE  # 2
 GQA_RATIO = NUM_Q_HEADS // NUM_KV_HEADS  # 6
 
 # Hardware specs for theoretical baseline
-B200_PEAK_BW_TB_S = 6.0
+# B200: 192GB HBM3e @ 8 TB/s peak (unidirectional)
+B200_PEAK_BW_TB_S = 8.0
 
 
 @dataclass
@@ -324,8 +325,8 @@ def calculate_theoretical_latency(batch_size: int, seq_len: int, dtype: torch.dt
     o_bytes = batch_size * 1 * NUM_Q_HEADS * HEAD_DIM * element_size
     total_bytes = q_bytes + kv_bytes + o_bytes
     
-    theoretical_latency_us = total_bytes / (B200_PEAK_BW_TB_S * 1e12) * 1e6
     traffic_gb = total_bytes / 1e9
+    theoretical_latency_us = traffic_gb / B200_PEAK_BW_TB_S / 1e3 * 1e6  # us
     
     return theoretical_latency_us, traffic_gb
 
@@ -387,7 +388,7 @@ def run_single_benchmark(
         provider="Theoretical",
         latency_us=theoretical_us,
         traffic_gb=traffic_gb,
-        bandwidth_gb_s=traffic_gb / (theoretical_us * 1e-6) / 1e9,
+        bandwidth_gb_s=traffic_gb / (theoretical_us * 1e-6),  # GB/s
     ))
     
     # PyTorch SDPA (always available)
