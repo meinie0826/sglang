@@ -4,13 +4,13 @@ MiniMax-M2.5 decode attention kernel micro-benchmark with baselines.
 
 This script compares multiple attention backends for MiniMax-M2.5 decode:
 1. PyTorch SDPA (baseline)
-2. FlashInfer (BatchDecodeWithPagedKVCacheWrapper)
+2. TRTLLM-GEN (production: flashinfer.decode.trtllm_batch_decode_with_kv_cache, fmhaSm100fKernel)
 3. FlashAttention4 (SM100 only - Blackwell B200/B300/GB200)
 4. Theoretical optimal - hardware peak
 
 Hardware support:
+- TRTLLM-GEN: SM100 (Blackwell B200/B300/GB200) - production backend
 - FA4: SM100 (Blackwell B200/B300/GB200) only
-- FlashInfer: SM80+ (all modern NVIDIA GPUs)
 
 Usage:
     python scripts/bench_minimax25_decode_micro.py --batch-size 64 --seq-len 8192
@@ -57,14 +57,6 @@ def get_device_capability() -> Tuple[int, int]:
 def is_sm100() -> bool:
     major, _ = get_device_capability()
     return major == 10
-
-
-def check_flashinfer() -> bool:
-    try:
-        import flashinfer
-        return True
-    except ImportError:
-        return False
 
 
 def check_trtllm_gen() -> bool:
@@ -118,94 +110,6 @@ def attn_pytorch_sdpa(q, k, v):
     scale = 1.0 / (HEAD_DIM ** 0.5)
     out = F.scaled_dot_product_attention(q_t, k_t, v_t, is_causal=True, scale=scale)
     return out.transpose(1, 2)
-
-
-def create_flashinfer_wrapper(batch_size: int, seq_len: int, dtype: torch.dtype, device: str):
-    """Create and configure FlashInfer decode wrapper."""
-    from flashinfer import BatchDecodeWithPagedKVCacheWrapper
-    
-    page_size = 16
-    num_pages_per_seq = (seq_len + page_size - 1) // page_size
-    total_pages = batch_size * num_pages_per_seq
-    
-    # Allocate workspace buffer (128 MB)
-    workspace_buffer = torch.empty(128 * 1024 * 1024, dtype=torch.uint8, device=device)
-    
-    # Create wrapper
-    wrapper = BatchDecodeWithPagedKVCacheWrapper(
-        workspace_buffer,
-        kv_layout="NHD",
-        use_cuda_graph=False,
-    )
-    
-    # Create page indices
-    page_indices = torch.arange(total_pages, dtype=torch.int32, device=device).reshape(
-        batch_size, num_pages_per_seq
-    )
-    
-    # Indptr: [0, num_pages_per_seq, 2*num_pages_per_seq, ...]
-    indptr = torch.arange(0, total_pages + 1, num_pages_per_seq, dtype=torch.int32, device=device)
-    
-    # Flatten page indices
-    indices = page_indices.flatten()
-    
-    # Last page lengths
-    last_page_len = torch.full((batch_size,), seq_len % page_size or page_size, dtype=torch.int32, device=device)
-    
-    # Plan - FlashInfer handles GQA automatically via num_qo_heads and num_kv_heads
-    wrapper.plan(
-        indptr=indptr,
-        indices=indices,
-        last_page_len=last_page_len,
-        num_qo_heads=NUM_Q_HEADS,
-        num_kv_heads=NUM_KV_HEADS,
-        head_dim=HEAD_DIM,
-        page_size=page_size,
-        pos_encoding_mode="NONE",
-        data_type=dtype,
-    )
-    
-    return wrapper
-
-
-def attn_flashinfer_decode(q, k, v, wrapper=None):
-    """FlashInfer decode using BatchDecodeWithPagedKVCacheWrapper."""
-    try:
-        batch_size = q.shape[0]
-        seq_len = k.shape[1]
-        
-        if wrapper is None:
-            wrapper = create_flashinfer_wrapper(batch_size, seq_len, q.dtype, q.device)
-        
-        page_size = 16
-        num_pages = (seq_len + page_size - 1) // page_size
-        
-        # Pad KV to full pages
-        padded_len = num_pages * page_size
-        if padded_len > seq_len:
-            k_padded = F.pad(k, (0, 0, 0, 0, 0, padded_len - seq_len))
-            v_padded = F.pad(v, (0, 0, 0, 0, 0, padded_len - seq_len))
-        else:
-            k_padded, v_padded = k, v
-        
-        # Reshape to paged format
-        k_pages = k_padded.reshape(batch_size, num_pages, page_size, NUM_KV_HEADS, HEAD_DIM)
-        v_pages = v_padded.reshape(batch_size, num_pages, page_size, NUM_KV_HEADS, HEAD_DIM)
-        
-        # Flatten to [total_pages, page_size, H_KV, D]
-        k_cache = k_pages.reshape(-1, page_size, NUM_KV_HEADS, HEAD_DIM)
-        v_cache = v_pages.reshape(-1, page_size, NUM_KV_HEADS, HEAD_DIM)
-        
-        paged_kv_cache = (k_cache, v_cache)
-        
-        # Forward - q needs [B, H_Q, D]
-        q_input = q.squeeze(1)
-        out = wrapper.forward(q_input, paged_kv_cache, sm_scale=1.0 / (HEAD_DIM ** 0.5))
-        
-        return out.unsqueeze(1)
-    except Exception as e:
-        print(f"FlashInfer error: {e}")
-        return attn_pytorch_sdpa(q, k, v)
 
 
 def attn_fa4_decode(q, k_cache, v_cache):
@@ -396,18 +300,6 @@ def run_single_benchmark(
         "PyTorch SDPA": (attn_pytorch_sdpa, None),
     }
     
-    # FlashInfer with pre-created wrapper
-    flashinfer_wrapper = None
-    if check_flashinfer():
-        try:
-            flashinfer_wrapper = create_flashinfer_wrapper(batch_size, seq_len, dtype, 'cuda')
-            providers["FlashInfer"] = (
-                lambda q, k, v, w=flashinfer_wrapper: attn_flashinfer_decode(q, k, v, w),
-                flashinfer_wrapper
-            )
-        except Exception as e:
-            print(f"  FlashInfer wrapper creation failed: {e}")
-    
     # FA4 (SM100 only)
     if check_fa4():
         providers["FA4"] = (attn_fa4_decode, None)
@@ -476,7 +368,6 @@ def main():
     # Check available providers
     print("\nAvailable providers:")
     print(f"  PyTorch SDPA: ✓ (always available)")
-    print(f"  FlashInfer: {'✓' if check_flashinfer() else '✗'}")
     print(f"  TRTLLM-GEN: {'✓ (SM100 production kernel)' if check_trtllm_gen() else '✗'}")
     print(f"  FA4: {'✓ (SM100 Blackwell)' if check_fa4() else '✗' + (' (requires SM100)' if major != 10 else '')}")
     
