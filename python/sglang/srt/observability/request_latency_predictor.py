@@ -61,8 +61,23 @@ class OnlineRequestLatencyPredictor:
         min_window_requests: int = 5,
         ridge_lambda: float = 1e-3,
     ):
-        self.model_path = model_path or DEFAULT_MODEL_PATH
-        self.event_log_path = event_log_path or DEFAULT_EVENT_LOG_PATH
+        configured_model_path = envs.SGLANG_WINDOW_TTFT_PREDICTOR_MODEL_PATH.get()
+        configured_event_log_path = (
+            envs.SGLANG_WINDOW_TTFT_PREDICTOR_EVENT_LOG_PATH.get()
+        )
+        if model_path is not None:
+            self.model_path = model_path
+        elif configured_model_path:
+            self.model_path = Path(configured_model_path)
+        else:
+            self.model_path = DEFAULT_MODEL_PATH
+
+        if event_log_path is not None:
+            self.event_log_path = event_log_path
+        elif configured_event_log_path:
+            self.event_log_path = Path(configured_event_log_path)
+        else:
+            self.event_log_path = DEFAULT_EVENT_LOG_PATH
         self.aggregation_window_seconds = (
             aggregation_window_seconds
             if aggregation_window_seconds is not None
