@@ -14,10 +14,18 @@ WINDOW_SECONDS="${WINDOW_SECONDS:-60}"
 TRAINING_WINDOW_SECONDS="${TRAINING_WINDOW_SECONDS:-900}"
 RETRAIN_INTERVAL_SECONDS="${RETRAIN_INTERVAL_SECONDS:-30}"
 
+MEM_FRACTION_STATIC="${MEM_FRACTION_STATIC:-0.68}"
+MAX_RUNNING_REQUESTS="${MAX_RUNNING_REQUESTS:-64}"
+MAX_PREFILL_TOKENS="${MAX_PREFILL_TOKENS:-32768}"
+CHUNKED_PREFILL_SIZE="${CHUNKED_PREFILL_SIZE:-8192}"
+MAX_TOTAL_TOKENS="${MAX_TOTAL_TOKENS:-65536}"
+TP_SIZE="${TP_SIZE:-4}"
+
 REQUEST_RATE="${REQUEST_RATE:-2}"
 TEST_DURATION_SECONDS="${TEST_DURATION_SECONDS:-180}"
 NUM_PROMPTS="${NUM_PROMPTS:-}"
 MAX_CONCURRENCY="${MAX_CONCURRENCY:-64}"
+DATASET_NAME="${DATASET_NAME:-random-ids}"
 RANDOM_INPUT_LEN="${RANDOM_INPUT_LEN:-4096}"
 RANDOM_OUTPUT_LEN="${RANDOM_OUTPUT_LEN:-1}"
 RANDOM_RANGE_RATIO="${RANDOM_RANGE_RATIO:-0.3}"
@@ -26,6 +34,7 @@ SEED="${SEED:-20260421}"
 START_SERVER="${START_SERVER:-1}"
 READY_TIMEOUT_SECONDS="${READY_TIMEOUT_SECONDS:-0}"
 SERVER_STARTUP_GRACE_SECONDS="${SERVER_STARTUP_GRACE_SECONDS:-10}"
+LOG_PRINT_INTERVAL_SECONDS="${LOG_PRINT_INTERVAL_SECONDS:-15}"
 
 RUN_TAG="${RUN_TAG:-window_ttft_online_$(date +%Y%m%d_%H%M%S)}"
 ARTIFACT_DIR="${ARTIFACT_DIR:-/tmp/${RUN_TAG}}"
@@ -79,6 +88,7 @@ wait_for_endpoint() {
   local process_pid="${3:-}"
   local log_path="${4:-}"
   local waited=0
+  local next_log_dump="${LOG_PRINT_INTERVAL_SECONDS}"
   while true; do
     if curl -fsS -H "Authorization: Bearer None" "${url}" >/dev/null 2>&1; then
       return 0
@@ -98,6 +108,12 @@ wait_for_endpoint() {
         print_log_tail "${log_path}"
       fi
       return 1
+    fi
+
+    if [[ -n "${log_path}" ]] && (( waited >= next_log_dump )); then
+      echo "[waiting] ${url} is not ready yet after ${waited}s" >&2
+      print_log_tail "${log_path}" 60
+      next_log_dump=$((next_log_dump + LOG_PRINT_INTERVAL_SECONDS))
     fi
 
     sleep 1
@@ -161,14 +177,22 @@ echo "BASE_URL=${BASE_URL}"
 echo "WINDOW_SECONDS=${WINDOW_SECONDS}"
 echo "TRAINING_WINDOW_SECONDS=${TRAINING_WINDOW_SECONDS}"
 echo "RETRAIN_INTERVAL_SECONDS=${RETRAIN_INTERVAL_SECONDS}"
+echo "MEM_FRACTION_STATIC=${MEM_FRACTION_STATIC}"
+echo "MAX_RUNNING_REQUESTS=${MAX_RUNNING_REQUESTS}"
+echo "MAX_PREFILL_TOKENS=${MAX_PREFILL_TOKENS}"
+echo "CHUNKED_PREFILL_SIZE=${CHUNKED_PREFILL_SIZE}"
+echo "MAX_TOTAL_TOKENS=${MAX_TOTAL_TOKENS}"
+echo "TP_SIZE=${TP_SIZE}"
 echo "REQUEST_RATE=${REQUEST_RATE}"
 echo "TEST_DURATION_SECONDS=${TEST_DURATION_SECONDS}"
 echo "NUM_PROMPTS=${NUM_PROMPTS}"
 echo "MAX_CONCURRENCY=${MAX_CONCURRENCY}"
+echo "DATASET_NAME=${DATASET_NAME}"
 echo "RANDOM_INPUT_LEN=${RANDOM_INPUT_LEN}"
 echo "RANDOM_OUTPUT_LEN=${RANDOM_OUTPUT_LEN}"
 echo "RANDOM_RANGE_RATIO=${RANDOM_RANGE_RATIO}"
 echo "SEED=${SEED}"
+echo "LOG_PRINT_INTERVAL_SECONDS=${LOG_PRINT_INTERVAL_SECONDS}"
 echo "ARTIFACT_DIR=${ARTIFACT_DIR}"
 echo "SERVER_LOG=${SERVER_LOG}"
 echo "CLIENT_LOG=${CLIENT_LOG}"
@@ -188,6 +212,12 @@ if [[ "${START_SERVER}" == "1" ]]; then
     export SGLANG_WINDOW_TTFT_PREDICTOR_WINDOW_SECONDS="${WINDOW_SECONDS}"
     export SGLANG_WINDOW_TTFT_PREDICTOR_TRAINING_WINDOW_SECONDS="${TRAINING_WINDOW_SECONDS}"
     export SGLANG_WINDOW_TTFT_PREDICTOR_RETRAIN_INTERVAL_SECONDS="${RETRAIN_INTERVAL_SECONDS}"
+    export MEM_FRACTION_STATIC
+    export MAX_RUNNING_REQUESTS
+    export MAX_PREFILL_TOKENS
+    export CHUNKED_PREFILL_SIZE
+    export MAX_TOTAL_TOKENS
+    export TP_SIZE
     exec bash "${SERVER_LAUNCH_SCRIPT}" --host "${HOST}" --port "${PORT}"
   ) >"${SERVER_LOG}" 2>&1 &
   SERVER_PID=$!
@@ -203,7 +233,7 @@ echo "[2/3] running random chat client"
   cd "${ROOT_DIR}"
   python3 -m sglang.bench_serving \
     --backend sglang-oai-chat \
-    --dataset-name random \
+    --dataset-name "${DATASET_NAME}" \
     --base-url "${BASE_URL}" \
     --num-prompts "${NUM_PROMPTS}" \
     --request-rate "${REQUEST_RATE}" \
