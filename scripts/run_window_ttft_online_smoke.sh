@@ -24,7 +24,7 @@ RANDOM_RANGE_RATIO="${RANDOM_RANGE_RATIO:-0.3}"
 SEED="${SEED:-20260421}"
 
 START_SERVER="${START_SERVER:-1}"
-READY_TIMEOUT_SECONDS="${READY_TIMEOUT_SECONDS:-600}"
+READY_TIMEOUT_SECONDS="${READY_TIMEOUT_SECONDS:-0}"
 SERVER_STARTUP_GRACE_SECONDS="${SERVER_STARTUP_GRACE_SECONDS:-10}"
 
 RUN_TAG="${RUN_TAG:-window_ttft_online_$(date +%Y%m%d_%H%M%S)}"
@@ -61,10 +61,23 @@ cleanup() {
 }
 trap cleanup EXIT
 
+print_log_tail() {
+  local path="$1"
+  local lines="${2:-120}"
+  if [[ -f "${path}" ]]; then
+    echo "===== tail ${path} =====" >&2
+    tail -n "${lines}" "${path}" >&2 || true
+    echo "===== end tail ${path} =====" >&2
+  else
+    echo "[error] log file not found: ${path}" >&2
+  fi
+}
+
 wait_for_endpoint() {
   local url="$1"
   local timeout="$2"
   local process_pid="${3:-}"
+  local log_path="${4:-}"
   local waited=0
   while true; do
     if curl -fsS -H "Authorization: Bearer None" "${url}" >/dev/null 2>&1; then
@@ -73,11 +86,17 @@ wait_for_endpoint() {
 
     if [[ -n "${process_pid}" ]] && ! kill -0 "${process_pid}" >/dev/null 2>&1; then
       echo "[error] process exited early while waiting for ${url}" >&2
+      if [[ -n "${log_path}" ]]; then
+        print_log_tail "${log_path}"
+      fi
       return 1
     fi
 
-    if (( waited >= timeout )); then
+    if (( timeout > 0 && waited >= timeout )); then
       echo "[error] endpoint ${url} not ready after ${timeout}s" >&2
+      if [[ -n "${log_path}" ]]; then
+        print_log_tail "${log_path}"
+      fi
       return 1
     fi
 
@@ -173,7 +192,7 @@ if [[ "${START_SERVER}" == "1" ]]; then
   ) >"${SERVER_LOG}" 2>&1 &
   SERVER_PID=$!
   sleep "${SERVER_STARTUP_GRACE_SECONDS}"
-  wait_for_endpoint "${BASE_URL}/v1/models" "${READY_TIMEOUT_SECONDS}" "${SERVER_PID}"
+  wait_for_endpoint "${BASE_URL}/v1/models" "${READY_TIMEOUT_SECONDS}" "${SERVER_PID}" "${SERVER_LOG}"
   echo "[1/3] server ready pid=${SERVER_PID}"
 else
   echo "[1/3] reuse existing server at ${BASE_URL}"
