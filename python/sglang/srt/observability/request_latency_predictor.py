@@ -29,17 +29,14 @@ class CompletedRequestRecord:
 
 
 class OnlineRequestLatencyPredictor:
-    """Window-level predictor for trailing-60s p50 TTFT.
+    """Window-level predictor for window p50 TTFT.
 
     Target:
-        p50 of request e2e latency over the trailing 60 seconds.
-
-    QPS is represented as a window-level feature rather than a request-level feature.
+        p50 of request e2e latency within the current aggregation window.
     """
 
     FEATURE_NAMES = [
         "active_requests",
-        "future_qps",
         "arrival_qps_60s",
         "finished_qps_60s",
         "finished_count_60s",
@@ -95,7 +92,6 @@ class OnlineRequestLatencyPredictor:
         self._model_version: int = 0
         self._last_retrain_time: float = 0.0
         self._last_retrain_sample_count: int = 0
-        self._last_window_summary: Optional[dict] = None
         self._lock = threading.Lock()
 
         self._stop_event = threading.Event()
@@ -214,13 +210,6 @@ class OnlineRequestLatencyPredictor:
             "observed_p50_ttft_ms": observed_p50_ttft_ms,
         }
 
-    def _with_future_qps(
-        self, features: Dict[str, float], future_qps: float
-    ) -> Dict[str, float]:
-        out = dict(features)
-        out["future_qps"] = float(max(future_qps, 0.0))
-        return out
-
     def _feature_vector(self, features: Dict[str, float]) -> np.ndarray:
         return np.array(
             [float(features.get(name, 0.0)) for name in self.FEATURE_NAMES],
@@ -248,7 +237,6 @@ class OnlineRequestLatencyPredictor:
         cachelen: int,
         actual_latency_ms: float,
         active_requests: int,
-        future_qps: Optional[float] = None,
         finish_ts: Optional[float] = None,
     ) -> Dict[str, float]:
         finish_ts = time.perf_counter() if finish_ts is None else finish_ts
@@ -271,42 +259,25 @@ class OnlineRequestLatencyPredictor:
             summary = self._build_window_summary_locked(active_requests)
             if summary is None:
                 return {}
-            current_qps = float(summary["features"]["arrival_qps_60s"])
-            assumed_future_qps = current_qps if future_qps is None else float(future_qps)
-            prediction_features = self._with_future_qps(
-                summary["features"], assumed_future_qps
+            predicted_window_p50_ttft_ms = self._predict_locked(summary["features"])
+            self._training_samples.append(
+                {
+                    "ts": finish_ts,
+                    "features": dict(summary["features"]),
+                    "label": float(summary["observed_p50_ttft_ms"]),
+                }
             )
-            predicted_next_window_p50_ttft_ms = self._predict_locked(
-                prediction_features
-            )
-
-            if self._last_window_summary is not None:
-                train_features = self._with_future_qps(
-                    self._last_window_summary["features"], current_qps
-                )
-                self._training_samples.append(
-                    {
-                        "ts": finish_ts,
-                        "features": train_features,
-                        "label": float(summary["observed_p50_ttft_ms"]),
-                    }
-                )
-
-            self._last_window_summary = {
-                "ts": finish_ts,
-                "features": dict(summary["features"]),
-                "observed_p50_ttft_ms": float(summary["observed_p50_ttft_ms"]),
-            }
             model_ready = self._weights is not None
             model_version = self._model_version
 
         snapshot = {
             "window_ttft_window_seconds": float(self.aggregation_window_seconds),
-            "current_window_p50_ttft_ms": float(summary["observed_p50_ttft_ms"]),
-            "predicted_next_window_p50_ttft_ms": float(
-                predicted_next_window_p50_ttft_ms
+            "window_p50_ttft_ms": float(summary["observed_p50_ttft_ms"]),
+            "predicted_window_p50_ttft_ms": float(predicted_window_p50_ttft_ms),
+            "window_ttft_abs_error_ms": abs(
+                float(summary["observed_p50_ttft_ms"])
+                - float(predicted_window_p50_ttft_ms)
             ),
-            "assumed_future_qps": float(assumed_future_qps),
             "window_ttft_predictor_ready": bool(model_ready),
             "window_ttft_model_version": int(model_version),
             "arrival_qps_60s": float(summary["features"]["arrival_qps_60s"]),
