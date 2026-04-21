@@ -258,6 +258,11 @@ inputs/
 # setuptools-scm generated version file
 python/sglang/_version.py
 
+# Keep TTFT smoke-test artifacts under version control.
+!artifacts/
+!artifacts/window_ttft_online/
+!artifacts/window_ttft_online/**
+
 # MUSA section
 # Generated source files by torchada
 sgl-kernel/csrc_musa/
