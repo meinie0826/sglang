@@ -437,9 +437,9 @@ async def async_request_openai_chat_completions(
                     if args.disable_stream:
                         # Non-streaming response
                         response_json = await response.json()
-                        output.generated_text = response_json["choices"][0]["message"][
-                            "content"
-                        ]
+                        output.generated_text = (
+                            response_json["choices"][0]["message"].get("content") or ""
+                        )
                         output.success = True
                         output.latency = time.perf_counter() - st
                         output.ttft = (
@@ -981,8 +981,9 @@ def calculate_metrics(
         if outputs[i].success:
             output_len = outputs[i].output_len
             output_lens.append(output_len)
+            generated_text = outputs[i].generated_text or ""
             retokenized_output_len = len(
-                tokenizer.encode(outputs[i].generated_text, add_special_tokens=False)
+                tokenizer.encode(generated_text, add_special_tokens=False)
             )
             retokenized_output_lens.append(retokenized_output_len)
             if input_requests is not None:
