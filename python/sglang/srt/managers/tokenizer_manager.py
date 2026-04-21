@@ -87,6 +87,9 @@ from sglang.srt.observability.req_time_stats import (
     real_time,
     set_time_batch,
 )
+from sglang.srt.observability.request_latency_predictor import (
+    get_request_latency_predictor,
+)
 from sglang.srt.observability.request_metrics_exporter import (
     RequestMetricsExporterManager,
 )
@@ -222,6 +225,7 @@ class TokenizerManager(TokenizerCommunicatorMixin, TokenizerManagerScoreMixin):
 
         # Init request dispatcher
         self.init_request_dispatcher()
+        self.request_latency_predictor = get_request_latency_predictor()
 
     def init_model_config(self):
         server_args = self.server_args
@@ -1096,6 +1100,7 @@ class TokenizerManager(TokenizerCommunicatorMixin, TokenizerManagerScoreMixin):
         self,
         tokenized_obj: Union[TokenizedGenerateReqInput, TokenizedEmbeddingReqInput],
     ):
+        self.request_latency_predictor.observe_request_arrival()
         tokenized_obj.time_stats.set_api_server_dispatch_time()
         tokenized_obj = wrap_shm_features(tokenized_obj)
         self.send_to_scheduler.send_pyobj(tokenized_obj)
@@ -1108,6 +1113,8 @@ class TokenizerManager(TokenizerCommunicatorMixin, TokenizerManagerScoreMixin):
         ],
     ):
         """Send a batch of tokenized requests as a single batched request to the scheduler."""
+        for _ in tokenized_objs:
+            self.request_latency_predictor.observe_request_arrival()
         if isinstance(tokenized_objs[0], TokenizedGenerateReqInput):
             batch_req = BatchTokenizedGenerateReqInput(batch=tokenized_objs)
         else:
@@ -1657,6 +1664,16 @@ class TokenizerManager(TokenizerCommunicatorMixin, TokenizerManagerScoreMixin):
                 )
                 state.time_stats.set_finished_time()
                 meta_info["e2e_latency"] = state.time_stats.get_e2e_latency()
+                cached_tokens = (
+                    recv_obj.cached_tokens[i]
+                    if not isinstance(recv_obj, BatchEmbeddingOutput)
+                    else 0
+                )
+                prompt_tokens = (
+                    recv_obj.prompt_tokens[i]
+                    if not isinstance(recv_obj, BatchEmbeddingOutput)
+                    else 0
+                )
 
                 if self.server_args.speculative_algorithm:
                     self._calculate_spec_decoding_metrics(meta_info, recv_obj, i)
@@ -1676,8 +1693,18 @@ class TokenizerManager(TokenizerCommunicatorMixin, TokenizerManagerScoreMixin):
                             scheduler_time_stats, completion_tokens
                         )
                     )
+                    # extend_tokens for TTFT prediction data collection.
+                    if not isinstance(recv_obj, BatchEmbeddingOutput):
+                        meta_info["extend_tokens"] = max(0, prompt_tokens - cached_tokens)
 
-                del self.rid_to_state[rid]
+                actual_e2e_ms = state.time_stats.get_e2e_latency() * 1000.0
+                window_snapshot = self.request_latency_predictor.observe_request_completion(
+                    seqlen=prompt_tokens,
+                    cachelen=cached_tokens,
+                    actual_latency_ms=actual_e2e_ms,
+                    active_requests=max(len(self.rid_to_state) - 1, 0),
+                )
+                meta_info.update(window_snapshot)
 
                 # Mark ongoing LoRA request as finished.
                 if self.server_args.enable_lora and state.obj.lora_path:

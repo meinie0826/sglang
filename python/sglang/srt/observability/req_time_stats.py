@@ -424,6 +424,16 @@ class APIServerReqTimeStats(ReqTimeStatsBase):
         decode_latency = self.get_decode_latency()
         if decode_latency > 0.0 and completion_tokens > 0:
             meta_info["decode_throughput"] = completion_tokens / decode_latency
+
+        # TTFT for TTFT prediction data collection.
+        if self.first_token_time and self.created_time:
+            meta_info["ttft"] = self.first_token_time - self.created_time
+
+        # Merge scheduler time stats fields for TTFT prediction.
+        # scheduler_time_stats contains remaining_prefill_chunks_on_arrival, etc.
+        if scheduler_time_stats:
+            meta_info.update(scheduler_time_stats.convert_to_output_meta_info())
+
         return meta_info
 
     def convert_to_gen_ai_span_attrs(self):
@@ -554,11 +564,22 @@ class SchedulerReqTimeStats(ReqTimeStatsBase):
     # Number of prefill retries for this request
     prefill_retry_count: int = 0
 
+    # System load snapshot when request enters waiting_queue.
+    # Used for TTFT prediction: TTFT depends on concurrent load, not just extend_tokens.
+    running_requests_on_arrival: int = 0
+    waiting_requests_on_arrival: int = 0
+    running_decode_tokens_on_arrival: int = 0
+    # Remaining prefill chunks in running_batch's chunked-prefill request.
+    # This is the primary source of queuing delay: new requests must wait
+    # for these chunks to complete before their own prefill can start.
+    remaining_prefill_chunks_on_arrival: int = 0
+    # Total chunks from all requests already in waiting_queue ahead of this one.
+    waiting_queue_total_chunks_on_arrival: int = 0
+
     def __getstate__(self) -> object:
         # send to detokenizer/tokenizer
-        if not self.enable_metrics:
-            return {}
-
+        # Always return full state for SchedulerReqTimeStats, regardless of enable_metrics.
+        # This is critical for TTFT prediction features which need to propagate to tokenizer.
         state = {
             "wait_queue_entry_time": self.wait_queue_entry_time,
             "forward_entry_time": self.forward_entry_time,
@@ -566,8 +587,24 @@ class SchedulerReqTimeStats(ReqTimeStatsBase):
             "prefill_run_batch_end_time": self.prefill_run_batch_end_time,
             "prefill_finished_time": self.prefill_finished_time,
             "diff_realtime_monotonic": global_diff_realtime_monotonic,
+            "running_requests_on_arrival": self.running_requests_on_arrival,
+            "waiting_requests_on_arrival": self.waiting_requests_on_arrival,
+            "running_decode_tokens_on_arrival": self.running_decode_tokens_on_arrival,
+            "remaining_prefill_chunks_on_arrival": self.remaining_prefill_chunks_on_arrival,
+            "waiting_queue_total_chunks_on_arrival": self.waiting_queue_total_chunks_on_arrival,
+            "enable_metrics": self.enable_metrics,
         }
         return state
+
+    def __setstate__(self, state: object):
+        for key in state.keys():
+            if key.endswith("time"):
+                state[key] = convert_time_cross_thread(
+                    state[key],
+                    state["diff_realtime_monotonic"],
+                    global_diff_realtime_monotonic,
+                )
+        self.__dict__.update(state)
 
     def set_scheduler_recv_time(self, ts=None):
         calibrate_time_diff()
@@ -1036,6 +1073,11 @@ class SchedulerReqTimeStats(ReqTimeStatsBase):
                 "queue_time": self.get_queueing_time(),
                 "prefill_waiting_latency": self.get_prefill_waiting_latency(),
                 "prefill_launch_latency": self.get_prefill_launch_latency(),
+                "running_requests_on_arrival": self.running_requests_on_arrival,
+                "waiting_requests_on_arrival": self.waiting_requests_on_arrival,
+                "running_decode_tokens_on_arrival": self.running_decode_tokens_on_arrival,
+                "remaining_prefill_chunks_on_arrival": self.remaining_prefill_chunks_on_arrival,
+                "waiting_queue_total_chunks_on_arrival": self.waiting_queue_total_chunks_on_arrival,
             }
         )
         return meta_data

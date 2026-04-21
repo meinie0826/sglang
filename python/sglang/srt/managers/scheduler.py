@@ -1780,7 +1780,7 @@ class Scheduler(
             if self.disaggregation_mode != DisaggregationMode.NULL:
                 # Invalid request for disaggregated mode
                 if (
-                    recv_req.bootstrap_room is None
+                    req.bootstrap_room is None
                     and self.transfer_backend != TransferBackend.FAKE
                 ):
                     error_msg = (
@@ -1934,6 +1934,51 @@ class Scheduler(
                 )
 
     def _add_request_to_queue(self, req: Req, is_retracted: bool = False):
+        # Snapshot system load for TTFT prediction features.
+        # This must happen before the request enters any queue, regardless of disaggregation mode.
+        # Only do this on attn_tp_rank==0 to avoid duplicate writes from other TP ranks.
+        if self.attn_tp_rank == 0:
+            import math
+            chunk_size = self.server_args.chunked_prefill_size or 1
+            req.time_stats.running_requests_on_arrival = (
+                len(self.running_batch.reqs) if self.running_batch is not None else 0
+            )
+            req.time_stats.waiting_requests_on_arrival = len(self.waiting_queue)
+            req.time_stats.running_decode_tokens_on_arrival = (
+                sum(len(r.output_ids) for r in self.running_batch.reqs)
+                if self.running_batch is not None else 0
+            )
+            # Track chunked prefill progress for TTFT prediction
+            # In PD disaggregation, P node has no decode but may have chunked prefill
+            chunked = self.chunked_req
+            if chunked is None:
+                for r in self.waiting_queue:
+                    total_r = math.ceil(len(r.origin_input_ids) / chunk_size)
+                    if r.is_chunked >= 0 and total_r > r.is_chunked:
+                        chunked = r
+                        break
+            if chunked is None and self.running_batch is not None:
+                for r in self.running_batch.reqs:
+                    total_r = math.ceil(len(r.origin_input_ids) / chunk_size)
+                    if r.is_chunked >= 1 and total_r > r.is_chunked:
+                        chunked = r
+                        break
+                    if r.is_chunked == 0 and total_r > 1 and len(r.output_ids) == 0:
+                        chunked = r
+                        break
+            if chunked is not None:
+                total_chunks = math.ceil(len(chunked.origin_input_ids) / chunk_size)
+                done_chunks = chunked.is_chunked
+                in_flight = (done_chunks == 0 and chunked in (self.running_batch.reqs if self.running_batch else []))
+                remaining_chunks = max(0, total_chunks - done_chunks - (1 if in_flight else 0))
+                req.time_stats.remaining_prefill_chunks_on_arrival = remaining_chunks
+            else:
+                req.time_stats.remaining_prefill_chunks_on_arrival = 0
+            req.time_stats.waiting_queue_total_chunks_on_arrival = sum(
+                math.ceil(len(r.origin_input_ids) / chunk_size)
+                for r in self.waiting_queue
+            )
+            
         if self.disaggregation_mode == DisaggregationMode.NULL:
             if not self._set_or_validate_priority(req):
                 return

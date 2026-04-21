@@ -83,7 +83,13 @@ class FileRequestMetricsExporter(RequestMetricsExporter):
         out_skip_names: Optional[set[str]],
     ):
         super().__init__(server_args, obj_skip_names, out_skip_names)
-        self.export_dir = getattr(server_args, "export_metrics_to_file_dir")
+        # Use model name and chunk size as subdirectory to distinguish data.
+        model_name = os.path.basename(server_args.model_path.rstrip("/"))
+        chunk_size = getattr(server_args, "chunked_prefill_size", 0)
+        subdir = f"{model_name}/chunk_{chunk_size}" if chunk_size else model_name
+        self.export_dir = os.path.join(
+            getattr(server_args, "export_metrics_to_file_dir"), subdir
+        )
         os.makedirs(self.export_dir, exist_ok=True)
 
         # File handler state management

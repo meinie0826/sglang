@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+import json
 import logging
+import os
+from pathlib import Path
 from typing import TYPE_CHECKING, List, Optional, Tuple, Union
 
 import torch
@@ -1051,6 +1054,10 @@ class SchedulerOutputProcessorMixin:
 
                 retraction_counts.append(req.retraction_count)
 
+                import sys
+                print(f"[SCHED_SEND_DEBUG] rid={req.rid[:12]} remaining={req.time_stats.remaining_prefill_chunks_on_arrival} "
+                      f"wq_chunks={req.time_stats.waiting_queue_total_chunks_on_arrival}", 
+                      file=sys.stderr, flush=True)
                 time_stats.append(req.time_stats)
 
                 if not self.spec_algorithm.is_none():
