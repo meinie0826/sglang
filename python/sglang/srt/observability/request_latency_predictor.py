@@ -69,6 +69,7 @@ class OnlineRequestLatencyPredictor:
         "active_requests",
         "arrival_qps_60s",
         "finished_qps_60s",
+        "backlog_growth_qps_60s",
         "finished_count_60s",
         "window_mean_seqlen_60s",
         "window_p90_seqlen_60s",
@@ -78,6 +79,13 @@ class OnlineRequestLatencyPredictor:
         "window_p90_extend_tokens_60s",
         "window_mean_ttft_ms_60s",
         "window_p90_ttft_ms_60s",
+        "delta_active_requests",
+        "delta_arrival_qps_60s",
+        "delta_finished_qps_60s",
+        "delta_backlog_growth_qps_60s",
+        "delta_finished_count_60s",
+        "delta_window_mean_ttft_ms_60s",
+        "delta_window_p90_ttft_ms_60s",
     ]
 
     def __init__(
@@ -252,6 +260,7 @@ class OnlineRequestLatencyPredictor:
                     self.FEATURE_NAMES,
                     feature_names,
                 )
+                return
             self._model = model
             self._model_version = int(attrs.get("model_version", "0"))
             self._last_retrain_time = float(attrs.get("last_retrain_time", "0.0"))
@@ -336,6 +345,7 @@ class OnlineRequestLatencyPredictor:
             "active_requests": float(max(active_requests, 0)),
             "arrival_qps_60s": len(self._arrival_times) / self.aggregation_window_seconds,
             "finished_qps_60s": finished_count / self.aggregation_window_seconds,
+            "backlog_growth_qps_60s": 0.0,
             "finished_count_60s": float(finished_count),
             "window_mean_seqlen_60s": float(seqlens.mean()),
             "window_p90_seqlen_60s": self._percentile(seqlens, 90),
@@ -345,12 +355,69 @@ class OnlineRequestLatencyPredictor:
             "window_p90_extend_tokens_60s": self._percentile(extend_tokens, 90),
             "window_mean_ttft_ms_60s": float(ttfts.mean()),
             "window_p90_ttft_ms_60s": self._percentile(ttfts, 90),
+            "delta_active_requests": 0.0,
+            "delta_arrival_qps_60s": 0.0,
+            "delta_finished_qps_60s": 0.0,
+            "delta_backlog_growth_qps_60s": 0.0,
+            "delta_finished_count_60s": 0.0,
+            "delta_window_mean_ttft_ms_60s": 0.0,
+            "delta_window_p90_ttft_ms_60s": 0.0,
         }
+        previous_features = None
+        if self._latest_window_summary is not None:
+            previous_features = self._latest_window_summary["features"]
+        features = self._apply_trend_features(
+            features=features,
+            reference_features=previous_features,
+        )
         observed_p50_ttft_ms = self._percentile(ttfts, 50)
         return {
             "features": features,
             "observed_p50_ttft_ms": observed_p50_ttft_ms,
         }
+
+    def _apply_trend_features(
+        self,
+        features: Dict[str, float],
+        reference_features: Optional[Dict[str, float]],
+    ) -> Dict[str, float]:
+        enriched = dict(features)
+        enriched["backlog_growth_qps_60s"] = float(
+            enriched.get("arrival_qps_60s", 0.0)
+            - enriched.get("finished_qps_60s", 0.0)
+        )
+        if reference_features is None:
+            return enriched
+
+        enriched["delta_active_requests"] = float(
+            enriched.get("active_requests", 0.0)
+            - reference_features.get("active_requests", 0.0)
+        )
+        enriched["delta_arrival_qps_60s"] = float(
+            enriched.get("arrival_qps_60s", 0.0)
+            - reference_features.get("arrival_qps_60s", 0.0)
+        )
+        enriched["delta_finished_qps_60s"] = float(
+            enriched.get("finished_qps_60s", 0.0)
+            - reference_features.get("finished_qps_60s", 0.0)
+        )
+        enriched["delta_backlog_growth_qps_60s"] = float(
+            enriched.get("backlog_growth_qps_60s", 0.0)
+            - reference_features.get("backlog_growth_qps_60s", 0.0)
+        )
+        enriched["delta_finished_count_60s"] = float(
+            enriched.get("finished_count_60s", 0.0)
+            - reference_features.get("finished_count_60s", 0.0)
+        )
+        enriched["delta_window_mean_ttft_ms_60s"] = float(
+            enriched.get("window_mean_ttft_ms_60s", 0.0)
+            - reference_features.get("window_mean_ttft_ms_60s", 0.0)
+        )
+        enriched["delta_window_p90_ttft_ms_60s"] = float(
+            enriched.get("window_p90_ttft_ms_60s", 0.0)
+            - reference_features.get("window_p90_ttft_ms_60s", 0.0)
+        )
+        return enriched
 
     def _feature_vector(self, features: Dict[str, float]) -> np.ndarray:
         return np.array(
@@ -377,7 +444,10 @@ class OnlineRequestLatencyPredictor:
             for key, value in feature_overrides.items():
                 if key in self.FEATURE_NAMES:
                     scenario[key] = float(value)
-        return scenario
+        return self._apply_trend_features(
+            features=scenario,
+            reference_features=base_features,
+        )
 
     def _accuracy_summary_locked(self) -> dict:
         if not self._prediction_history:
@@ -573,11 +643,25 @@ class OnlineRequestLatencyPredictor:
             "window_ttft_model_version": int(model_version),
             "arrival_qps_60s": float(summary["features"]["arrival_qps_60s"]),
             "finished_qps_60s": float(summary["features"]["finished_qps_60s"]),
+            "backlog_growth_qps_60s": float(
+                summary["features"]["backlog_growth_qps_60s"]
+            ),
             "window_finished_count_60s": float(summary["features"]["finished_count_60s"]),
             "window_mean_seqlen_60s": float(summary["features"]["window_mean_seqlen_60s"]),
             "window_mean_cachelen_60s": float(summary["features"]["window_mean_cachelen_60s"]),
             "window_mean_ttft_ms_60s": float(summary["features"]["window_mean_ttft_ms_60s"]),
             "window_p90_ttft_ms_60s": float(summary["features"]["window_p90_ttft_ms_60s"]),
+            "delta_active_requests": float(summary["features"]["delta_active_requests"]),
+            "delta_arrival_qps_60s": float(summary["features"]["delta_arrival_qps_60s"]),
+            "delta_finished_qps_60s": float(
+                summary["features"]["delta_finished_qps_60s"]
+            ),
+            "delta_window_mean_ttft_ms_60s": float(
+                summary["features"]["delta_window_mean_ttft_ms_60s"]
+            ),
+            "delta_window_p90_ttft_ms_60s": float(
+                summary["features"]["delta_window_p90_ttft_ms_60s"]
+            ),
             "window_ttft_recent_eval_count": int(accuracy_summary["count"]),
             "window_ttft_recent_mae_ms": accuracy_summary["mae_ms"],
             "window_ttft_recent_mape_pct": accuracy_summary["mape_pct"],
