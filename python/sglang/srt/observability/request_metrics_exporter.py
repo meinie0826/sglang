@@ -16,6 +16,17 @@ logger = logging.getLogger(__name__)
 # Fields that should always be excluded from request parameters
 # because they contain non-JSON-serializable objects (e.g., ImageData, tensors)
 ALWAYS_EXCLUDE_FIELDS = {"image_data", "video_data", "audio_data", "input_embeds"}
+REQUEST_PARAMETER_EXCLUDE_FIELDS = {"text", "input_ids"}
+SAMPLING_PARAM_WHITELIST = (
+    "temperature",
+    "top_p",
+    "top_k",
+    "min_p",
+    "max_new_tokens",
+    "min_new_tokens",
+    "n",
+    "ignore_eos",
+)
 
 
 class RequestMetricsExporter(ABC):
@@ -46,6 +57,15 @@ class RequestMetricsExporter(ABC):
                 and field_name not in ALWAYS_EXCLUDE_FIELDS
             ):
                 value = getattr(obj, field_name)
+                if field_name in REQUEST_PARAMETER_EXCLUDE_FIELDS:
+                    continue
+
+                if field_name == "sampling_params":
+                    summarized_sampling_params = self._summarize_sampling_params(value)
+                    if summarized_sampling_params is not None:
+                        request_params[field_name] = summarized_sampling_params
+                    continue
+
                 # Convert to serializable format
                 if value is not None:
                     request_params[field_name] = value
@@ -60,6 +80,16 @@ class RequestMetricsExporter(ABC):
             **filtered_out_meta_info,
         }
         return request_output_data
+
+    @staticmethod
+    def _summarize_sampling_params(value: object) -> Optional[dict]:
+        if not isinstance(value, dict):
+            return None
+        summarized = {}
+        for key in SAMPLING_PARAM_WHITELIST:
+            if key in value and value[key] is not None:
+                summarized[key] = value[key]
+        return summarized or None
 
     @abstractmethod
     async def write_record(

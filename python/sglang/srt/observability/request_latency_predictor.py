@@ -7,7 +7,7 @@ import time
 from collections import deque
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Deque, Dict, Optional
+from typing import Deque, Dict, Optional, Tuple
 
 import numpy as np
 
@@ -23,6 +23,7 @@ except ImportError:
 
 DEFAULT_MODEL_PATH = Path("/tmp/sglang_window_ttft_model.json")
 DEFAULT_EVENT_LOG_PATH = Path("/tmp/sglang_window_ttft_events.jsonl")
+DEFAULT_FUTURE_QPS_LOG_PATH = Path("/tmp/sglang_window_ttft_future_qps.jsonl")
 
 
 @dataclass
@@ -39,6 +40,18 @@ class WindowPredictionRecord:
     ts: float
     actual_p50_ttft_ms: float
     predicted_p50_ttft_ms: float
+
+
+@dataclass
+class FutureQpsPredictionRecord:
+    prediction_ts: float
+    target_ts: float
+    future_qps: float
+    predicted_p50_ttft_ms: float
+    model_version: int
+    base_window_p50_ttft_ms: float
+    base_features: Dict[str, float]
+    scenario_features: Dict[str, float]
 
 
 class OnlineRequestLatencyPredictor:
@@ -113,6 +126,23 @@ class OnlineRequestLatencyPredictor:
             if retrain_interval_seconds is not None
             else envs.SGLANG_WINDOW_TTFT_PREDICTOR_RETRAIN_INTERVAL_SECONDS.get()
         )
+        configured_future_qps_log_path = (
+            envs.SGLANG_WINDOW_TTFT_PREDICTOR_FUTURE_QPS_LOG_PATH.get()
+        )
+        if configured_future_qps_log_path:
+            self.future_qps_log_path = Path(configured_future_qps_log_path)
+        elif self.event_log_path:
+            self.future_qps_log_path = self.event_log_path.with_name(
+                "sglang_window_ttft_future_qps.jsonl"
+            )
+        else:
+            self.future_qps_log_path = DEFAULT_FUTURE_QPS_LOG_PATH
+        self.future_qps_values = self._parse_future_qps_values(
+            envs.SGLANG_WINDOW_TTFT_PREDICTOR_FUTURE_QPS_VALUES.get()
+        )
+        self.future_qps_interval_seconds = (
+            envs.SGLANG_WINDOW_TTFT_PREDICTOR_FUTURE_QPS_INTERVAL_SECONDS.get()
+        )
         self.min_train_samples = min_train_samples
         self.min_window_requests = min_window_requests
         self.xgb_n_estimators = xgb_n_estimators
@@ -123,11 +153,13 @@ class OnlineRequestLatencyPredictor:
         self._completed_records: Deque[CompletedRequestRecord] = deque()
         self._training_samples: Deque[dict] = deque()
         self._prediction_history: Deque[WindowPredictionRecord] = deque()
+        self._pending_future_predictions: Deque[FutureQpsPredictionRecord] = deque()
 
         self._model: Optional[XGBRegressor] = None
         self._model_version: int = 0
         self._last_retrain_time: float = 0.0
         self._last_retrain_sample_count: int = 0
+        self._last_future_prediction_emit_time: float = 0.0
         self._latest_window_summary: Optional[dict] = None
         self._lock = threading.Lock()
 
@@ -159,6 +191,24 @@ class OnlineRequestLatencyPredictor:
             random_state=0,
             n_jobs=1,
         )
+
+    @staticmethod
+    def _parse_future_qps_values(raw: str) -> Tuple[float, ...]:
+        if not raw:
+            return tuple()
+        values = []
+        for part in raw.split(","):
+            part = part.strip()
+            if not part:
+                continue
+            try:
+                values.append(max(0.0, float(part)))
+            except ValueError:
+                logger.warning(
+                    "[WindowTTFTPredictor] invalid future qps value %r, skipping",
+                    part,
+                )
+        return tuple(values)
 
     def _retrain_loop(self) -> None:
         while not self._stop_event.wait(self.retrain_interval_seconds):
@@ -215,16 +265,20 @@ class OnlineRequestLatencyPredictor:
         )
         self._model.save_model(str(self.model_path))
 
-    def _log_event(self, record: dict) -> None:
+    @staticmethod
+    def _append_jsonl(path: Path, record: dict) -> None:
         try:
-            self.event_log_path.parent.mkdir(parents=True, exist_ok=True)
-            with open(self.event_log_path, "a", encoding="utf-8") as f:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            with open(path, "a", encoding="utf-8") as f:
                 f.write(json.dumps(record) + "\n")
         except Exception:
-            logger.exception(
-                "[WindowTTFTPredictor] failed to write event log to %s",
-                self.event_log_path,
-            )
+            logger.exception("[WindowTTFTPredictor] failed to write jsonl to %s", path)
+
+    def _log_event(self, record: dict) -> None:
+        self._append_jsonl(self.event_log_path, record)
+
+    def _log_future_qps_event(self, record: dict) -> None:
+        self._append_jsonl(self.future_qps_log_path, record)
 
     def _prune_locked(self, now: float) -> None:
         arrival_cutoff = now - self.aggregation_window_seconds
@@ -240,6 +294,11 @@ class OnlineRequestLatencyPredictor:
             self._training_samples.popleft()
         while self._prediction_history and self._prediction_history[0].ts < training_cutoff:
             self._prediction_history.popleft()
+        while (
+            self._pending_future_predictions
+            and self._pending_future_predictions[0].target_ts < training_cutoff
+        ):
+            self._pending_future_predictions.popleft()
 
     @staticmethod
     def _percentile(values: np.ndarray, q: float) -> float:
@@ -338,6 +397,82 @@ class OnlineRequestLatencyPredictor:
             "within_20pct_rate": float((rel_err <= 0.20).mean()),
         }
 
+    def _maybe_emit_future_qps_predictions_locked(
+        self, now: float
+    ) -> list[FutureQpsPredictionRecord]:
+        if not self.future_qps_values:
+            return []
+        if self._latest_window_summary is None:
+            return []
+        if (
+            self._last_future_prediction_emit_time > 0.0
+            and now - self._last_future_prediction_emit_time
+            < self.future_qps_interval_seconds
+        ):
+            return []
+
+        base_features = dict(self._latest_window_summary["features"])
+        base_window_p50_ttft_ms = float(
+            self._latest_window_summary["observed_p50_ttft_ms"]
+        )
+        target_ts = now + self.aggregation_window_seconds
+        records = []
+        for future_qps in self.future_qps_values:
+            scenario_features = self._build_future_qps_features_locked(
+                base_features=base_features,
+                future_qps=future_qps,
+            )
+            predicted_ms = self._predict_locked(scenario_features)
+            record = FutureQpsPredictionRecord(
+                prediction_ts=now,
+                target_ts=target_ts,
+                future_qps=float(future_qps),
+                predicted_p50_ttft_ms=float(predicted_ms),
+                model_version=int(self._model_version),
+                base_window_p50_ttft_ms=base_window_p50_ttft_ms,
+                base_features=base_features,
+                scenario_features=scenario_features,
+            )
+            self._pending_future_predictions.append(record)
+            records.append(record)
+
+        self._last_future_prediction_emit_time = now
+        return records
+
+    def _resolve_future_qps_predictions_locked(
+        self, now: float, actual_summary: dict
+    ) -> list[dict]:
+        resolved = []
+        while self._pending_future_predictions and (
+            self._pending_future_predictions[0].target_ts <= now
+        ):
+            record = self._pending_future_predictions.popleft()
+            actual_qps = float(actual_summary["features"]["arrival_qps_60s"])
+            actual_p50_ttft_ms = float(actual_summary["observed_p50_ttft_ms"])
+            resolved.append(
+                {
+                    "event": "future_qps_evaluation",
+                    "time": time.time(),
+                    "prediction_monotonic_ts": record.prediction_ts,
+                    "target_monotonic_ts": record.target_ts,
+                    "future_qps": float(record.future_qps),
+                    "actual_arrival_qps_60s": actual_qps,
+                    "actual_finished_qps_60s": float(
+                        actual_summary["features"]["finished_qps_60s"]
+                    ),
+                    "predicted_window_p50_ttft_ms": float(
+                        record.predicted_p50_ttft_ms
+                    ),
+                    "actual_window_p50_ttft_ms": actual_p50_ttft_ms,
+                    "window_ttft_abs_error_ms": abs(
+                        actual_p50_ttft_ms - record.predicted_p50_ttft_ms
+                    ),
+                    "qps_abs_error": abs(actual_qps - record.future_qps),
+                    "model_version": int(record.model_version),
+                }
+            )
+        return resolved
+
     def observe_request_arrival(self, now: Optional[float] = None) -> None:
         now = time.perf_counter() if now is None else now
         with self._lock:
@@ -393,9 +528,15 @@ class OnlineRequestLatencyPredictor:
                 "features": dict(summary["features"]),
                 "observed_p50_ttft_ms": float(summary["observed_p50_ttft_ms"]),
             }
+            future_qps_evaluations = self._resolve_future_qps_predictions_locked(
+                finish_ts, summary
+            )
             model_ready = self._model is not None
             model_version = self._model_version
             accuracy_summary = self._accuracy_summary_locked()
+            future_qps_predictions = self._maybe_emit_future_qps_predictions_locked(
+                finish_ts
+            )
 
         snapshot = {
             "window_ttft_window_seconds": float(self.aggregation_window_seconds),
@@ -425,6 +566,25 @@ class OnlineRequestLatencyPredictor:
                 **snapshot,
             }
         )
+        for record in future_qps_predictions:
+            self._log_future_qps_event(
+                {
+                    "event": "future_qps_prediction",
+                    "time": time.time(),
+                    "prediction_monotonic_ts": record.prediction_ts,
+                    "target_monotonic_ts": record.target_ts,
+                    "future_qps": float(record.future_qps),
+                    "predicted_window_p50_ttft_ms": float(
+                        record.predicted_p50_ttft_ms
+                    ),
+                    "base_window_p50_ttft_ms": float(record.base_window_p50_ttft_ms),
+                    "model_version": int(record.model_version),
+                    "base_features": record.base_features,
+                    "scenario_features": record.scenario_features,
+                }
+            )
+        for record in future_qps_evaluations:
+            self._log_future_qps_event(record)
         self.maybe_retrain()
         return snapshot
 
@@ -525,6 +685,10 @@ class OnlineRequestLatencyPredictor:
                 "window_ttft_model_version": int(self._model_version),
                 "aggregation_window_seconds": float(self.aggregation_window_seconds),
                 "training_window_seconds": float(self.training_window_seconds),
+                "future_qps_values": list(self.future_qps_values),
+                "future_qps_interval_seconds": float(
+                    self.future_qps_interval_seconds
+                ),
                 "latest_window_summary": latest_window_summary,
                 "recent_accuracy": accuracy_summary,
             }
