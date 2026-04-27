@@ -32,7 +32,7 @@ class CompletedRequestRecord:
     seqlen: int
     cachelen: int
     extend_tokens: int
-    e2e_latency_ms: float
+    ttft_ms: float
 
 
 @dataclass
@@ -58,7 +58,7 @@ class OnlineRequestLatencyPredictor:
     """Window-level predictor for current-window p50 TTFT.
 
     Target:
-        p50 of request e2e latency within the current aggregation window.
+        p50 of request TTFT within the current aggregation window.
 
     Inference:
         Uses the latest window request features, with caller-provided qps replacing
@@ -317,7 +317,7 @@ class OnlineRequestLatencyPredictor:
             [r.extend_tokens for r in self._completed_records], dtype=np.float64
         )
         ttfts = np.array(
-            [r.e2e_latency_ms for r in self._completed_records], dtype=np.float64
+            [r.ttft_ms for r in self._completed_records], dtype=np.float64
         )
 
         features = {
@@ -483,14 +483,14 @@ class OnlineRequestLatencyPredictor:
         self,
         seqlen: int,
         cachelen: int,
-        actual_latency_ms: float,
+        actual_ttft_ms: float,
         active_requests: int,
         finish_ts: Optional[float] = None,
     ) -> Dict[str, float]:
         finish_ts = time.perf_counter() if finish_ts is None else finish_ts
         seqlen = max(0, int(seqlen))
         cachelen = max(0, min(int(cachelen), seqlen))
-        actual_latency_ms = max(0.0, float(actual_latency_ms))
+        actual_ttft_ms = max(0.0, float(actual_ttft_ms))
         extend_tokens = max(0, seqlen - cachelen)
 
         with self._lock:
@@ -501,7 +501,7 @@ class OnlineRequestLatencyPredictor:
                     seqlen=seqlen,
                     cachelen=cachelen,
                     extend_tokens=extend_tokens,
-                    e2e_latency_ms=actual_latency_ms,
+                    ttft_ms=actual_ttft_ms,
                 )
             )
             summary = self._build_window_summary_locked(active_requests)

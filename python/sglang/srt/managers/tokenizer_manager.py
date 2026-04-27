@@ -1697,11 +1697,11 @@ class TokenizerManager(TokenizerCommunicatorMixin, TokenizerManagerScoreMixin):
                     if not isinstance(recv_obj, BatchEmbeddingOutput):
                         meta_info["extend_tokens"] = max(0, prompt_tokens - cached_tokens)
 
-                actual_e2e_ms = state.time_stats.get_e2e_latency() * 1000.0
+                actual_ttft_ms = state.time_stats.get_first_token_latency() * 1000.0
                 window_snapshot = self.request_latency_predictor.observe_request_completion(
                     seqlen=prompt_tokens,
                     cachelen=cached_tokens,
-                    actual_latency_ms=actual_e2e_ms,
+                    actual_ttft_ms=actual_ttft_ms,
                     active_requests=max(len(self.rid_to_state) - 1, 0),
                 )
                 meta_info.update(window_snapshot)
