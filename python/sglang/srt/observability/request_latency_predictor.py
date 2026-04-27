@@ -24,6 +24,7 @@ except ImportError:
 DEFAULT_MODEL_PATH = Path("/tmp/sglang_window_ttft_model.json")
 DEFAULT_EVENT_LOG_PATH = Path("/tmp/sglang_window_ttft_events.jsonl")
 DEFAULT_FUTURE_QPS_LOG_PATH = Path("/tmp/sglang_window_ttft_future_qps.jsonl")
+DEFAULT_LABEL_TRANSFORM = "log1p"
 
 
 @dataclass
@@ -193,6 +194,14 @@ class OnlineRequestLatencyPredictor:
         self._load_model()
         self._retrain_thread.start()
 
+    @staticmethod
+    def _encode_label(ttft_ms: np.ndarray | float) -> np.ndarray | float:
+        return np.log1p(np.maximum(ttft_ms, 0.0))
+
+    @staticmethod
+    def _decode_label(encoded_ttft: np.ndarray | float) -> np.ndarray | float:
+        return np.expm1(encoded_ttft)
+
     def _make_regressor(self) -> XGBRegressor:
         if XGBRegressor is None:
             raise RuntimeError(
@@ -252,6 +261,7 @@ class OnlineRequestLatencyPredictor:
             booster = model.get_booster()
             attrs = booster.attributes()
             feature_names = json.loads(attrs.get("feature_names", "[]"))
+            label_transform = attrs.get("label_transform", "")
             if feature_names and feature_names != self.FEATURE_NAMES:
                 logger.warning(
                     "[WindowTTFTPredictor] feature name mismatch while loading %s; "
@@ -259,6 +269,15 @@ class OnlineRequestLatencyPredictor:
                     self.model_path,
                     self.FEATURE_NAMES,
                     feature_names,
+                )
+                return
+            if label_transform and label_transform != DEFAULT_LABEL_TRANSFORM:
+                logger.warning(
+                    "[WindowTTFTPredictor] label transform mismatch while loading %s; "
+                    "expected=%s loaded=%s",
+                    self.model_path,
+                    DEFAULT_LABEL_TRANSFORM,
+                    label_transform,
                 )
                 return
             self._model = model
@@ -283,6 +302,7 @@ class OnlineRequestLatencyPredictor:
             aggregation_window_seconds=str(self.aggregation_window_seconds),
             training_window_seconds=str(self.training_window_seconds),
             feature_names=json.dumps(self.FEATURE_NAMES),
+            label_transform=DEFAULT_LABEL_TRANSFORM,
         )
         self._model.save_model(str(self.model_path))
 
@@ -429,7 +449,8 @@ class OnlineRequestLatencyPredictor:
         if self._model is None:
             return max(0.0, float(features.get("window_mean_ttft_ms_60s", 0.0)))
         x = self._feature_vector(features).reshape(1, -1)
-        return max(0.0, float(self._model.predict(x)[0]))
+        encoded_pred = float(self._model.predict(x)[0])
+        return max(0.0, float(self._decode_label(encoded_pred)))
 
     def _build_future_qps_features_locked(
         self,
@@ -721,9 +742,10 @@ class OnlineRequestLatencyPredictor:
                 [float(sample["label"]) for sample in self._training_samples],
                 dtype=np.float32,
             )
+            y_encoded = self._encode_label(y).astype(np.float32)
             model = self._make_regressor()
-            model.fit(x, y, verbose=False)
-            preds = model.predict(x)
+            model.fit(x, y_encoded, verbose=False)
+            preds = self._decode_label(model.predict(x))
             mae_ms = float(np.mean(np.abs(preds - y)))
             mape_pct = float(
                 np.mean(np.abs(preds - y) / np.maximum(y, 1e-6)) * 100.0
