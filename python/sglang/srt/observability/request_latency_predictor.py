@@ -143,6 +143,12 @@ class OnlineRequestLatencyPredictor:
         self.future_qps_interval_seconds = (
             envs.SGLANG_WINDOW_TTFT_PREDICTOR_FUTURE_QPS_INTERVAL_SECONDS.get()
         )
+        self.future_qps_horizon_seconds = max(
+            0.0,
+            float(
+                envs.SGLANG_WINDOW_TTFT_PREDICTOR_FUTURE_QPS_HORIZON_SECONDS.get()
+            ),
+        )
         self.future_qps_match_tolerance = max(
             0.0,
             float(
@@ -421,7 +427,7 @@ class OnlineRequestLatencyPredictor:
         base_window_p50_ttft_ms = float(
             self._latest_window_summary["observed_p50_ttft_ms"]
         )
-        target_ts = now + self.aggregation_window_seconds
+        target_ts = now + self.future_qps_horizon_seconds
         records = []
         for future_qps in self.future_qps_values:
             scenario_features = self._build_future_qps_features_locked(
@@ -467,6 +473,9 @@ class OnlineRequestLatencyPredictor:
                     "prediction_monotonic_ts": record.prediction_ts,
                     "target_monotonic_ts": record.target_ts,
                     "future_qps": float(record.future_qps),
+                    "future_qps_horizon_seconds": float(
+                        self.future_qps_horizon_seconds
+                    ),
                     "actual_arrival_qps_60s": actual_qps,
                     "actual_finished_qps_60s": float(
                         actual_summary["features"]["finished_qps_60s"]
@@ -588,6 +597,9 @@ class OnlineRequestLatencyPredictor:
                     "prediction_monotonic_ts": record.prediction_ts,
                     "target_monotonic_ts": record.target_ts,
                     "future_qps": float(record.future_qps),
+                    "future_qps_horizon_seconds": float(
+                        self.future_qps_horizon_seconds
+                    ),
                     "predicted_window_p50_ttft_ms": float(
                         record.predicted_p50_ttft_ms
                     ),
@@ -702,6 +714,9 @@ class OnlineRequestLatencyPredictor:
                 "future_qps_values": list(self.future_qps_values),
                 "future_qps_interval_seconds": float(
                     self.future_qps_interval_seconds
+                ),
+                "future_qps_horizon_seconds": float(
+                    self.future_qps_horizon_seconds
                 ),
                 "future_qps_match_tolerance": float(
                     self.future_qps_match_tolerance
