@@ -143,6 +143,12 @@ class OnlineRequestLatencyPredictor:
         self.future_qps_interval_seconds = (
             envs.SGLANG_WINDOW_TTFT_PREDICTOR_FUTURE_QPS_INTERVAL_SECONDS.get()
         )
+        self.future_qps_match_tolerance = max(
+            0.0,
+            float(
+                envs.SGLANG_WINDOW_TTFT_PREDICTOR_FUTURE_QPS_MATCH_TOLERANCE.get()
+            ),
+        )
         self.min_train_samples = min_train_samples
         self.min_window_requests = min_window_requests
         self.xgb_n_estimators = xgb_n_estimators
@@ -449,6 +455,11 @@ class OnlineRequestLatencyPredictor:
             record = self._pending_future_predictions.popleft()
             actual_qps = float(actual_summary["features"]["arrival_qps_60s"])
             actual_p50_ttft_ms = float(actual_summary["observed_p50_ttft_ms"])
+            qps_abs_error = abs(actual_qps - record.future_qps)
+            qps_match = qps_abs_error <= self.future_qps_match_tolerance
+            raw_window_ttft_abs_error_ms = abs(
+                actual_p50_ttft_ms - record.predicted_p50_ttft_ms
+            )
             resolved.append(
                 {
                     "event": "future_qps_evaluation",
@@ -464,10 +475,13 @@ class OnlineRequestLatencyPredictor:
                         record.predicted_p50_ttft_ms
                     ),
                     "actual_window_p50_ttft_ms": actual_p50_ttft_ms,
-                    "window_ttft_abs_error_ms": abs(
-                        actual_p50_ttft_ms - record.predicted_p50_ttft_ms
+                    "window_ttft_abs_error_ms": (
+                        raw_window_ttft_abs_error_ms if qps_match else None
                     ),
-                    "qps_abs_error": abs(actual_qps - record.future_qps),
+                    "raw_window_ttft_abs_error_ms": raw_window_ttft_abs_error_ms,
+                    "qps_abs_error": qps_abs_error,
+                    "qps_match": qps_match,
+                    "qps_match_tolerance": float(self.future_qps_match_tolerance),
                     "model_version": int(record.model_version),
                 }
             )
@@ -688,6 +702,9 @@ class OnlineRequestLatencyPredictor:
                 "future_qps_values": list(self.future_qps_values),
                 "future_qps_interval_seconds": float(
                     self.future_qps_interval_seconds
+                ),
+                "future_qps_match_tolerance": float(
+                    self.future_qps_match_tolerance
                 ),
                 "latest_window_summary": latest_window_summary,
                 "recent_accuracy": accuracy_summary,
