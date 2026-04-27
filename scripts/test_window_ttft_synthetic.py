@@ -22,6 +22,11 @@ from typing import Dict, List, Sequence
 
 import numpy as np
 
+try:
+    from xgboost import XGBRegressor
+except ImportError:
+    XGBRegressor = None
+
 
 @dataclass
 class RequestRecord:
@@ -222,26 +227,26 @@ def vectorize(rows: Sequence[dict]) -> tuple[np.ndarray, np.ndarray]:
     return x, y
 
 
-def fit_ridge(
-    x_train: np.ndarray,
-    y_train: np.ndarray,
-    ridge_lambda: float,
-) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    mean = x_train.mean(axis=0)
-    std = x_train.std(axis=0)
-    std[std < 1e-6] = 1.0
-    x_norm = (x_train - mean) / std
-    x_aug = np.concatenate([np.ones((x_norm.shape[0], 1)), x_norm], axis=1)
-    reg = np.eye(x_aug.shape[1], dtype=np.float64) * ridge_lambda
-    reg[0, 0] = 0.0
-    weights = np.linalg.solve(x_aug.T @ x_aug + reg, x_aug.T @ y_train)
-    return mean, std, weights
+def fit_xgboost(x_train: np.ndarray, y_train: np.ndarray) -> XGBRegressor:
+    if XGBRegressor is None:
+        raise RuntimeError("xgboost is required for the synthetic TTFT validation script.")
+    model = XGBRegressor(
+        objective="reg:squarederror",
+        n_estimators=96,
+        max_depth=4,
+        learning_rate=0.08,
+        subsample=0.9,
+        colsample_bytree=0.9,
+        reg_lambda=1.0,
+        random_state=0,
+        n_jobs=1,
+    )
+    model.fit(x_train.astype(np.float32), y_train.astype(np.float32), verbose=False)
+    return model
 
 
-def predict(x: np.ndarray, mean: np.ndarray, std: np.ndarray, weights: np.ndarray) -> np.ndarray:
-    x_norm = (x - mean) / std
-    x_aug = np.concatenate([np.ones((x_norm.shape[0], 1)), x_norm], axis=1)
-    return x_aug @ weights
+def predict(x: np.ndarray, model: XGBRegressor) -> np.ndarray:
+    return model.predict(x.astype(np.float32))
 
 
 def summarize_errors(y_true: np.ndarray, y_pred: np.ndarray) -> Dict[str, float]:
@@ -280,7 +285,6 @@ def main() -> None:
     parser.add_argument("--window-seconds", type=float, default=60.0)
     parser.add_argument("--duration-seconds", type=int, default=6 * 3600)
     parser.add_argument("--min-window-requests", type=int, default=5)
-    parser.add_argument("--ridge-lambda", type=float, default=1e-3)
     parser.add_argument("--train-ratio", type=float, default=0.6)
     parser.add_argument("--valid-ratio", type=float, default=0.2)
     parser.add_argument("--dump-jsonl", type=str, default=None)
@@ -309,9 +313,9 @@ def main() -> None:
     x_train, y_train = vectorize(train_rows)
     x_valid, y_valid = vectorize(valid_rows)
     x_test, y_test = vectorize(test_rows)
-    mean, std, weights = fit_ridge(x_train, y_train, args.ridge_lambda)
-    valid_pred = predict(x_valid, mean, std, weights)
-    test_pred = predict(x_test, mean, std, weights)
+    model = fit_xgboost(x_train, y_train)
+    valid_pred = predict(x_valid, model)
+    test_pred = predict(x_test, model)
 
     print("Synthetic window-TTFT validation")
     print(f"  windows_total: {total_windows}")
@@ -341,7 +345,7 @@ def main() -> None:
         scenario = base.copy()
         scenario[0, qps_idx] = future_qps
         scenario[0, FEATURE_NAMES.index("finished_qps_60s")] = future_qps
-        pred = float(predict(scenario, mean, std, weights)[0])
+        pred = float(predict(scenario, model)[0])
         print(f"  qps={future_qps:>4.1f} -> predicted_window_p50_ttft_ms={pred:>8.2f}")
 
 

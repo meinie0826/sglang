@@ -15,6 +15,12 @@ from sglang.srt.environ import envs
 
 logger = logging.getLogger(__name__)
 
+try:
+    from xgboost import XGBRegressor
+except ImportError:
+    XGBRegressor = None
+
+
 DEFAULT_MODEL_PATH = Path("/tmp/sglang_window_ttft_model.json")
 DEFAULT_EVENT_LOG_PATH = Path("/tmp/sglang_window_ttft_events.jsonl")
 
@@ -28,11 +34,22 @@ class CompletedRequestRecord:
     e2e_latency_ms: float
 
 
+@dataclass
+class WindowPredictionRecord:
+    ts: float
+    actual_p50_ttft_ms: float
+    predicted_p50_ttft_ms: float
+
+
 class OnlineRequestLatencyPredictor:
-    """Window-level predictor for window p50 TTFT.
+    """Window-level predictor for current-window p50 TTFT.
 
     Target:
         p50 of request e2e latency within the current aggregation window.
+
+    Inference:
+        Uses the latest window request features, with caller-provided qps replacing
+        the qps features, to estimate the current-window p50 TTFT under that qps.
     """
 
     FEATURE_NAMES = [
@@ -59,7 +76,9 @@ class OnlineRequestLatencyPredictor:
         retrain_interval_seconds: Optional[float] = None,
         min_train_samples: int = 20,
         min_window_requests: int = 5,
-        ridge_lambda: float = 1e-3,
+        xgb_n_estimators: int = 96,
+        xgb_max_depth: int = 4,
+        xgb_learning_rate: float = 0.08,
     ):
         configured_model_path = envs.SGLANG_WINDOW_TTFT_PREDICTOR_MODEL_PATH.get()
         configured_event_log_path = (
@@ -78,6 +97,7 @@ class OnlineRequestLatencyPredictor:
             self.event_log_path = Path(configured_event_log_path)
         else:
             self.event_log_path = DEFAULT_EVENT_LOG_PATH
+
         self.aggregation_window_seconds = (
             aggregation_window_seconds
             if aggregation_window_seconds is not None
@@ -95,18 +115,20 @@ class OnlineRequestLatencyPredictor:
         )
         self.min_train_samples = min_train_samples
         self.min_window_requests = min_window_requests
-        self.ridge_lambda = ridge_lambda
+        self.xgb_n_estimators = xgb_n_estimators
+        self.xgb_max_depth = xgb_max_depth
+        self.xgb_learning_rate = xgb_learning_rate
 
         self._arrival_times: Deque[float] = deque()
         self._completed_records: Deque[CompletedRequestRecord] = deque()
         self._training_samples: Deque[dict] = deque()
+        self._prediction_history: Deque[WindowPredictionRecord] = deque()
 
-        self._mean: Optional[np.ndarray] = None
-        self._std: Optional[np.ndarray] = None
-        self._weights: Optional[np.ndarray] = None
+        self._model: Optional[XGBRegressor] = None
         self._model_version: int = 0
         self._last_retrain_time: float = 0.0
         self._last_retrain_sample_count: int = 0
+        self._latest_window_summary: Optional[dict] = None
         self._lock = threading.Lock()
 
         self._stop_event = threading.Event()
@@ -119,6 +141,25 @@ class OnlineRequestLatencyPredictor:
         self._load_model()
         self._retrain_thread.start()
 
+    def _make_regressor(self) -> XGBRegressor:
+        if XGBRegressor is None:
+            raise RuntimeError(
+                "xgboost is not installed. Please install the python package dependency "
+                "for the window TTFT predictor."
+            )
+        return XGBRegressor(
+            objective="reg:squarederror",
+            n_estimators=self.xgb_n_estimators,
+            max_depth=self.xgb_max_depth,
+            learning_rate=self.xgb_learning_rate,
+            subsample=0.9,
+            colsample_bytree=0.9,
+            reg_lambda=1.0,
+            min_child_weight=1.0,
+            random_state=0,
+            n_jobs=1,
+        )
+
     def _retrain_loop(self) -> None:
         while not self._stop_event.wait(self.retrain_interval_seconds):
             try:
@@ -129,37 +170,50 @@ class OnlineRequestLatencyPredictor:
     def _load_model(self) -> None:
         if not self.model_path.exists():
             return
+        if XGBRegressor is None:
+            logger.warning(
+                "[WindowTTFTPredictor] xgboost unavailable, skipping model load from %s",
+                self.model_path,
+            )
+            return
         try:
-            with open(self.model_path, encoding="utf-8") as f:
-                data = json.load(f)
-            self._model_version = int(data.get("model_version", 0))
-            self._mean = np.array(data["feature_mean"], dtype=np.float64)
-            self._std = np.array(data["feature_std"], dtype=np.float64)
-            self._weights = np.array(data["weights"], dtype=np.float64)
-            self._last_retrain_time = float(data.get("last_retrain_time", 0.0))
+            model = self._make_regressor()
+            model.load_model(str(self.model_path))
+            booster = model.get_booster()
+            attrs = booster.attributes()
+            feature_names = json.loads(attrs.get("feature_names", "[]"))
+            if feature_names and feature_names != self.FEATURE_NAMES:
+                logger.warning(
+                    "[WindowTTFTPredictor] feature name mismatch while loading %s; "
+                    "expected=%s loaded=%s",
+                    self.model_path,
+                    self.FEATURE_NAMES,
+                    feature_names,
+                )
+            self._model = model
+            self._model_version = int(attrs.get("model_version", "0"))
+            self._last_retrain_time = float(attrs.get("last_retrain_time", "0.0"))
         except Exception:
             logger.exception(
-                "[WindowTTFTPredictor] failed to load model from %s",
+                "[WindowTTFTPredictor] failed to load XGBoost model from %s",
                 self.model_path,
             )
 
     def _persist_model(self, sample_count: int) -> None:
-        if self._weights is None or self._mean is None or self._std is None:
+        if self._model is None:
             return
-        payload = {
-            "model_version": self._model_version,
-            "feature_names": self.FEATURE_NAMES,
-            "feature_mean": self._mean.tolist(),
-            "feature_std": self._std.tolist(),
-            "weights": self._weights.tolist(),
-            "sample_count": sample_count,
-            "last_retrain_time": self._last_retrain_time,
-            "aggregation_window_seconds": self.aggregation_window_seconds,
-            "training_window_seconds": self.training_window_seconds,
-        }
         self.model_path.parent.mkdir(parents=True, exist_ok=True)
-        with open(self.model_path, "w", encoding="utf-8") as f:
-            json.dump(payload, f, indent=2)
+        booster = self._model.get_booster()
+        booster.set_attr(
+            model_type="xgboost",
+            model_version=str(self._model_version),
+            last_retrain_time=str(self._last_retrain_time),
+            sample_count=str(sample_count),
+            aggregation_window_seconds=str(self.aggregation_window_seconds),
+            training_window_seconds=str(self.training_window_seconds),
+            feature_names=json.dumps(self.FEATURE_NAMES),
+        )
+        self._model.save_model(str(self.model_path))
 
     def _log_event(self, record: dict) -> None:
         try:
@@ -184,6 +238,8 @@ class OnlineRequestLatencyPredictor:
         training_cutoff = now - self.training_window_seconds
         while self._training_samples and self._training_samples[0]["ts"] < training_cutoff:
             self._training_samples.popleft()
+        while self._prediction_history and self._prediction_history[0].ts < training_cutoff:
+            self._prediction_history.popleft()
 
     @staticmethod
     def _percentile(values: np.ndarray, q: float) -> float:
@@ -228,17 +284,59 @@ class OnlineRequestLatencyPredictor:
     def _feature_vector(self, features: Dict[str, float]) -> np.ndarray:
         return np.array(
             [float(features.get(name, 0.0)) for name in self.FEATURE_NAMES],
-            dtype=np.float64,
+            dtype=np.float32,
         )
 
     def _predict_locked(self, features: Dict[str, float]) -> float:
-        if self._weights is None or self._mean is None or self._std is None:
-            # Warm start heuristic: use current window mean TTFT before model is trained.
+        if self._model is None:
             return max(0.0, float(features.get("window_mean_ttft_ms_60s", 0.0)))
-        x = self._feature_vector(features)
-        x_norm = (x - self._mean) / self._std
-        x_aug = np.concatenate([np.ones(1, dtype=np.float64), x_norm])
-        return max(0.0, float(np.dot(x_aug, self._weights)))
+        x = self._feature_vector(features).reshape(1, -1)
+        return max(0.0, float(self._model.predict(x)[0]))
+
+    def _build_future_qps_features_locked(
+        self,
+        base_features: Dict[str, float],
+        future_qps: float,
+        feature_overrides: Optional[Dict[str, float]] = None,
+    ) -> Dict[str, float]:
+        scenario = dict(base_features)
+        scenario["arrival_qps_60s"] = float(max(future_qps, 0.0))
+        scenario["finished_qps_60s"] = float(max(future_qps, 0.0))
+        if feature_overrides:
+            for key, value in feature_overrides.items():
+                if key in self.FEATURE_NAMES:
+                    scenario[key] = float(value)
+        return scenario
+
+    def _accuracy_summary_locked(self) -> dict:
+        if not self._prediction_history:
+            return {
+                "count": 0,
+                "mae_ms": None,
+                "mape_pct": None,
+                "p50_abs_err_ms": None,
+                "p90_abs_err_ms": None,
+                "within_10pct_rate": None,
+                "within_20pct_rate": None,
+            }
+
+        actual = np.array(
+            [r.actual_p50_ttft_ms for r in self._prediction_history], dtype=np.float64
+        )
+        predicted = np.array(
+            [r.predicted_p50_ttft_ms for r in self._prediction_history], dtype=np.float64
+        )
+        abs_err = np.abs(actual - predicted)
+        rel_err = abs_err / np.maximum(actual, 1e-6)
+        return {
+            "count": int(len(self._prediction_history)),
+            "mae_ms": float(abs_err.mean()),
+            "mape_pct": float(rel_err.mean() * 100.0),
+            "p50_abs_err_ms": self._percentile(abs_err, 50),
+            "p90_abs_err_ms": self._percentile(abs_err, 90),
+            "within_10pct_rate": float((rel_err <= 0.10).mean()),
+            "within_20pct_rate": float((rel_err <= 0.20).mean()),
+        }
 
     def observe_request_arrival(self, now: Optional[float] = None) -> None:
         now = time.perf_counter() if now is None else now
@@ -274,6 +372,7 @@ class OnlineRequestLatencyPredictor:
             summary = self._build_window_summary_locked(active_requests)
             if summary is None:
                 return {}
+
             predicted_window_p50_ttft_ms = self._predict_locked(summary["features"])
             self._training_samples.append(
                 {
@@ -282,8 +381,21 @@ class OnlineRequestLatencyPredictor:
                     "label": float(summary["observed_p50_ttft_ms"]),
                 }
             )
-            model_ready = self._weights is not None
+            self._prediction_history.append(
+                WindowPredictionRecord(
+                    ts=finish_ts,
+                    actual_p50_ttft_ms=float(summary["observed_p50_ttft_ms"]),
+                    predicted_p50_ttft_ms=float(predicted_window_p50_ttft_ms),
+                )
+            )
+            self._latest_window_summary = {
+                "ts": finish_ts,
+                "features": dict(summary["features"]),
+                "observed_p50_ttft_ms": float(summary["observed_p50_ttft_ms"]),
+            }
+            model_ready = self._model is not None
             model_version = self._model_version
+            accuracy_summary = self._accuracy_summary_locked()
 
         snapshot = {
             "window_ttft_window_seconds": float(self.aggregation_window_seconds),
@@ -302,6 +414,9 @@ class OnlineRequestLatencyPredictor:
             "window_mean_cachelen_60s": float(summary["features"]["window_mean_cachelen_60s"]),
             "window_mean_ttft_ms_60s": float(summary["features"]["window_mean_ttft_ms_60s"]),
             "window_p90_ttft_ms_60s": float(summary["features"]["window_p90_ttft_ms_60s"]),
+            "window_ttft_recent_eval_count": int(accuracy_summary["count"]),
+            "window_ttft_recent_mae_ms": accuracy_summary["mae_ms"],
+            "window_ttft_recent_mape_pct": accuracy_summary["mape_pct"],
         }
         self._log_event(
             {
@@ -330,35 +445,20 @@ class OnlineRequestLatencyPredictor:
                     self._feature_vector(sample["features"])
                     for sample in self._training_samples
                 ],
-                dtype=np.float64,
+                dtype=np.float32,
             )
             y = np.array(
                 [float(sample["label"]) for sample in self._training_samples],
-                dtype=np.float64,
+                dtype=np.float32,
             )
-            mean = x.mean(axis=0)
-            std = x.std(axis=0)
-            std[std < 1e-6] = 1.0
-            x_norm = (x - mean) / std
-            x_aug = np.concatenate(
-                [np.ones((x_norm.shape[0], 1), dtype=np.float64), x_norm],
-                axis=1,
-            )
-            reg = np.eye(x_aug.shape[1], dtype=np.float64) * self.ridge_lambda
-            reg[0, 0] = 0.0
-            try:
-                weights = np.linalg.solve(x_aug.T @ x_aug + reg, x_aug.T @ y)
-            except np.linalg.LinAlgError:
-                logger.warning(
-                    "[WindowTTFTPredictor] retrain skipped due to singular matrix"
-                )
-                return
-
-            preds = x_aug @ weights
+            model = self._make_regressor()
+            model.fit(x, y, verbose=False)
+            preds = model.predict(x)
             mae_ms = float(np.mean(np.abs(preds - y)))
-            self._mean = mean
-            self._std = std
-            self._weights = weights
+            mape_pct = float(
+                np.mean(np.abs(preds - y) / np.maximum(y, 1e-6)) * 100.0
+            )
+            self._model = model
             self._model_version += 1
             self._last_retrain_time = now
             self._last_retrain_sample_count = sample_count
@@ -368,11 +468,66 @@ class OnlineRequestLatencyPredictor:
             {
                 "event": "retrain",
                 "time": time.time(),
+                "model_type": "xgboost",
                 "model_version": self._model_version,
                 "sample_count": sample_count,
                 "mae_ms": mae_ms,
+                "mape_pct": mape_pct,
             }
         )
+
+    def predict_with_future_qps(
+        self,
+        future_qps: float,
+        feature_overrides: Optional[Dict[str, float]] = None,
+    ) -> Dict[str, float]:
+        with self._lock:
+            if self._latest_window_summary is None:
+                return {
+                    "window_ttft_predictor_ready": False,
+                    "reason": "no_window_summary",
+                }
+
+            scenario_features = self._build_future_qps_features_locked(
+                base_features=self._latest_window_summary["features"],
+                future_qps=future_qps,
+                feature_overrides=feature_overrides,
+            )
+            predicted_ms = self._predict_locked(scenario_features)
+            accuracy_summary = self._accuracy_summary_locked()
+            latest_actual = float(self._latest_window_summary["observed_p50_ttft_ms"])
+            model_ready = self._model is not None
+            model_version = self._model_version
+
+        return {
+            "window_ttft_predictor_ready": bool(model_ready),
+            "window_ttft_model_version": int(model_version),
+            "future_qps": float(max(future_qps, 0.0)),
+            "latest_window_p50_ttft_ms": latest_actual,
+            "predicted_window_p50_ttft_ms": float(predicted_ms),
+            "latest_window_features": scenario_features,
+            "recent_accuracy": accuracy_summary,
+        }
+
+    def get_predictor_status(self) -> Dict[str, object]:
+        with self._lock:
+            accuracy_summary = self._accuracy_summary_locked()
+            latest_window_summary = None
+            if self._latest_window_summary is not None:
+                latest_window_summary = {
+                    "window_p50_ttft_ms": float(
+                        self._latest_window_summary["observed_p50_ttft_ms"]
+                    ),
+                    "features": dict(self._latest_window_summary["features"]),
+                }
+            return {
+                "window_ttft_predictor_ready": bool(self._model is not None),
+                "window_ttft_model_version": int(self._model_version),
+                "aggregation_window_seconds": float(self.aggregation_window_seconds),
+                "training_window_seconds": float(self.training_window_seconds),
+                "latest_window_summary": latest_window_summary,
+                "recent_accuracy": accuracy_summary,
+            }
 
 
 _global_request_latency_predictor: Optional[OnlineRequestLatencyPredictor] = None

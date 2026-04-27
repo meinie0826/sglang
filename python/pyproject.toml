@@ -76,6 +76,7 @@ dependencies = [
   "uvloop",
   "watchfiles",
   "xgrammar==0.1.32",
+  "xgboost",
   "smg-grpc-servicer>=0.5.0",
 ]
 

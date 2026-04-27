@@ -58,6 +58,7 @@ from fastapi import (
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import ORJSONResponse, Response, StreamingResponse
+from pydantic import BaseModel, Field
 
 from sglang.srt.constants import HEALTH_CHECK_RID_PREFIX
 from sglang.srt.disaggregation.utils import FAKE_BOOTSTRAP_HOST, DisaggregationMode
@@ -192,6 +193,11 @@ class _GlobalState:
     tokenizer_manager: Union[TokenizerManager, MultiTokenizerRouter, TokenizerWorker]
     template_manager: TemplateManager
     scheduler_info: Dict
+
+
+class WindowTTFTPredictionReq(BaseModel):
+    future_qps: float = Field(..., ge=0.0)
+    feature_overrides: Optional[Dict[str, float]] = None
 
 
 _global_state: Optional[_GlobalState] = None
@@ -626,6 +632,21 @@ async def get_load():
         "Please use '/v1/loads' instead."
     )
     return await _global_state.tokenizer_manager.get_load()
+
+
+@app.get("/window_ttft_predictor_status")
+async def window_ttft_predictor_status():
+    """Get current window TTFT predictor status and recent accuracy summary."""
+    return _global_state.tokenizer_manager.request_latency_predictor.get_predictor_status()
+
+
+@app.post("/predict_window_ttft")
+async def predict_window_ttft(obj: WindowTTFTPredictionReq):
+    """Predict window p50 TTFT from latest window features plus a caller-provided qps."""
+    return _global_state.tokenizer_manager.request_latency_predictor.predict_with_future_qps(
+        future_qps=obj.future_qps,
+        feature_overrides=obj.feature_overrides,
+    )
 
 
 # example usage:
