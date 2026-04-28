@@ -8,6 +8,8 @@ MODEL_PATH="${MODEL_PATH:-/media/ssd1/qwen3-32b}"
 
 ROUTER_HOST="${ROUTER_HOST:-0.0.0.0}"
 ROUTER_PORT="${ROUTER_PORT:-30000}"
+CAPACITY_HOST="${CAPACITY_HOST:-127.0.0.1}"
+CAPACITY_PORT="${CAPACITY_PORT:-30001}"
 PREFILL_HOST="${PREFILL_HOST:-127.0.0.1}"
 PREFILL_PORT="${PREFILL_PORT:-31000}"
 DECODE_HOST="${DECODE_HOST:-127.0.0.1}"
@@ -53,6 +55,11 @@ FUTURE_QPS_LOG_PATH="${PREDICTOR_DIR}/sglang_window_ttft_future_qps.jsonl"
 PREFILL_LOG_PATH="${PREFILL_DIR}/server.log"
 DECODE_LOG_PATH="${DECODE_DIR}/server.log"
 ROUTER_LOG_PATH="${ROUTER_DIR}/router.log"
+CAPACITY_LOG_PATH="${ROUTER_DIR}/capacity_estimator.log"
+CAPACITY_EVENTS_LOG_PATH="${ROUTER_DIR}/capacity_estimator_events.jsonl"
+CAPACITY_DECODE_URLS="${CAPACITY_DECODE_URLS:-http://${DECODE_HOST}:${DECODE_PORT}}"
+CAPACITY_DECODE_WEIGHTS="${CAPACITY_DECODE_WEIGHTS:-}"
+CAPACITY_REQUEST_TIMEOUT_SECONDS="${CAPACITY_REQUEST_TIMEOUT_SECONDS:-2.0}"
 
 mkdir -p \
     "${PREFILL_METRICS_DIR}" \
@@ -64,6 +71,9 @@ cleanup() {
     local exit_code=$?
     if [[ -n "${ROUTER_PID:-}" ]]; then
         kill "${ROUTER_PID}" >/dev/null 2>&1 || true
+    fi
+    if [[ -n "${CAPACITY_PID:-}" ]]; then
+        kill "${CAPACITY_PID}" >/dev/null 2>&1 || true
     fi
     if [[ -n "${DECODE_PID:-}" ]]; then
         kill "${DECODE_PID}" >/dev/null 2>&1 || true
@@ -154,6 +164,9 @@ echo "ARTIFACT_DIR=${ARTIFACT_DIR}"
 echo "PREFILL=${PREFILL_HOST}:${PREFILL_PORT} GPUs=${PREFILL_CUDA_VISIBLE_DEVICES} TP=${PREFILL_TP_SIZE}"
 echo "DECODE=${DECODE_HOST}:${DECODE_PORT} GPUs=${DECODE_CUDA_VISIBLE_DEVICES} TP=${DECODE_TP_SIZE}"
 echo "ROUTER=${ROUTER_HOST}:${ROUTER_PORT}"
+echo "CAPACITY_ESTIMATOR=${CAPACITY_HOST}:${CAPACITY_PORT}"
+echo "CAPACITY_DECODE_URLS=${CAPACITY_DECODE_URLS}"
+echo "CAPACITY_DECODE_WEIGHTS=${CAPACITY_DECODE_WEIGHTS:-<uniform>}"
 echo "DISAGG_TRANSFER_BACKEND=${DISAGG_TRANSFER_BACKEND}"
 echo "DISAGG_IB_DEVICE=${DISAGG_IB_DEVICE:-<unset>}"
 echo "DISAGG_IB_DEVICE_AUTO=${DISAGG_IB_DEVICE_AUTO}"
@@ -227,10 +240,34 @@ echo "[start] router pid=${ROUTER_PID} log=${ROUTER_LOG_PATH}"
 
 wait_for_http "router" "http://127.0.0.1:${ROUTER_PORT}/health" "${ROUTER_LOG_PATH}"
 
+CAPACITY_ARGS=(
+    --host "${CAPACITY_HOST}"
+    --port "${CAPACITY_PORT}"
+    --decode-urls "${CAPACITY_DECODE_URLS}"
+    --request-timeout-seconds "${CAPACITY_REQUEST_TIMEOUT_SECONDS}"
+    --log-path "${CAPACITY_EVENTS_LOG_PATH}"
+)
+if [[ -n "${CAPACITY_DECODE_WEIGHTS}" ]]; then
+    CAPACITY_ARGS+=(--decode-weights "${CAPACITY_DECODE_WEIGHTS}")
+fi
+
+(
+    exec python -m sglang.srt.observability.router_capacity_estimator \
+        "${CAPACITY_ARGS[@]}" \
+        >"${CAPACITY_LOG_PATH}" 2>&1
+) &
+CAPACITY_PID=$!
+echo "[start] capacity estimator pid=${CAPACITY_PID} log=${CAPACITY_LOG_PATH}"
+
+wait_for_http "capacity estimator" "http://${CAPACITY_HOST}:${CAPACITY_PORT}/health" "${CAPACITY_LOG_PATH}"
+
 echo
 echo "=== Ready ==="
 echo "Router endpoint:"
 echo "  http://127.0.0.1:${ROUTER_PORT}"
+echo "Router capacity estimator:"
+echo "  curl http://${CAPACITY_HOST}:${CAPACITY_PORT}/router_ttft_capacity_status"
+echo "  curl -X POST http://${CAPACITY_HOST}:${CAPACITY_PORT}/estimate_ttft_capacity -H 'Content-Type: application/json' -d '{\"slo_p50_ttft_ms\": 1000, \"qps_min\": 0.1, \"qps_max\": 5.0, \"qps_step\": 0.1, \"horizon_seconds\": 60}'"
 echo "Decode predictor status:"
 echo "  curl http://${DECODE_HOST}:${DECODE_PORT}/window_ttft_predictor_status"
 echo "Decode what-if qps:"
