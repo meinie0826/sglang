@@ -1,0 +1,1205 @@
+/sglang/python/sglang/launch_server.py:51: UserWarning: 'python -m sglang.launch_server' is still supported, but 'sglang serve' is the recommended entrypoint.
+  Example: sglang serve --model-path <model> [options]
+  warnings.warn(
+TensorRT-LLM MHA only supports page_size of 16, 32 or 64, changing page_size from None to 64.
+Cuda graph is disabled for prefill server when piecewise cuda graph is not enabled.
+No IB devices specified for Mooncake backend, falling back to auto discovery.
+/sglang/python/sglang/srt/entrypoints/http_server.py:173: FastAPIDeprecationWarning: ORJSONResponse is deprecated, FastAPI now serializes data directly to JSON bytes via Pydantic when a return type or response model is set, which is faster and doesn't need a custom response class. Read more in the FastAPI docs: https://fastapi.tiangolo.com/advanced/custom-response/#orjson-or-response-model and https://fastapi.tiangolo.com/tutorial/response-model/
+  from sglang.srt.utils.json_response import (
+[2026-04-28 02:29:56] server_args=ServerArgs(model_path='/media/ssd1/qwen3-32b', tokenizer_path='/media/ssd1/qwen3-32b', tokenizer_mode='auto', tokenizer_worker_num=1, skip_tokenizer_init=False, load_format='auto', model_loader_extra_config='{}', trust_remote_code=True, context_length=None, is_embedding=False, enable_multimodal=None, revision=None, model_impl='auto', host='127.0.0.1', port=31000, fastapi_root_path='', grpc_mode=False, skip_server_warmup=False, warmups=None, nccl_port=None, checkpoint_engine_wait_weights_before_ready=False, ssl_keyfile=None, ssl_certfile=None, ssl_ca_certs=None, ssl_keyfile_password=None, enable_ssl_refresh=False, dtype='auto', quantization=None, quantization_param_path=None, kv_cache_dtype='auto', enable_fp32_lm_head=False, modelopt_quant=None, modelopt_checkpoint_restore_path=None, modelopt_checkpoint_save_path=None, modelopt_export_path=None, quantize_and_serve=False, rl_quant_profile=None, mem_fraction_static=0.72, max_running_requests=128, max_queued_requests=None, max_total_tokens=65536, chunked_prefill_size=8192, enable_dynamic_chunking=False, max_prefill_tokens=32768, prefill_max_requests=None, schedule_policy='fcfs', enable_priority_scheduling=False, disable_priority_preemption=False, default_priority_value=None, abort_on_priority_when_disabled=False, schedule_low_priority_values_first=False, priority_scheduling_preemption_threshold=10, schedule_conservativeness=1.0, page_size=64, swa_full_tokens_ratio=0.8, disable_hybrid_swa_memory=False, radix_eviction_policy='lru', enable_prefill_delayer=False, prefill_delayer_max_delay_passes=30, prefill_delayer_token_usage_low_watermark=None, prefill_delayer_forward_passes_buckets=None, prefill_delayer_wait_seconds_buckets=None, device='cuda', tp_size=2, pp_size=1, pp_max_micro_batch_size=None, pp_async_batch_depth=0, stream_interval=1, stream_response_default_include_usage=False, incremental_streaming_output=False, enable_streaming_session=False, random_seed=51417671, constrained_json_whitespace_pattern=None, constrained_json_disable_any_whitespace=False, watchdog_timeout=300, soft_watchdog_timeout=None, dist_timeout=None, download_dir=None, model_checksum=None, base_gpu_id=0, gpu_id_step=1, sleep_on_idle=False, use_ray=False, custom_sigquit_handler=None, log_level='info', log_level_http='info', log_requests=False, log_requests_level=2, log_requests_format='text', log_requests_target=None, uvicorn_access_log_exclude_prefixes=[], crash_dump_folder=None, show_time_cost=False, enable_metrics=True, enable_mfu_metrics=False, enable_metrics_for_all_schedulers=False, tokenizer_metrics_custom_labels_header='x-custom-labels', tokenizer_metrics_allowed_custom_labels=None, extra_metric_labels=None, bucket_time_to_first_token=None, bucket_inter_token_latency=None, bucket_e2e_request_latency=None, collect_tokens_histogram=False, prompt_tokens_buckets=None, generation_tokens_buckets=None, gc_warning_threshold_secs=0.0, decode_log_interval=40, enable_request_time_stats_logging=True, kv_events_config=None, enable_trace=False, otlp_traces_endpoint='localhost:4317', export_metrics_to_file=True, export_metrics_to_file_dir='/sglang/artifacts/ttft_online/qwen3_32b_pd_ttft_20260428_022944/prefill/metrics', api_key=None, admin_api_key=None, served_model_name='/media/ssd1/qwen3-32b', weight_version='default', chat_template=None, hf_chat_template_name=None, completion_template=None, file_storage_path='sglang_storage', enable_cache_report=False, reasoning_parser=None, tool_call_parser=None, tool_server=None, sampling_defaults='model', dp_size=1, load_balance_method='follow_bootstrap_room', attn_cp_size=1, moe_dp_size=1, dist_init_addr=None, nnodes=1, node_rank=0, json_model_override_args='{}', preferred_sampling_params=None, enable_lora=None, enable_lora_overlap_loading=None, max_lora_rank=None, lora_target_modules=None, lora_paths=None, max_loaded_loras=None, max_loras_per_batch=8, lora_eviction_policy='lru', lora_backend='csgmv', max_lora_chunk_size=16, experts_shared_outer_loras=None, attention_backend='trtllm_mha', decode_attention_backend=None, prefill_attention_backend=None, sampling_backend='flashinfer', grammar_backend='xgrammar', mm_attention_backend=None, fp8_gemm_runner_backend='auto', fp4_gemm_runner_backend='auto', nsa_prefill_backend=None, nsa_decode_backend=None, disable_flashinfer_autotune=False, mamba_backend='triton', speculative_algorithm=None, speculative_draft_model_path=None, speculative_draft_model_revision=None, speculative_draft_load_format=None, speculative_num_steps=None, speculative_eagle_topk=None, speculative_num_draft_tokens=None, speculative_accept_threshold_single=1.0, speculative_accept_threshold_acc=1.0, speculative_token_map=None, speculative_attention_mode='prefill', speculative_draft_attention_backend=None, speculative_moe_runner_backend='auto', speculative_moe_a2a_backend=None, speculative_draft_model_quantization=None, speculative_ngram_min_bfs_breadth=1, speculative_ngram_max_bfs_breadth=10, speculative_ngram_match_type='BFS', speculative_ngram_max_trie_depth=18, speculative_ngram_capacity=10000000, enable_multi_layer_eagle=False, ep_size=1, moe_a2a_backend='none', moe_runner_backend='auto', flashinfer_mxfp4_moe_precision='default', enable_flashinfer_allreduce_fusion=False, enforce_disable_flashinfer_allreduce_fusion=False, enable_aiter_allreduce_fusion=False, deepep_mode='auto', ep_num_redundant_experts=0, ep_dispatch_algorithm=None, init_expert_location='trivial', enable_eplb=False, eplb_algorithm='auto', eplb_rebalance_num_iterations=1000, eplb_rebalance_layers_per_chunk=None, eplb_min_rebalancing_utilization_threshold=1.0, expert_distribution_recorder_mode=None, expert_distribution_recorder_buffer_size=1000, enable_expert_distribution_metrics=False, deepep_config=None, moe_dense_tp_size=None, elastic_ep_backend=None, enable_elastic_expert_backup=False, mooncake_ib_device=None, max_mamba_cache_size=None, mamba_ssm_dtype=None, mamba_full_memory_ratio=0.9, mamba_scheduler_strategy='no_buffer', mamba_track_interval=256, linear_attn_backend='triton', linear_attn_decode_backend=None, linear_attn_prefill_backend=None, enable_hierarchical_cache=False, hicache_ratio=2.0, hicache_size=0, hicache_write_policy='write_through', hicache_io_backend='kernel', hicache_mem_layout='layer_first', hicache_storage_backend=None, hicache_storage_prefetch_policy='best_effort', hicache_storage_backend_extra_config=None, enable_hisparse=False, hisparse_config=None, enable_lmcache=False, kt_weight_path=None, kt_method='AMXINT4', kt_cpuinfer=None, kt_threadpool_count=2, kt_num_gpu_experts=None, kt_max_deferred_experts_per_token=None, dllm_algorithm=None, dllm_algorithm_config=None, enable_double_sparsity=False, ds_channel_config_path=None, ds_heavy_channel_num=32, ds_heavy_token_num=256, ds_heavy_channel_type='qk', ds_sparse_decode_threshold=4096, cpu_offload_gb=0, offload_group_size=-1, offload_num_in_group=1, offload_prefetch_step=1, offload_mode='cpu', multi_item_scoring_delimiter=None, disable_radix_cache=False, cuda_graph_max_bs=512, cuda_graph_bs=[1, 2, 4, 8, 12, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232, 240, 248, 256, 272, 288, 304, 320, 336, 352, 368, 384, 400, 416, 432, 448, 464, 480, 496, 512], disable_cuda_graph=True, disable_cuda_graph_padding=False, enable_profile_cuda_graph=False, enable_cudagraph_gc=False, enable_layerwise_nvtx_marker=False, enable_nccl_nvls=False, enable_symm_mem=False, disable_flashinfer_cutlass_moe_fp4_allgather=False, enable_tokenizer_batch_encode=False, disable_tokenizer_batch_decode=False, disable_outlines_disk_cache=False, disable_custom_all_reduce=False, enable_mscclpp=False, enable_torch_symm_mem=False, pre_warm_nccl=False, disable_overlap_schedule=False, enable_mixed_chunk=False, enable_dp_attention=False, enable_dp_lm_head=False, enable_two_batch_overlap=False, enable_single_batch_overlap=False, tbo_token_distribution_threshold=0.48, enable_torch_compile=False, disable_piecewise_cuda_graph=True, enforce_piecewise_cuda_graph=False, enable_torch_compile_debug_mode=False, torch_compile_max_bs=32, piecewise_cuda_graph_max_tokens=8192, piecewise_cuda_graph_tokens=[4, 8, 12, 16, 20, 24, 28, 32, 48, 64, 80, 96, 112, 128, 144, 160, 176, 192, 208, 224, 240, 256, 288, 320, 352, 384, 416, 448, 480, 512, 576, 640, 704, 768, 832, 896, 960, 1024, 1280, 1536, 1792, 2048, 2304, 2560, 2816, 3072, 3328, 3584, 3840, 4096, 4608, 5120, 5632, 6144, 6656, 7168, 7680, 8192], piecewise_cuda_graph_compiler='eager', torchao_config='', enable_nan_detection=False, enable_p2p_check=False, triton_attention_reduce_in_fp32=False, triton_attention_num_kv_splits=8, triton_attention_split_tile_size=None, num_continuous_decode_steps=1, delete_ckpt_after_loading=False, enable_memory_saver=False, enable_weights_cpu_backup=False, enable_draft_weights_cpu_backup=False, allow_auto_truncate=False, enable_custom_logit_processor=False, flashinfer_mla_disable_ragged=False, disable_shared_experts_fusion=False, disable_chunked_prefix_cache=False, disable_fast_image_processor=False, keep_mm_feature_on_device=False, enable_return_hidden_states=False, enable_return_routed_experts=False, scheduler_recv_interval=1, numa_node=None, enable_deterministic_inference=False, rl_on_policy_target=None, enable_attn_tp_input_scattered=False, gc_threshold=None, enable_nsa_prefill_context_parallel=False, nsa_prefill_cp_mode='round-robin-split', enable_fused_qk_norm_rope=False, enable_precise_embedding_interpolation=False, enable_fused_moe_sum_all_reduce=False, enable_prefill_context_parallel=False, prefill_cp_mode='in-seq-split', enable_dynamic_batch_tokenizer=False, dynamic_batch_tokenizer_batch_size=32, dynamic_batch_tokenizer_batch_timeout=0.002, debug_tensor_dump_output_folder=None, debug_tensor_dump_layers=None, debug_tensor_dump_input_file=None, debug_tensor_dump_inject=False, disaggregation_mode='prefill', disaggregation_transfer_backend='mooncake', disaggregation_bootstrap_port=8998, disaggregation_ib_device=None, disaggregation_decode_enable_offload_kvcache=False, num_reserved_decode_tokens=512, disaggregation_decode_polling_interval=1, encoder_only=False, language_only=False, encoder_transfer_backend='zmq_to_scheduler', encoder_urls=[], enable_adaptive_dispatch_to_encoder=False, custom_weight_loader=[], weight_loader_disable_mmap=False, remote_instance_weight_loader_seed_instance_ip=None, remote_instance_weight_loader_seed_instance_service_port=None, remote_instance_weight_loader_send_weights_group_ports=None, remote_instance_weight_loader_backend='nccl', remote_instance_weight_loader_start_seed_via_transfer_engine=False, engine_info_bootstrap_port=6789, modelexpress_config=None, enable_pdmux=False, pdmux_config_path=None, sm_group_num=8, enable_broadcast_mm_inputs_process=False, enable_prefix_mm_cache=False, mm_enable_dp_encoder=False, mm_process_config={}, limit_mm_data_per_request=None, enable_mm_global_cache=False, decrypted_config_file=None, decrypted_draft_config_file=None, forward_hooks=None)
+[2026-04-28 02:29:57] mp.set_executable /usr/bin/python -> /tmp/sglang_temp_file_1777343397.1542745_6423441.sh (script='#!/bin/sh\nexec numactl --cpunodebind=0 --membind=0 /usr/bin/python "$@"')
+[2026-04-28 02:29:57] mp.set_executable revert to /usr/bin/python
+[2026-04-28 02:29:57] mp.set_executable /usr/bin/python -> /tmp/sglang_temp_file_1777343397.1572232_7929911.sh (script='#!/bin/sh\nexec numactl --cpunodebind=0 --membind=0 /usr/bin/python "$@"')
+[2026-04-28 02:29:57] mp.set_executable revert to /usr/bin/python
+[2026-04-28 02:29:58] CommonKVBootstrapServer started successfully on 127.0.0.1:8998
+[2026-04-28 02:29:58] Using default HuggingFace chat template with detected content format: string
+[2026-04-28 02:30:07 TP1] NUMA affinity is already constrained for process, skipping NUMA node configuration for GPU. Remove your constraints to allow automatic configuration.
+[2026-04-28 02:30:07 TP0] NUMA affinity is already constrained for process, skipping NUMA node configuration for GPU. Remove your constraints to allow automatic configuration.
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+W20260428 02:30:08.890264 68473 transfer_engine_py.cpp:77] Using default malloc/free for protocol: rdma
+I20260428 02:30:08.890328 68473 transfer_engine_impl.cpp:586] Metrics reporting is disabled (set MC_TE_METRIC=1 to enable)
+I20260428 02:30:08.890338 68473 transfer_engine_impl.cpp:105] Transfer Engine parseHostNameWithPort. server_name: 10.83.77.226 port: 12001
+I20260428 02:30:08.890363 68473 transfer_engine_impl.cpp:172] Transfer Engine RPC using P2P handshake, listening on 10.83.77.226:16152
+I20260428 02:30:08.890429 68473 transfer_engine_impl.cpp:217] Auto-discovering topology...
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+W20260428 02:30:08.907445 68472 transfer_engine_py.cpp:77] Using default malloc/free for protocol: rdma
+I20260428 02:30:08.907507 68472 transfer_engine_impl.cpp:586] Metrics reporting is disabled (set MC_TE_METRIC=1 to enable)
+I20260428 02:30:08.907514 68472 transfer_engine_impl.cpp:105] Transfer Engine parseHostNameWithPort. server_name: 10.83.77.226 port: 12001
+I20260428 02:30:08.907536 68472 transfer_engine_impl.cpp:172] Transfer Engine RPC using P2P handshake, listening on 10.83.77.226:15669
+I20260428 02:30:08.907608 68472 transfer_engine_impl.cpp:217] Auto-discovering topology...
+I20260428 02:30:08.910754 68473 topology.cpp:120] Device mlx5_100 port 1 is available
+I20260428 02:30:08.915376 68472 topology.cpp:120] Device mlx5_100 port 1 is available
+I20260428 02:30:08.915560 68473 topology.cpp:120] Device mlx5_101 port 1 is available
+I20260428 02:30:08.920162 68472 topology.cpp:120] Device mlx5_101 port 1 is available
+I20260428 02:30:08.920277 68473 topology.cpp:120] Device mlx5_102 port 1 is available
+I20260428 02:30:08.924944 68472 topology.cpp:120] Device mlx5_102 port 1 is available
+I20260428 02:30:08.925004 68473 topology.cpp:120] Device mlx5_103 port 1 is available
+I20260428 02:30:08.929576 68472 topology.cpp:120] Device mlx5_103 port 1 is available
+I20260428 02:30:08.934744 68472 topology.cpp:120] Device mlx5_10 port 1 is available
+I20260428 02:30:08.939483 68472 topology.cpp:120] Device mlx5_0 port 1 is available
+I20260428 02:30:08.942086 68473 topology.cpp:120] Device mlx5_10 port 1 is available
+I20260428 02:30:08.944386 68472 topology.cpp:120] Device mlx5_11 port 1 is available
+I20260428 02:30:08.946758 68473 topology.cpp:120] Device mlx5_0 port 1 is available
+I20260428 02:30:08.951388 68473 topology.cpp:120] Device mlx5_11 port 1 is available
+I20260428 02:30:08.957006 68473 topology.cpp:120] Device mlx5_12 port 1 is available
+I20260428 02:30:08.962064 68472 topology.cpp:120] Device mlx5_12 port 1 is available
+I20260428 02:30:08.962518 68473 topology.cpp:120] Device mlx5_13 port 1 is available
+I20260428 02:30:08.967556 68472 topology.cpp:120] Device mlx5_13 port 1 is available
+I20260428 02:30:08.968084 68473 topology.cpp:120] Device mlx5_14 port 1 is available
+I20260428 02:30:08.973141 68472 topology.cpp:120] Device mlx5_14 port 1 is available
+I20260428 02:30:08.977839 68472 topology.cpp:120] Device mlx5_1 port 1 is available
+I20260428 02:30:08.982841 68472 topology.cpp:120] Device mlx5_15 port 1 is available
+I20260428 02:30:08.986138 68473 topology.cpp:120] Device mlx5_1 port 1 is available
+I20260428 02:30:08.988317 68472 topology.cpp:120] Device mlx5_16 port 1 is available
+I20260428 02:30:08.990852 68473 topology.cpp:120] Device mlx5_15 port 1 is available
+I20260428 02:30:08.993801 68472 topology.cpp:120] Device mlx5_17 port 1 is available
+I20260428 02:30:08.995287 68472 transfer_engine_impl.cpp:232] Topology discovery complete. Found 14 HCAs.
+I20260428 02:30:08.995294 68472 rdma_transport.cpp:63] [RDMA] Relaxed ordering disabled via MC_IB_PCI_RELAXED_ORDERING=0. Falling back to strict ordering.
+I20260428 02:30:08.995319 68472 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:08.996043 68473 topology.cpp:120] Device mlx5_16 port 1 is available
+I20260428 02:30:09.000157 68472 rdma_context.cpp:575] Find best gid index: 3 on mlx5_11/ (network state: with network device)
+I20260428 02:30:09.000808 68472 rdma_context.cpp:140] RDMA device: mlx5_11, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0c:c2
+I20260428 02:30:09.000823 68472 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:09.001248 68473 topology.cpp:120] Device mlx5_17 port 1 is available
+I20260428 02:30:09.002676 68473 transfer_engine_impl.cpp:232] Topology discovery complete. Found 14 HCAs.
+I20260428 02:30:09.002684 68473 rdma_transport.cpp:63] [RDMA] Relaxed ordering disabled via MC_IB_PCI_RELAXED_ORDERING=0. Falling back to strict ordering.
+I20260428 02:30:09.002707 68473 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:09.005897 68472 rdma_context.cpp:575] Find best gid index: 0 on mlx5_100/ (network state: without network device)
+I20260428 02:30:09.006529 68472 rdma_context.cpp:140] RDMA device: mlx5_100, LID: 1, GID: (GID_Index 0) fe:80:00:00:00:00:00:00:08:20:e7:03:00:54:47:4c
+I20260428 02:30:09.006542 68472 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:09.007661 68473 rdma_context.cpp:575] Find best gid index: 3 on mlx5_11/ (network state: with network device)
+I20260428 02:30:09.008248 68473 rdma_context.cpp:140] RDMA device: mlx5_11, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0c:c2
+I20260428 02:30:09.008262 68473 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:09.024135 68472 rdma_context.cpp:575] Find best gid index: 0 on mlx5_101/ (network state: without network device)
+I20260428 02:30:09.024788 68472 rdma_context.cpp:140] RDMA device: mlx5_101, LID: 3, GID: (GID_Index 0) fe:80:00:00:00:00:00:00:08:20:e7:03:00:54:47:4d
+I20260428 02:30:09.024809 68472 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:09.026141 68473 rdma_context.cpp:575] Find best gid index: 0 on mlx5_100/ (network state: without network device)
+I20260428 02:30:09.040967 68473 rdma_context.cpp:140] RDMA device: mlx5_100, LID: 1, GID: (GID_Index 0) fe:80:00:00:00:00:00:00:08:20:e7:03:00:54:47:4c
+I20260428 02:30:09.040983 68473 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:09.042079 68472 rdma_context.cpp:575] Find best gid index: 0 on mlx5_102/ (network state: without network device)
+I20260428 02:30:09.042686 68472 rdma_context.cpp:140] RDMA device: mlx5_102, LID: 5, GID: (GID_Index 0) fe:80:00:00:00:00:00:00:08:20:e7:03:00:54:47:4e
+I20260428 02:30:09.042701 68472 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:09.047823 68472 rdma_context.cpp:575] Find best gid index: 0 on mlx5_103/ (network state: without network device)
+I20260428 02:30:09.048465 68472 rdma_context.cpp:140] RDMA device: mlx5_103, LID: 6, GID: (GID_Index 0) fe:80:00:00:00:00:00:00:08:20:e7:03:00:54:47:4f
+I20260428 02:30:09.048478 68472 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:09.058960 68473 rdma_context.cpp:575] Find best gid index: 0 on mlx5_101/ (network state: without network device)
+I20260428 02:30:09.059553 68473 rdma_context.cpp:140] RDMA device: mlx5_101, LID: 3, GID: (GID_Index 0) fe:80:00:00:00:00:00:00:08:20:e7:03:00:54:47:4d
+I20260428 02:30:09.059566 68473 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:09.064580 68473 rdma_context.cpp:575] Find best gid index: 0 on mlx5_102/ (network state: without network device)
+I20260428 02:30:09.065136 68473 rdma_context.cpp:140] RDMA device: mlx5_102, LID: 5, GID: (GID_Index 0) fe:80:00:00:00:00:00:00:08:20:e7:03:00:54:47:4e
+I20260428 02:30:09.065150 68473 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:09.066294 68472 rdma_context.cpp:575] Find best gid index: 3 on mlx5_10/ (network state: with network device)
+I20260428 02:30:09.066959 68472 rdma_context.cpp:140] RDMA device: mlx5_10, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0c:42
+I20260428 02:30:09.066972 68472 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:09.070163 68473 rdma_context.cpp:575] Find best gid index: 0 on mlx5_103/ (network state: without network device)
+I20260428 02:30:09.070736 68473 rdma_context.cpp:140] RDMA device: mlx5_103, LID: 6, GID: (GID_Index 0) fe:80:00:00:00:00:00:00:08:20:e7:03:00:54:47:4f
+I20260428 02:30:09.070749 68473 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:09.075631 68473 rdma_context.cpp:575] Find best gid index: 3 on mlx5_10/ (network state: with network device)
+I20260428 02:30:09.076164 68473 rdma_context.cpp:140] RDMA device: mlx5_10, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0c:42
+I20260428 02:30:09.076176 68473 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:09.084292 68472 rdma_context.cpp:575] Find best gid index: 3 on mlx5_0/ (network state: with network device)
+I20260428 02:30:09.084946 68472 rdma_context.cpp:140] RDMA device: mlx5_0, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:0a:53:4d:e2
+I20260428 02:30:09.084961 68472 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:09.089871 68472 rdma_context.cpp:575] Find best gid index: 3 on mlx5_12/ (network state: with network device)
+I20260428 02:30:09.090598 68472 rdma_context.cpp:140] RDMA device: mlx5_12, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0d:42
+I20260428 02:30:09.090610 68472 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:09.093302 68473 rdma_context.cpp:575] Find best gid index: 3 on mlx5_0/ (network state: with network device)
+I20260428 02:30:09.093922 68473 rdma_context.cpp:140] RDMA device: mlx5_0, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:0a:53:4d:e2
+I20260428 02:30:09.093935 68473 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:09.095495 68472 rdma_context.cpp:575] Find best gid index: 3 on mlx5_13/ (network state: with network device)
+I20260428 02:30:09.096133 68472 rdma_context.cpp:140] RDMA device: mlx5_13, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0d:c2
+I20260428 02:30:09.096144 68472 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:09.101018 68472 rdma_context.cpp:575] Find best gid index: 3 on mlx5_14/ (network state: with network device)
+I20260428 02:30:09.101649 68472 rdma_context.cpp:140] RDMA device: mlx5_14, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0e:42
+I20260428 02:30:09.101663 68472 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:09.106117 68472 rdma_context.cpp:575] Find best gid index: 3 on mlx5_1/ (network state: with network device)
+I20260428 02:30:09.106766 68472 rdma_context.cpp:140] RDMA device: mlx5_1, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:0a:53:4d:e2
+I20260428 02:30:09.106778 68472 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:09.111261 68473 rdma_context.cpp:575] Find best gid index: 3 on mlx5_12/ (network state: with network device)
+I20260428 02:30:09.111822 68473 rdma_context.cpp:140] RDMA device: mlx5_12, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0d:42
+I20260428 02:30:09.111835 68473 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:09.116839 68473 rdma_context.cpp:575] Find best gid index: 3 on mlx5_13/ (network state: with network device)
+I20260428 02:30:09.117411 68473 rdma_context.cpp:140] RDMA device: mlx5_13, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0d:c2
+I20260428 02:30:09.117427 68473 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:09.124392 68472 rdma_context.cpp:575] Find best gid index: 3 on mlx5_15/ (network state: with network device)
+I20260428 02:30:09.125068 68472 rdma_context.cpp:140] RDMA device: mlx5_15, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0e:c2
+I20260428 02:30:09.125088 68472 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:09.130045 68472 rdma_context.cpp:575] Find best gid index: 3 on mlx5_16/ (network state: with network device)
+I20260428 02:30:09.130676 68472 rdma_context.cpp:140] RDMA device: mlx5_16, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0f:42
+I20260428 02:30:09.130689 68472 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:09.135520 68473 rdma_context.cpp:575] Find best gid index: 3 on mlx5_14/ (network state: with network device)
+I20260428 02:30:09.135599 68472 rdma_context.cpp:575] Find best gid index: 3 on mlx5_17/ (network state: with network device)
+I20260428 02:30:09.136169 68473 rdma_context.cpp:140] RDMA device: mlx5_14, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0e:42
+I20260428 02:30:09.136186 68473 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:09.153367 68473 rdma_context.cpp:575] Find best gid index: 3 on mlx5_1/ (network state: with network device)
+I20260428 02:30:09.154026 68473 rdma_context.cpp:140] RDMA device: mlx5_1, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:0a:53:4d:e2
+I20260428 02:30:09.154040 68473 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:09.154584 68472 rdma_context.cpp:140] RDMA device: mlx5_17, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0f:c2
+I20260428 02:30:09.154659 68472 transfer_engine_impl.cpp:271] Using RDMA transport (RoCE/iWARP)
+[2026-04-28 02:30:09 TP0] Init torch distributed begin.
+I20260428 02:30:09.171509 68473 rdma_context.cpp:575] Find best gid index: 3 on mlx5_15/ (network state: with network device)
+I20260428 02:30:09.172134 68473 rdma_context.cpp:140] RDMA device: mlx5_15, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0e:c2
+I20260428 02:30:09.172147 68473 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:09.177246 68473 rdma_context.cpp:575] Find best gid index: 3 on mlx5_16/ (network state: with network device)
+I20260428 02:30:09.177860 68473 rdma_context.cpp:140] RDMA device: mlx5_16, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0f:42
+I20260428 02:30:09.177873 68473 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:09.195494 68473 rdma_context.cpp:575] Find best gid index: 3 on mlx5_17/ (network state: with network device)
+I20260428 02:30:09.196095 68473 rdma_context.cpp:140] RDMA device: mlx5_17, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0f:c2
+I20260428 02:30:09.196157 68473 transfer_engine_impl.cpp:271] Using RDMA transport (RoCE/iWARP)
+[2026-04-28 02:30:09 TP1] Init torch distributed begin.
+[Gloo] Rank 1 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+[Gloo] Rank 0 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+[Gloo] Rank 0 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+[Gloo] Rank 1 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+[2026-04-28 02:30:10 TP0] sglang is using nccl==2.28.3
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[2026-04-28 02:30:10 TP0] Init torch distributed ends. elapsed=1.75 s, mem usage=1.16 GB
+[2026-04-28 02:30:10 TP1] Init torch distributed ends. elapsed=1.71 s, mem usage=1.16 GB
+[2026-04-28 02:30:11 TP1] Load weight begin. avail mem=176.58 GB
+[2026-04-28 02:30:11 TP0] Load weight begin. avail mem=176.58 GB
+Multi-thread loading shards:   0% Completed | 0/17 [00:00<?, ?it/s]Multi-thread loading shards:   6% Completed | 1/17 [00:00<00:09,  1.76it/s]Multi-thread loading shards:  12% Completed | 2/17 [00:01<00:10,  1.46it/s]Multi-thread loading shards:  18% Completed | 3/17 [00:02<00:10,  1.39it/s]Multi-thread loading shards:  24% Completed | 4/17 [00:02<00:09,  1.35it/s]Multi-thread loading shards:  29% Completed | 5/17 [00:03<00:09,  1.33it/s]Multi-thread loading shards:  35% Completed | 6/17 [00:04<00:08,  1.35it/s]Multi-thread loading shards:  41% Completed | 7/17 [00:05<00:07,  1.35it/s]Multi-thread loading shards:  47% Completed | 8/17 [00:05<00:06,  1.37it/s]Multi-thread loading shards:  53% Completed | 9/17 [00:06<00:05,  1.38it/s]Multi-thread loading shards:  59% Completed | 10/17 [00:07<00:05,  1.39it/s]Multi-thread loading shards:  65% Completed | 11/17 [00:07<00:04,  1.40it/s]Multi-thread loading shards:  71% Completed | 12/17 [00:08<00:03,  1.40it/s]Multi-thread loading shards:  76% Completed | 13/17 [00:09<00:02,  1.41it/s]Multi-thread loading shards:  82% Completed | 14/17 [00:10<00:02,  1.42it/s]Multi-thread loading shards:  88% Completed | 15/17 [00:10<00:01,  1.42it/s]Multi-thread loading shards:  94% Completed | 16/17 [00:11<00:00,  1.42it/s]Multi-thread loading shards: 100% Completed | 17/17 [00:11<00:00,  1.59it/s]Multi-thread loading shards: 100% Completed | 17/17 [00:11<00:00,  1.43it/s]
+[2026-04-28 02:30:23 TP1] Load weight end. elapsed=12.08 s, type=Qwen3ForCausalLM, avail mem=145.99 GB, mem usage=30.59 GB.
+[2026-04-28 02:30:23 TP0] Load weight end. elapsed=12.11 s, type=Qwen3ForCausalLM, avail mem=145.99 GB, mem usage=30.59 GB.
+[2026-04-28 02:30:23 TP0] Using KV cache dtype: torch.bfloat16
+[2026-04-28 02:30:23 TP1] KV Cache is allocated. #tokens: 65536, K size: 4.00 GB, V size: 4.00 GB
+[2026-04-28 02:30:23 TP0] KV Cache is allocated. #tokens: 65536, K size: 4.00 GB, V size: 4.00 GB
+[2026-04-28 02:30:23 TP1] Memory pool end. avail mem=137.71 GB
+[2026-04-28 02:30:23 TP0] Memory pool end. avail mem=137.71 GB
+[2026-04-28 02:30:23 TP1] Disable piecewise CUDA graph because --disable-piecewise-cuda-graph is set
+[2026-04-28 02:30:23 TP0] Disable piecewise CUDA graph because --disable-piecewise-cuda-graph is set
+[2026-04-28 02:30:25 TP0] max_total_num_tokens=65536, chunked_prefill_size=8192, max_prefill_tokens=32768, max_running_requests=128, context_len=40960, available_gpu_mem=136.61 GB
+[2026-04-28 02:30:26] INFO:     Started server process [68000]
+[2026-04-28 02:30:26] INFO:     Waiting for application startup.
+[2026-04-28 02:30:26] Using default chat sampling params from model generation config: {'temperature': 0.6, 'top_k': 20, 'top_p': 0.95}
+[2026-04-28 02:30:26] INFO:     Application startup complete.
+[2026-04-28 02:30:26] INFO:     Uvicorn running on http://127.0.0.1:31000 (Press CTRL+C to quit)
+[2026-04-28 02:30:27] INFO:     127.0.0.1:48136 - "GET /model_info HTTP/1.1" 200 OK
+[2026-04-28 02:30:27] Start of pd disaggregation warmup ...
+2026-04-28 02:30:28,590 - CUTE_DSL - WARNING - [handle_import_error] - Unexpected error during package walk: cutlass.cute.experimental
+[2026-04-28 02:30:28 TP1] Unexpected error during package walk: cutlass.cute.experimental
+2026-04-28 02:30:28,689 - CUTE_DSL - WARNING - [handle_import_error] - Unexpected error during package walk: cutlass.cute.experimental
+[2026-04-28 02:30:28 TP0] Unexpected error during package walk: cutlass.cute.experimental
+[2026-04-28 02:30:29 TP0] Prefill batch, #new-seq: 1, #new-token: 64, #cached-token: 0, token usage: 0.00, #running-req: 0, #queue-req: 0, #prealloc-req: 0, #inflight-req: 1, cuda graph: False, input throughput (token/s): 0.00
+[2026-04-28 02:30:29 TP0] Req Time Stats(rid=123c03d8bcf048c68830ea542fb49028, bootstrap_room=0, input len=4, output len=1, type=prefill): bootstrap_queue_duration(0.67ms) = bootstrap(0.65ms) + alloc_wait(0.02ms); queue_duration=1.10ms, forward_duration=2333.15ms, start=1020236.988, transfer_speed=0.47GB/s, transfer_total=8.00MB, #retries=0
+[2026-04-28 02:30:29] INFO:     127.0.0.1:48138 - "POST /generate HTTP/1.1" 200 OK
+[2026-04-28 02:30:29] End of prefill disaggregation mode warmup with status 200, resp: [{'text': '0', 'output_ids': [15], 'meta_info': {'id': '123c03d8bcf048c68830ea542fb49028', 'finish_reason': {'type': 'length', 'length': 0}, 'prompt_tokens': 4, 'weight_version': 'default', 'total_retractions': 0, 'forward_entry_time': 1777343427.655833, 'prefill_finished_time': 1777343429.9711344, 'queue_time': 0.0010976791381835938, 'prefill_waiting_latency': 0.39215946197509766, 'prefill_launch_latency': 1.922713041305542, 'running_requests_on_arrival': 0, 'waiting_requests_on_arrival': 0, 'running_decode_tokens_on_arrival': 0, 'remaining_prefill_chunks_on_arrival': 0, 'waiting_queue_total_chunks_on_arrival': 0, 'reasoning_tokens': 0, 'completion_tokens': 1, 'cached_tokens': 0, 'cached_tokens_details': None, 'dp_rank': None, 'e2e_latency': 2.474162570084445, 'request_received_ts': 1777343427.5171587, 'api_server_dispatch_finish_ts': 1777343427.5175552, 'request_finished_ts': 1777343429.9913213, 'inference_time': 2.3354884281288832, 'decode_throughput': 161186.1928994971, 'ttft': 2.4741563660791144, 'extend_tokens': 4, 'response_sent_to_client_ts': 1777343429.992348}}]
+[2026-04-28 02:30:29] The server is fired up and ready to roll!
+[2026-04-28 02:30:30 TP0] Prefill batch, #new-seq: 1, #new-token: 64, #cached-token: 0, token usage: 0.00, #running-req: 0, #queue-req: 0, #prealloc-req: 0, #inflight-req: 1, cuda graph: False, input throughput (token/s): 75.99
+[2026-04-28 02:30:30 TP0] Req Time Stats(rid=HEALTH_CHECK_1777343430.714745, bootstrap_room=0, input len=1, output len=1, type=prefill): bootstrap_queue_duration(0.36ms) = bootstrap(0.34ms) + alloc_wait(0.02ms); queue_duration=0.20ms, forward_duration=99.31ms, start=1020240.050, transfer_speed=7.72GB/s, transfer_total=8.00MB, #retries=0
+[2026-04-28 02:30:31] INFO:     127.0.0.1:48146 - "GET /health HTTP/1.1" 200 OK
+[2026-04-28 02:30:38] INFO:     127.0.0.1:49360 - "PRI %2A HTTP/2.0" 404 Not Found
+[2026-04-28 02:30:38] WARNING:  Invalid HTTP request received.
+[2026-04-28 02:30:38] INFO:     127.0.0.1:49366 - "PRI %2A HTTP/2.0" 404 Not Found
+[2026-04-28 02:30:38] WARNING:  Invalid HTTP request received.
+[2026-04-28 02:30:38 TP0] Prefill batch, #new-seq: 1, #new-token: 64, #cached-token: 0, token usage: 0.00, #running-req: 0, #queue-req: 0, #prealloc-req: 0, #inflight-req: 1, cuda graph: False, input throughput (token/s): 8.63
+[2026-04-28 02:30:38 TP0] Req Time Stats(rid=HEALTH_CHECK_1777343438.2014422, bootstrap_room=0, input len=1, output len=1, type=prefill): bootstrap_queue_duration(0.33ms) = bootstrap(0.32ms) + alloc_wait(0.01ms); queue_duration=0.16ms, forward_duration=31.87ms, start=1020247.536, transfer_speed=8.19GB/s, transfer_total=8.00MB, #retries=0
+[2026-04-28 02:30:39] INFO:     127.0.0.1:49356 - "GET /health HTTP/1.1" 200 OK
+[2026-04-28 02:30:39] INFO:     127.0.0.1:49376 - "GET /server_info HTTP/1.1" 200 OK
+[2026-04-28 02:30:39] INFO:     127.0.0.1:49376 - "GET /model_info HTTP/1.1" 200 OK
+/sglang/python/sglang/srt/entrypoints/openai/serving_chat.py:619: FastAPIDeprecationWarning: ORJSONResponse is deprecated, FastAPI now serializes data directly to JSON bytes via Pydantic when a return type or response model is set, which is faster and doesn't need a custom response class. Read more in the FastAPI docs: https://fastapi.tiangolo.com/advanced/custom-response/#orjson-or-response-model and https://fastapi.tiangolo.com/tutorial/response-model/
+  return self.create_error_response(str(e))
+[2026-04-28 02:31:13] INFO:     127.0.0.1:36354 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:31:13] INFO:     127.0.0.1:36390 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:31:13 TP0] Prefill batch, #new-seq: 1, #new-token: 64, #cached-token: 0, token usage: 0.12, #running-req: 0, #queue-req: 0, #prealloc-req: 3, #inflight-req: 1, cuda graph: False, input throughput (token/s): 1.83
+E20260428 02:31:13.244580 69303 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:13.244616 69303 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_100, mark it inactive
+E20260428 02:31:13.248862 69356 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:13.248893 69356 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_103, mark it inactive
+[2026-04-28 02:31:13] INFO:     127.0.0.1:36424 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:31:13] INFO:     127.0.0.1:36390 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:31:13 TP0] Prefill batch, #new-seq: 2, #new-token: 7744, #cached-token: 0, token usage: 0.19, #running-req: 0, #queue-req: 0, #prealloc-req: 4, #inflight-req: 3, cuda graph: False, input throughput (token/s): 272.14
+[2026-04-28 02:31:13] INFO:     127.0.0.1:36454 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:31:13] INFO:     127.0.0.1:36390 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:31:13] INFO:     127.0.0.1:36454 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:31:13 TP0] Prefill batch, #new-seq: 1, #new-token: 4736, #cached-token: 0, token usage: 0.31, #running-req: 0, #queue-req: 1, #prealloc-req: 3, #inflight-req: 4, cuda graph: False, input throughput (token/s): 51083.21
+[2026-04-28 02:31:13] INFO:     127.0.0.1:36508 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:31:13 TP0] Prefill batch, #new-seq: 2, #new-token: 8192, #cached-token: 128, token usage: 0.44, #running-req: 0, #queue-req: 0, #prealloc-req: 4, #inflight-req: 5, cuda graph: False, input throughput (token/s): 18984.75
+[2026-04-28 02:31:13] INFO:     127.0.0.1:36544 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:31:14 TP0] Prefill batch, #new-seq: 3, #new-token: 7936, #cached-token: 0, token usage: 0.56, #running-req: 0, #queue-req: 0, #prealloc-req: 11, #inflight-req: 8, cuda graph: False, input throughput (token/s): 38852.56
+[2026-04-28 02:31:14] INFO:     127.0.0.1:36592 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:31:14] INFO:     127.0.0.1:36606 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+E20260428 02:31:14.238653 69359 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_0, local.peer_nic_path: 10.83.77.226:15433@mlx5_13, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:31:14.238688 69359 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_13, mark it inactive
+E20260428 02:31:14.244237 69327 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_102, local.peer_nic_path: 10.83.77.226:15433@mlx5_12, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:31:14.244270 69327 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_12, mark it inactive
+E20260428 02:31:14.245589 69306 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_101, local.peer_nic_path: 10.83.77.226:15433@mlx5_11, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:31:14.245621 69306 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_11, mark it inactive
+E20260428 02:31:14.246716 69307 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_101, local.peer_nic_path: 10.83.77.226:15433@mlx5_12, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:31:14.246752 69307 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_12, mark it inactive
+E20260428 02:31:14.251641 69365 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_0, local.peer_nic_path: 10.83.77.226:16246@mlx5_13, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:31:14.251675 69365 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_13, mark it inactive
+E20260428 02:31:14.254503 69353 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_103, local.peer_nic_path: 10.83.77.226:16246@mlx5_12, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:31:14.254534 69353 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_12, mark it inactive
+E20260428 02:31:14.255533 69298 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:14.255563 69298 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_101, mark it inactive
+E20260428 02:31:14.271778 69359 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:14.271806 69359 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_100, mark it inactive
+E20260428 02:31:14.287422 69356 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:14.287457 69356 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_100, mark it inactive
+E20260428 02:31:14.288885 69365 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:14.288918 69365 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_100, mark it inactive
+E20260428 02:31:14.291754 69303 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:14.291783 69303 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_101, mark it inactive
+E20260428 02:31:14.294193 69298 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:14.294224 69298 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_100, mark it inactive
+E20260428 02:31:14.295775 69359 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:14.295804 69359 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_101, mark it inactive
+E20260428 02:31:14.309396 69356 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:14.309425 69356 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_101, mark it inactive
+E20260428 02:31:14.311110 69365 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:14.311141 69365 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_101, mark it inactive
+E20260428 02:31:14.312685 69303 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:14.312711 69303 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_102, mark it inactive
+E20260428 02:31:14.317137 69359 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:14.317169 69359 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_102, mark it inactive
+E20260428 02:31:14.318728 69298 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:14.318756 69298 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_102, mark it inactive
+[2026-04-28 02:31:14 TP0] Prefill batch, #new-seq: 1, #new-token: 8192, #cached-token: 0, token usage: 0.69, #running-req: 0, #queue-req: 0, #prealloc-req: 15, #inflight-req: 8, cuda graph: False, input throughput (token/s): 29086.07
+E20260428 02:31:14.329646 69356 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:14.329672 69356 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_102, mark it inactive
+E20260428 02:31:14.331259 69365 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:14.331287 69365 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_102, mark it inactive
+E20260428 02:31:14.332860 69303 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:14.332885 69303 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_103, mark it inactive
+E20260428 02:31:14.333974 69359 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:14.334000 69359 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_103, mark it inactive
+E20260428 02:31:14.335569 69298 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:14.335593 69298 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_103, mark it inactive
+E20260428 02:31:14.355159 69365 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:14.355185 69365 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_103, mark it inactive
+[2026-04-28 02:31:14] INFO:     127.0.0.1:36630 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:31:14] INFO:     127.0.0.1:36642 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:31:14 TP0] Prefill batch, #new-seq: 1, #new-token: 8192, #cached-token: 0, token usage: 0.81, #running-req: 0, #queue-req: 0, #prealloc-req: 17, #inflight-req: 8, cuda graph: False, input throughput (token/s): 24947.63
+[2026-04-28 02:31:14] INFO:     127.0.0.1:36642 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:31:15 TP0] Prefill batch, #new-seq: 1, #new-token: 8192, #cached-token: 0, token usage: 0.85, #running-req: 0, #queue-req: 0, #prealloc-req: 20, #inflight-req: 8, cuda graph: False, input throughput (token/s): 19652.97
+[2026-04-28 02:31:15 TP0] Prefill batch, #new-seq: 1, #new-token: 2880, #cached-token: 0, token usage: 0.85, #running-req: 0, #queue-req: 0, #prealloc-req: 21, #inflight-req: 9, cuda graph: False, input throughput (token/s): 63972.57
+E20260428 02:31:15.358587 69359 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_0, local.peer_nic_path: 10.83.77.226:15433@mlx5_10, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:31:15.358614 69359 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_10, mark it inactive
+E20260428 02:31:15.422580 69365 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_0, local.peer_nic_path: 10.83.77.226:16246@mlx5_10, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:31:15.422613 69365 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_10, mark it inactive
+E20260428 02:31:17.962155 69352 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3aa01f40, length: 64, dest_addr: 0x5fc41200, local_nic: mlx5_103, peer_nic: 10.83.77.226:16246@mlx5_100, dest_rkey: 2091435, retry_cnt: 1): transport retry counter exceeded
+E20260428 02:31:17.962179 69335 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3a491700, length: 64, dest_addr: 0x5c9b2200, local_nic: mlx5_103, peer_nic: 10.83.77.226:15433@mlx5_100, dest_rkey: 2095286, retry_cnt: 0): transport retry counter exceeded
+E20260428 02:31:21.715190 69352 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3aa01f40, length: 64, dest_addr: 0x5fc41200, local_nic: mlx5_103, peer_nic: 10.83.77.226:16246@mlx5_101, dest_rkey: 2337446, retry_cnt: 2): transport retry counter exceeded
+E20260428 02:31:21.715305 69335 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3a491700, length: 64, dest_addr: 0x5c9b2200, local_nic: mlx5_103, peer_nic: 10.83.77.226:15433@mlx5_100, dest_rkey: 2095286, retry_cnt: 1): transport retry counter exceeded
+E20260428 02:31:25.473107 69335 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3a491700, length: 64, dest_addr: 0x5c9b2200, local_nic: mlx5_103, peer_nic: 10.83.77.226:15433@mlx5_101, dest_rkey: 2342076, retry_cnt: 2): transport retry counter exceeded
+E20260428 02:31:25.473275 69352 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3aa01f40, length: 64, dest_addr: 0x5fc41200, local_nic: mlx5_103, peer_nic: 10.83.77.226:16246@mlx5_102, dest_rkey: 2207148, retry_cnt: 3): transport retry counter exceeded
+E20260428 02:31:29.231447 69335 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3a491700, length: 64, dest_addr: 0x5c9b2200, local_nic: mlx5_103, peer_nic: 10.83.77.226:15433@mlx5_102, dest_rkey: 2209711, retry_cnt: 3): transport retry counter exceeded
+E20260428 02:31:29.231729 69352 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3aa01f40, length: 64, dest_addr: 0x5fc41200, local_nic: mlx5_103, peer_nic: 10.83.77.226:16246@mlx5_103, dest_rkey: 2471338, retry_cnt: 4): transport retry counter exceeded
+E20260428 02:31:29.241905 69352 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_103, local.peer_nic_path: 10.83.77.226:16246@mlx5_10, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:31:29.241932 69352 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_10, mark it inactive
+E20260428 02:31:29.251613 69352 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_103, local.peer_nic_path: 10.83.77.226:16246@mlx5_0, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:31:29.251634 69352 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_0, mark it inactive
+E20260428 02:31:29.261062 69352 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_103, local.peer_nic_path: 10.83.77.226:16246@mlx5_11, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:31:29.261083 69352 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_11, mark it inactive
+E20260428 02:31:29.279162 69356 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:29.279191 69356 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_103, mark it inactive
+E20260428 02:31:29.282546 69320 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_100, local.peer_nic_path: 10.83.77.226:16246@mlx5_12, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:31:29.282581 69320 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_12, mark it inactive
+E20260428 02:31:29.288972 69319 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_100, local.peer_nic_path: 10.83.77.226:16246@mlx5_10, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:31:29.289001 69319 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_10, mark it inactive
+E20260428 02:31:29.328502 69364 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:29.328531 69364 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_102, mark it inactive
+E20260428 02:31:30.398628 69364 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_0, local.peer_nic_path: 10.83.77.226:16246@mlx5_10, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:31:30.398658 69364 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_10, mark it inactive
+E20260428 02:31:30.422546 69343 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_101, local.peer_nic_path: 10.83.77.226:16246@mlx5_10, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:31:30.422575 69343 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_10, mark it inactive
+E20260428 02:31:30.441371 69303 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:30.441401 69303 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_100, mark it inactive
+E20260428 02:31:30.442965 69380 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:30.442994 69380 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_103, mark it inactive
+E20260428 02:31:30.460776 69380 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:30.460803 69380 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_100, mark it inactive
+E20260428 02:31:30.462419 69303 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:30.462446 69303 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_102, mark it inactive
+E20260428 02:31:30.475230 69380 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:30.475255 69380 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_101, mark it inactive
+E20260428 02:31:30.488711 69380 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:30.488736 69380 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_102, mark it inactive
+E20260428 02:31:32.989734 69335 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3a491700, length: 64, dest_addr: 0x5c9b2200, local_nic: mlx5_103, peer_nic: 10.83.77.226:15433@mlx5_103, dest_rkey: 2472632, retry_cnt: 4): transport retry counter exceeded
+E20260428 02:31:32.999709 69335 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_103, local.peer_nic_path: 10.83.77.226:15433@mlx5_10, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:31:32.999734 69335 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_10, mark it inactive
+E20260428 02:31:33.009399 69335 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_103, local.peer_nic_path: 10.83.77.226:15433@mlx5_0, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:31:33.009420 69335 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_0, mark it inactive
+E20260428 02:31:33.019016 69335 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_103, local.peer_nic_path: 10.83.77.226:15433@mlx5_11, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:31:33.019037 69335 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_11, mark it inactive
+E20260428 02:31:33.028780 69335 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_103, local.peer_nic_path: 10.83.77.226:15433@mlx5_12, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:31:33.028801 69335 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_12, mark it inactive
+E20260428 02:31:34.046586 69359 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_0, local.peer_nic_path: 10.83.77.226:15433@mlx5_12, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:31:34.046617 69359 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_12, mark it inactive
+E20260428 02:31:34.047827 69336 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_103, local.peer_nic_path: 10.83.77.226:15433@mlx5_13, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:31:34.047855 69336 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_13, mark it inactive
+E20260428 02:31:34.051903 69349 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:34.051934 69349 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_102, mark it inactive
+E20260428 02:31:34.063370 69352 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3f1447c0, length: 512, dest_addr: 0x5ba81880, local_nic: mlx5_103, peer_nic: 10.83.77.226:16246@mlx5_100, dest_rkey: 1558408, retry_cnt: 1): transport retry counter exceeded
+E20260428 02:31:34.076200 69349 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:34.076231 69349 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_100, mark it inactive
+I20260428 02:31:34.078529 69336 rdma_endpoint.cpp:116] Connection has been established
+E20260428 02:31:34.079486 69297 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:34.079519 69297 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_100, mark it inactive
+E20260428 02:31:34.117260 69349 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:34.117286 69349 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_101, mark it inactive
+E20260428 02:31:34.150797 69349 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:34.150821 69349 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_103, mark it inactive
+E20260428 02:31:37.821590 69352 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3f1447c0, length: 512, dest_addr: 0x5ba81880, local_nic: mlx5_103, peer_nic: 10.83.77.226:16246@mlx5_101, dest_rkey: 1790548, retry_cnt: 2): transport retry counter exceeded
+E20260428 02:31:37.821936 69335 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x38e20780, length: 64, dest_addr: 0x5cb5bfc0, local_nic: mlx5_103, peer_nic: 10.83.77.226:15433@mlx5_100, dest_rkey: 2093484, retry_cnt: 1): transport retry counter exceeded
+[2026-04-28 02:31:38 TP0] Prefill batch, #new-seq: 1, #new-token: 64, #cached-token: 0, token usage: 0.86, #running-req: 0, #queue-req: 0, #prealloc-req: 21, #inflight-req: 10, cuda graph: False, input throughput (token/s): 124.98
+[2026-04-28 02:31:38 TP0] Req Time Stats(rid=HEALTH_CHECK_1777343498.2091043, bootstrap_room=0, input len=1, output len=1, type=prefill): bootstrap_queue_duration(0.33ms) = bootstrap(0.32ms) + alloc_wait(0.01ms); queue_duration=0.16ms, forward_duration=32.50ms, start=1020307.544, transfer_speed=7.80GB/s, transfer_total=8.00MB, #retries=0
+[2026-04-28 02:31:39] INFO:     127.0.0.1:54444 - "GET /health HTTP/1.1" 200 OK
+E20260428 02:31:41.579885 69352 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3f1447c0, length: 512, dest_addr: 0x5ba81880, local_nic: mlx5_103, peer_nic: 10.83.77.226:16246@mlx5_102, dest_rkey: 1649964, retry_cnt: 3): transport retry counter exceeded
+E20260428 02:31:41.580265 69335 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3a491700, length: 64, dest_addr: 0x5c9b2200, local_nic: mlx5_103, peer_nic: 10.83.77.226:15433@mlx5_101, dest_rkey: 2342076, retry_cnt: 2): transport retry counter exceeded
+I20260428 02:31:43.230722 70124 transfer_engine_py.cpp:482] Sync batch data transfer timeout after 30000001711ns
+[2026-04-28 02:31:43 TP0] Prefill transfer failed for request rank=0 req.rid='d1e6b144c99c45449e9835e8c36c40a4' req.bootstrap_room=963263204282719081 with exception KVTransferError(bootstrap_room=963263204282719081): Failed due to an unknown reason from another rank
+[2026-04-28 02:31:43 TP1] Prefill transfer failed for request rank=1 req.rid='d1e6b144c99c45449e9835e8c36c40a4' req.bootstrap_room=963263204282719081 with exception KVTransferError(bootstrap_room=963263204282719081): Failed due to an unknown reason from another rank
+[2026-04-28 02:31:43 TP0] Req Time Stats(rid=d1e6b144c99c45449e9835e8c36c40a4, bootstrap_room=963263204282719081, input len=9, output len=1, type=prefill): bootstrap_queue_duration(6.43ms) = bootstrap(6.42ms) + alloc_wait(0.01ms); queue_duration=0.19ms, forward_duration=30152.01ms, start=1020282.408, transfer_speed=0.00GB/s, transfer_total=0.00MB, #retries=0
+[2026-04-28 02:31:43] INFO:     127.0.0.1:36342 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+E20260428 02:31:43.254765 69367 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:43.254797 69367 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_100, mark it inactive
+E20260428 02:31:43.277367 69349 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:43.277398 69349 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_102, mark it inactive
+E20260428 02:31:43.279016 69367 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:43.279042 69367 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_101, mark it inactive
+E20260428 02:31:43.296749 69367 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:43.296774 69367 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_102, mark it inactive
+E20260428 02:31:43.307194 69367 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:43.307219 69367 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_103, mark it inactive
+E20260428 02:31:43.335850 69361 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:43.335881 69361 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_102, mark it inactive
+[2026-04-28 02:31:43] INFO:     127.0.0.1:36342 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+E20260428 02:31:43.346163 69350 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:43.346194 69350 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_101, mark it inactive
+E20260428 02:31:43.347728 69362 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:43.347757 69362 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_103, mark it inactive
+E20260428 02:31:43.348438 69307 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_101, local.peer_nic_path: 10.83.77.226:15433@mlx5_13, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:31:43.348472 69307 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_13, mark it inactive
+[2026-04-28 02:31:43 TP0] Prefill batch, #new-seq: 1, #new-token: 4160, #cached-token: 128, token usage: 0.92, #running-req: 0, #queue-req: 0, #prealloc-req: 20, #inflight-req: 9, cuda graph: False, input throughput (token/s): 12.49
+[2026-04-28 02:31:43] INFO:     127.0.0.1:36342 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+E20260428 02:31:43.374905 69361 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:43.374933 69361 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_100, mark it inactive
+E20260428 02:31:43.376456 69350 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:43.376482 69350 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_100, mark it inactive
+E20260428 02:31:43.378376 69362 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:43.378398 69362 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_100, mark it inactive
+E20260428 02:31:43.401083 69362 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:43.401108 69362 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_101, mark it inactive
+E20260428 02:31:43.402871 69361 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:43.402892 69361 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_101, mark it inactive
+E20260428 02:31:43.420027 69350 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:43.420053 69350 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_103, mark it inactive
+E20260428 02:31:45.338347 69335 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x38e1c740, length: 64, dest_addr: 0x5cb57f80, local_nic: mlx5_103, peer_nic: 10.83.77.226:15433@mlx5_102, dest_rkey: 2206889, retry_cnt: 3): transport retry counter exceeded
+E20260428 02:31:45.338697 69352 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3f1447c0, length: 512, dest_addr: 0x5ba81880, local_nic: mlx5_103, peer_nic: 10.83.77.226:16246@mlx5_103, dest_rkey: 1960168, retry_cnt: 4): transport retry counter exceeded
+E20260428 02:31:45.365824 69352 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_103, local.peer_nic_path: 10.83.77.226:16246@mlx5_11, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:31:45.365849 69352 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_11, mark it inactive
+E20260428 02:31:45.375739 69352 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_103, local.peer_nic_path: 10.83.77.226:16246@mlx5_12, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:31:45.375761 69352 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_12, mark it inactive
+E20260428 02:31:45.385955 69365 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:45.385987 69365 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_101, mark it inactive
+E20260428 02:31:45.386924 69353 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_103, local.peer_nic_path: 10.83.77.226:16246@mlx5_0, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:31:45.386953 69353 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_0, mark it inactive
+E20260428 02:31:45.391507 69344 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_101, local.peer_nic_path: 10.83.77.226:16246@mlx5_13, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:31:45.391536 69344 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_13, mark it inactive
+E20260428 02:31:45.395078 69355 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:45.395109 69355 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_100, mark it inactive
+E20260428 02:31:45.420006 69365 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:45.420035 69365 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_100, mark it inactive
+E20260428 02:31:45.433629 69355 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:45.433656 69355 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_101, mark it inactive
+E20260428 02:31:45.451730 69355 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:45.451753 69355 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_102, mark it inactive
+E20260428 02:31:45.453600 69365 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:45.453629 69365 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_103, mark it inactive
+E20260428 02:31:46.398496 69377 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Connection timed out [110]
+E20260428 02:31:46.398528 69377 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_0, mark it inactive
+E20260428 02:31:46.409659 69377 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:46.409687 69377 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_100, mark it inactive
+E20260428 02:31:46.420241 69377 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:46.420267 69377 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_101, mark it inactive
+E20260428 02:31:46.430685 69377 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:46.430708 69377 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_102, mark it inactive
+E20260428 02:31:46.441212 69377 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:46.441236 69377 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_103, mark it inactive
+E20260428 02:31:46.462471 69356 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Connection timed out [110]
+E20260428 02:31:46.462524 69356 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_0, mark it inactive
+E20260428 02:31:46.500286 69356 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:46.500314 69356 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_103, mark it inactive
+E20260428 02:31:46.948491 69326 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x38e1c7c0, length: 64, dest_addr: 0x5cb58000, local_nic: mlx5_102, peer_nic: 10.83.77.226:15433@mlx5_101, dest_rkey: 2341048, retry_cnt: 0): transport retry counter exceeded
+E20260428 02:31:46.949088 69335 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3a4cc3c0, length: 512, dest_addr: 0x5d141940, local_nic: mlx5_103, peer_nic: 10.83.77.226:15433@mlx5_102, dest_rkey: 1696739, retry_cnt: 0): transport retry counter exceeded
+E20260428 02:31:46.956590 69326 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3a29e940, length: 64, dest_addr: 0x5f3d8380, local_nic: mlx5_102, peer_nic: 10.83.77.226:15433@mlx5_103, dest_rkey: 2468263, retry_cnt: 0): transport retry counter exceeded
+E20260428 02:31:49.096668 69335 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3a29e8c0, length: 64, dest_addr: 0x5f3d8300, local_nic: mlx5_103, peer_nic: 10.83.77.226:15433@mlx5_103, dest_rkey: 2468263, retry_cnt: 4): transport retry counter exceeded
+E20260428 02:31:49.097054 69352 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3a9f9f00, length: 64, dest_addr: 0x5b4155c0, local_nic: mlx5_103, peer_nic: 10.83.77.226:16246@mlx5_100, dest_rkey: 2096312, retry_cnt: 1): transport retry counter exceeded
+E20260428 02:31:49.130285 69335 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_103, local.peer_nic_path: 10.83.77.226:15433@mlx5_0, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:31:49.130311 69335 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_0, mark it inactive
+E20260428 02:31:50.707563 69335 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3a4cc3c0, length: 512, dest_addr: 0x5d141940, local_nic: mlx5_103, peer_nic: 10.83.77.226:15433@mlx5_100, dest_rkey: 1577165, retry_cnt: 1): transport retry counter exceeded
+E20260428 02:31:52.855118 69352 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3a9f9f00, length: 64, dest_addr: 0x5b4155c0, local_nic: mlx5_103, peer_nic: 10.83.77.226:16246@mlx5_101, dest_rkey: 2337967, retry_cnt: 2): transport retry counter exceeded
+E20260428 02:31:54.465865 69335 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3a4cc3c0, length: 512, dest_addr: 0x5d141940, local_nic: mlx5_103, peer_nic: 10.83.77.226:15433@mlx5_101, dest_rkey: 1839114, retry_cnt: 2): transport retry counter exceeded
+E20260428 02:31:56.613158 69352 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3a9f9f00, length: 64, dest_addr: 0x5b4155c0, local_nic: mlx5_103, peer_nic: 10.83.77.226:16246@mlx5_102, dest_rkey: 2211511, retry_cnt: 3): transport retry counter exceeded
+E20260428 02:31:58.224020 69335 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3a4cc3c0, length: 512, dest_addr: 0x5d141940, local_nic: mlx5_103, peer_nic: 10.83.77.226:15433@mlx5_102, dest_rkey: 1696739, retry_cnt: 3): transport retry counter exceeded
+E20260428 02:32:00.371362 69352 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3a9f9f00, length: 64, dest_addr: 0x5b4155c0, local_nic: mlx5_103, peer_nic: 10.83.77.226:16246@mlx5_103, dest_rkey: 2468779, retry_cnt: 4): transport retry counter exceeded
+E20260428 02:32:00.381568 69352 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_103, local.peer_nic_path: 10.83.77.226:16246@mlx5_10, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:00.381593 69352 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_10, mark it inactive
+E20260428 02:32:00.414834 69320 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_100, local.peer_nic_path: 10.83.77.226:16246@mlx5_0, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:00.414862 69320 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_0, mark it inactive
+E20260428 02:32:00.416791 69304 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:00.416823 69304 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_103, mark it inactive
+E20260428 02:32:00.417546 69344 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_101, local.peer_nic_path: 10.83.77.226:16246@mlx5_12, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:00.417577 69344 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_12, mark it inactive
+I20260428 02:32:00.418429 70129 transfer_engine_py.cpp:482] Sync batch data transfer timeout after 30000001701ns
+[2026-04-28 02:32:00 TP0] Prefill transfer failed for request rank=0 req.rid='7f14e4a1651c4691a1479f7015c6277c' req.bootstrap_room=1007830829382134386 with exception KVTransferError(bootstrap_room=1007830829382134386): Failed due to an unknown reason from another rank
+[2026-04-28 02:32:00 TP0] Req Time Stats(rid=7f14e4a1651c4691a1479f7015c6277c, bootstrap_room=1007830829382134386, input len=2963, output len=1, type=prefill): bootstrap_queue_duration(1.20ms) = bootstrap(1.19ms) + alloc_wait(0.01ms); queue_duration=0.38ms, forward_duration=47266.63ms, start=1020282.485, transfer_speed=0.00GB/s, transfer_total=0.00MB, #retries=0
+[2026-04-28 02:32:00 TP1] Prefill transfer failed for request rank=1 req.rid='7f14e4a1651c4691a1479f7015c6277c' req.bootstrap_room=1007830829382134386 with exception KVTransferError(bootstrap_room=1007830829382134386): Failed due to an unknown reason from another rank
+[2026-04-28 02:32:00] INFO:     127.0.0.1:36344 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:32:00] INFO:     127.0.0.1:36344 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+E20260428 02:32:01.502599 69364 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_0, local.peer_nic_path: 10.83.77.226:16246@mlx5_10, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:01.502630 69364 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_10, mark it inactive
+E20260428 02:32:01.521229 69377 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:01.521266 69377 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_100, mark it inactive
+E20260428 02:32:01.528544 69356 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:01.528576 69356 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_100, mark it inactive
+E20260428 02:32:01.546949 69376 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:01.546979 69376 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_100, mark it inactive
+E20260428 02:32:01.548525 69380 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:01.548555 69380 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_101, mark it inactive
+E20260428 02:32:01.561475 69364 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:01.561501 69364 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_100, mark it inactive
+E20260428 02:32:01.563133 69304 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:01.563163 69304 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_101, mark it inactive
+E20260428 02:32:01.581411 69356 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:01.581439 69356 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_101, mark it inactive
+E20260428 02:32:01.583105 69365 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:01.583137 69365 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_102, mark it inactive
+E20260428 02:32:01.601382 69377 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:01.601408 69377 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_101, mark it inactive
+E20260428 02:32:01.619652 69364 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:01.619678 69364 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_101, mark it inactive
+E20260428 02:32:01.626847 69376 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:01.626876 69376 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_102, mark it inactive
+E20260428 02:32:01.639552 69356 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:01.639586 69356 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_102, mark it inactive
+E20260428 02:32:01.685247 69376 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:01.685273 69376 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_103, mark it inactive
+E20260428 02:32:01.686128 69344 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_101, local.peer_nic_path: 10.83.77.226:16246@mlx5_0, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:01.686157 69344 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_0, mark it inactive
+E20260428 02:32:01.709352 69352 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_103, local.peer_nic_path: 10.83.77.226:16246@mlx5_11, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:01.709380 69352 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_11, mark it inactive
+E20260428 02:32:01.711256 69356 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:01.711285 69356 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_103, mark it inactive
+E20260428 02:32:01.712915 69377 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:01.712942 69377 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_103, mark it inactive
+E20260428 02:32:01.714529 69364 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:01.714555 69364 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_103, mark it inactive
+E20260428 02:32:01.721863 69304 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:01.721891 69304 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_100, mark it inactive
+E20260428 02:32:01.804394 69304 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:01.804420 69304 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_102, mark it inactive
+E20260428 02:32:01.837466 69304 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:01.837493 69304 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_103, mark it inactive
+E20260428 02:32:01.982391 69335 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3a4cc3c0, length: 512, dest_addr: 0x5d141940, local_nic: mlx5_103, peer_nic: 10.83.77.226:15433@mlx5_103, dest_rkey: 1959135, retry_cnt: 4): transport retry counter exceeded
+E20260428 02:32:01.992576 69335 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_103, local.peer_nic_path: 10.83.77.226:15433@mlx5_10, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:01.992602 69335 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_10, mark it inactive
+W20260428 02:32:01.992609 69335 worker_pool.cpp:252] Failed to establish peer endpoints in local RNIC 10.83.77.226:15669@mlx5_103, mark it inactive
+E20260428 02:32:02.000587 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:02.008742 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:02.016353 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:02.023907 70124 rdma_transport.cpp:538] Device 4 is not active
+[2026-04-28 02:32:02 TP0] Prefill transfer failed for request rank=0 req.rid='cd558d3353b242409b2183e5f18beae6' req.bootstrap_room=4526482062301487626 with exception KVTransferError(bootstrap_room=4526482062301487626): Failed due to an unknown reason from another rank
+[2026-04-28 02:32:02 TP1] Prefill transfer failed for request rank=1 req.rid='cd558d3353b242409b2183e5f18beae6' req.bootstrap_room=4526482062301487626 with exception KVTransferError(bootstrap_room=4526482062301487626): Failed due to an unknown reason from another rank
+[2026-04-28 02:32:02 TP0] Req Time Stats(rid=cd558d3353b242409b2183e5f18beae6, bootstrap_room=4526482062301487626, input len=4724, output len=1, type=prefill): bootstrap_queue_duration(1.18ms) = bootstrap(1.17ms) + alloc_wait(0.00ms); queue_duration=0.34ms, forward_duration=48872.53ms, start=1020282.485, transfer_speed=0.00GB/s, transfer_total=0.00MB, #retries=0
+[2026-04-28 02:32:02] INFO:     127.0.0.1:36360 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+E20260428 02:32:02.041337 70124 rdma_transport.cpp:538] Device 4 is not active
+[2026-04-28 02:32:02 TP0] Prefill transfer failed for request rank=0 req.rid='ef1d46011ef449f7aeee8cbf00c73bfb' req.bootstrap_room=6756706063912519709 with exception KVTransferError(bootstrap_room=6756706063912519709): Failed due to an unknown reason from another rank
+[2026-04-28 02:32:02 TP1] Prefill transfer failed for request rank=1 req.rid='ef1d46011ef449f7aeee8cbf00c73bfb' req.bootstrap_room=6756706063912519709 with exception KVTransferError(bootstrap_room=6756706063912519709): Failed due to an unknown reason from another rank
+[2026-04-28 02:32:02 TP0] Req Time Stats(rid=ef1d46011ef449f7aeee8cbf00c73bfb, bootstrap_room=6756706063912519709, input len=4687, output len=1, type=prefill): bootstrap_queue_duration(55.86ms) = bootstrap(55.85ms) + alloc_wait(0.01ms); queue_duration=0.21ms, forward_duration=48834.94ms, start=1020282.486, transfer_speed=0.00GB/s, transfer_total=0.00MB, #retries=0
+E20260428 02:32:02.059762 69300 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_100, local.peer_nic_path: 10.83.77.226:15433@mlx5_11, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:02.059791 69300 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_11, mark it inactive
+[2026-04-28 02:32:02] INFO:     127.0.0.1:36374 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+E20260428 02:32:02.066339 69301 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_100, local.peer_nic_path: 10.83.77.226:15433@mlx5_0, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:02.066373 69301 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_0, mark it inactive
+E20260428 02:32:03.102644 69358 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_0, local.peer_nic_path: 10.83.77.226:15433@mlx5_11, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:03.102675 69358 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_11, mark it inactive
+E20260428 02:32:03.119462 69300 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_100, local.peer_nic_path: 10.83.77.226:15433@mlx5_10, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:03.119493 69300 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_10, mark it inactive
+E20260428 02:32:03.141975 69358 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:03.142004 69358 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_100, mark it inactive
+E20260428 02:32:03.148910 69367 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:03.148938 69367 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_102, mark it inactive
+E20260428 02:32:03.160969 69361 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:03.160997 69361 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_102, mark it inactive
+E20260428 02:32:03.162617 69358 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:03.162642 69358 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_101, mark it inactive
+E20260428 02:32:03.185001 69358 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:03.185026 69358 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_102, mark it inactive
+E20260428 02:32:03.195444 69358 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:03.195472 69358 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_103, mark it inactive
+E20260428 02:32:04.254601 69358 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_0, local.peer_nic_path: 10.83.77.226:15433@mlx5_10, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:04.254631 69358 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_10, mark it inactive
+E20260428 02:32:04.281998 69298 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:04.282028 69298 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_103, mark it inactive
+E20260428 02:32:04.328373 69361 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:04.328403 69361 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_100, mark it inactive
+E20260428 02:32:04.342226 69350 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:04.342254 69350 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_101, mark it inactive
+E20260428 02:32:04.349175 69298 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:04.349205 69298 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_101, mark it inactive
+E20260428 02:32:04.361173 69361 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:04.361200 69361 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_101, mark it inactive
+E20260428 02:32:04.383496 69298 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:04.383524 69298 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_102, mark it inactive
+E20260428 02:32:04.395684 69361 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:04.395710 69361 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_102, mark it inactive
+E20260428 02:32:04.413036 69361 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:04.413060 69361 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_103, mark it inactive
+E20260428 02:32:05.471984 69352 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3f1449c0, length: 512, dest_addr: 0x5ba81a80, local_nic: mlx5_103, peer_nic: 10.83.77.226:16246@mlx5_100, dest_rkey: 1558408, retry_cnt: 1): transport retry counter exceeded
+E20260428 02:32:07.887856 69335 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3a491840, length: 64, dest_addr: 0x5c9b2380, local_nic: mlx5_103, peer_nic: 10.83.77.226:15433@mlx5_100, dest_rkey: 2095286, retry_cnt: 1): transport retry counter exceeded
+W20260428 02:32:07.887887 69335 worker_pool.cpp:311] Too many errors found in local RNIC 10.83.77.226:15669@mlx5_103, mark it inactive
+E20260428 02:32:07.896030 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:07.903566 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:07.911069 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:07.918608 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:07.926117 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:07.933607 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:07.941068 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:07.950405 69301 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_100, local.peer_nic_path: 10.83.77.226:15433@mlx5_13, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:07.950433 69301 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_13, mark it inactive
+E20260428 02:32:07.951351 69326 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_102, local.peer_nic_path: 10.83.77.226:15433@mlx5_11, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:07.951380 69326 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_11, mark it inactive
+E20260428 02:32:07.957552 69327 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_102, local.peer_nic_path: 10.83.77.226:15433@mlx5_13, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:07.957579 69327 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_13, mark it inactive
+E20260428 02:32:07.987459 69362 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:07.987488 69362 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_101, mark it inactive
+E20260428 02:32:09.231426 69352 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3f1449c0, length: 512, dest_addr: 0x5ba81a80, local_nic: mlx5_103, peer_nic: 10.83.77.226:16246@mlx5_101, dest_rkey: 1790548, retry_cnt: 2): transport retry counter exceeded
+E20260428 02:32:11.645503 69326 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3a4ebe00, length: 128, dest_addr: 0x614329c0, local_nic: mlx5_102, peer_nic: 10.83.77.226:15433@mlx5_101, dest_rkey: 1808538, retry_cnt: 0): transport retry counter exceeded
+E20260428 02:32:11.673794 69297 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:11.673826 69297 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_100, mark it inactive
+E20260428 02:32:12.701478 69362 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Connection timed out [110]
+E20260428 02:32:12.701535 69362 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_0, mark it inactive
+E20260428 02:32:12.702492 69368 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Connection timed out [110]
+E20260428 02:32:12.702665 69368 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_0, mark it inactive
+E20260428 02:32:12.710990 69368 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:12.711007 69368 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_103, mark it inactive
+E20260428 02:32:12.712648 69362 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:12.712675 69362 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_100, mark it inactive
+E20260428 02:32:12.714330 69368 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:12.714342 69368 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_101, mark it inactive
+E20260428 02:32:12.737186 69362 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:12.737211 69362 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_102, mark it inactive
+E20260428 02:32:12.738898 69368 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:12.738924 69368 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_100, mark it inactive
+E20260428 02:32:12.754048 69362 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:12.754072 69362 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_103, mark it inactive
+E20260428 02:32:12.988749 69352 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3f1449c0, length: 512, dest_addr: 0x5ba81a80, local_nic: mlx5_103, peer_nic: 10.83.77.226:16246@mlx5_102, dest_rkey: 1649964, retry_cnt: 3): transport retry counter exceeded
+E20260428 02:32:15.404631 69335 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3a4ccbc0, length: 512, dest_addr: 0x5d142340, local_nic: mlx5_103, peer_nic: 10.83.77.226:15433@mlx5_102, dest_rkey: 1696739, retry_cnt: 0): transport retry counter exceeded
+W20260428 02:32:15.404665 69335 worker_pool.cpp:311] Too many errors found in local RNIC 10.83.77.226:15669@mlx5_103, mark it inactive
+E20260428 02:32:15.413482 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:15.422137 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:15.430757 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:15.439424 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:15.448155 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:15.456796 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:15.465471 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:15.474092 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:15.482791 70124 rdma_transport.cpp:538] Device 4 is not active
+[2026-04-28 02:32:15 TP1] Prefill transfer failed for request rank=1 req.rid='153d8ecd3b16426a98d29c38a38a3c70' req.bootstrap_room=5059005006301990323 with exception KVTransferError(bootstrap_room=5059005006301990323): Failed due to an unknown reason from another rank
+[2026-04-28 02:32:15 TP0] Prefill transfer failed for request rank=0 req.rid='153d8ecd3b16426a98d29c38a38a3c70' req.bootstrap_room=5059005006301990323 with exception KVTransferError(bootstrap_room=5059005006301990323): Failed due to an unknown reason from another rank
+[2026-04-28 02:32:15 TP0] Req Time Stats(rid=153d8ecd3b16426a98d29c38a38a3c70, bootstrap_room=5059005006301990323, input len=4888, output len=1, type=prefill): bootstrap_queue_duration(235.26ms) = bootstrap(235.26ms) + alloc_wait(0.00ms); queue_duration=358.30ms, forward_duration=61683.62ms, start=1020282.541, transfer_speed=0.00GB/s, transfer_total=0.00MB, #retries=0
+[2026-04-28 02:32:15] INFO:     127.0.0.1:36422 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+E20260428 02:32:15.507946 69300 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_100, local.peer_nic_path: 10.83.77.226:15433@mlx5_11, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:15.507974 69300 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_11, mark it inactive
+E20260428 02:32:15.508900 69301 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_100, local.peer_nic_path: 10.83.77.226:15433@mlx5_12, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:15.508929 69301 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_12, mark it inactive
+E20260428 02:32:15.510816 69297 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:15.510848 69297 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_102, mark it inactive
+E20260428 02:32:15.512539 69358 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:15.512571 69358 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_100, mark it inactive
+E20260428 02:32:15.541496 69368 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:15.541525 69368 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_101, mark it inactive
+E20260428 02:32:15.548749 69358 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:15.548776 69358 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_101, mark it inactive
+E20260428 02:32:15.555864 69297 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:15.555893 69297 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_101, mark it inactive
+E20260428 02:32:15.563076 69368 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:15.563102 69368 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_102, mark it inactive
+E20260428 02:32:15.570392 69358 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:15.570415 69358 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_102, mark it inactive
+E20260428 02:32:15.593837 69297 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:15.593868 69297 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_103, mark it inactive
+E20260428 02:32:15.596096 69358 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:15.596120 69358 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_103, mark it inactive
+E20260428 02:32:16.670588 69358 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_0, local.peer_nic_path: 10.83.77.226:15433@mlx5_10, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:16.670616 69358 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_10, mark it inactive
+E20260428 02:32:16.747102 69352 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3f1449c0, length: 512, dest_addr: 0x5ba81a80, local_nic: mlx5_103, peer_nic: 10.83.77.226:16246@mlx5_103, dest_rkey: 1960168, retry_cnt: 4): transport retry counter exceeded
+E20260428 02:32:16.765507 69352 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_103, local.peer_nic_path: 10.83.77.226:16246@mlx5_0, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:16.765532 69352 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_0, mark it inactive
+E20260428 02:32:16.778653 69335 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_103, local.peer_nic_path: 10.83.77.226:15433@mlx5_11, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:16.778687 69335 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_11, mark it inactive
+W20260428 02:32:16.778693 69335 worker_pool.cpp:252] Failed to establish peer endpoints in local RNIC 10.83.77.226:15669@mlx5_103, mark it inactive
+E20260428 02:32:16.779727 69336 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_103, local.peer_nic_path: 10.83.77.226:15433@mlx5_12, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:16.779758 69336 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_12, mark it inactive
+E20260428 02:32:16.783202 69352 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_103, local.peer_nic_path: 10.83.77.226:16246@mlx5_12, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:16.783226 69352 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_12, mark it inactive
+E20260428 02:32:16.808425 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:16.813642 69336 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:16.821041 69367 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:16.821074 69367 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_100, mark it inactive
+E20260428 02:32:16.826273 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:16.831431 69336 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:16.833197 69359 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:16.833227 69359 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_101, mark it inactive
+E20260428 02:32:16.843731 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:16.848887 69336 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:16.865065 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:16.870215 69336 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:16.877594 69367 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:16.877624 69367 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_102, mark it inactive
+E20260428 02:32:16.882898 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:16.888106 69336 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:16.904213 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:16.909374 69336 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:16.916715 69367 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:16.916743 69367 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_103, mark it inactive
+E20260428 02:32:16.922004 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:16.927210 69336 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:16.937683 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:16.942857 69336 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:16.957810 69349 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:16.957841 69349 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_100, mark it inactive
+E20260428 02:32:16.963950 69307 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_101, local.peer_nic_path: 10.83.77.226:15433@mlx5_12, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:16.963975 69307 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_12, mark it inactive
+E20260428 02:32:16.983162 69359 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:16.983191 69359 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_100, mark it inactive
+E20260428 02:32:17.008023 69349 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:17.008050 69349 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_102, mark it inactive
+E20260428 02:32:17.009744 69359 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:17.009769 69359 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_102, mark it inactive
+E20260428 02:32:17.023031 69349 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:17.023057 69349 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_103, mark it inactive
+E20260428 02:32:17.024688 69359 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:17.024712 69359 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_103, mark it inactive
+E20260428 02:32:17.798581 69364 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_0, local.peer_nic_path: 10.83.77.226:16246@mlx5_11, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:17.798612 69364 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_11, mark it inactive
+E20260428 02:32:17.799741 69347 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_102, local.peer_nic_path: 10.83.77.226:16246@mlx5_0, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:17.799772 69347 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_0, mark it inactive
+E20260428 02:32:17.806466 69350 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Connection timed out [110]
+E20260428 02:32:17.806515 69350 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_0, mark it inactive
+E20260428 02:32:17.809435 69350 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:17.809448 69350 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_101, mark it inactive
+E20260428 02:32:17.814122 69379 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:17.814152 69379 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_102, mark it inactive
+E20260428 02:32:17.814853 69319 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_100, local.peer_nic_path: 10.83.77.226:16246@mlx5_11, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:17.814884 69319 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_11, mark it inactive
+E20260428 02:32:17.868607 69379 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:17.868638 69379 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_100, mark it inactive
+E20260428 02:32:17.880726 69355 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:17.880756 69355 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_102, mark it inactive
+E20260428 02:32:17.887672 69364 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:17.887701 69364 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_102, mark it inactive
+E20260428 02:32:17.894556 69304 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:17.894586 69304 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_103, mark it inactive
+E20260428 02:32:17.927209 69379 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:17.927237 69379 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_103, mark it inactive
+E20260428 02:32:17.957472 69298 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Connection timed out [110]
+E20260428 02:32:17.957525 69298 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_0, mark it inactive
+E20260428 02:32:17.968950 69298 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:17.968977 69298 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_100, mark it inactive
+E20260428 02:32:18.025225 69362 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:18.025256 69362 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_101, mark it inactive
+E20260428 02:32:18.045135 69297 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:18.045166 69297 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_102, mark it inactive
+E20260428 02:32:18.099067 69349 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:18.099097 69349 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_102, mark it inactive
+E20260428 02:32:18.100775 69297 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:18.100803 69297 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_101, mark it inactive
+E20260428 02:32:19.038480 69368 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Connection timed out [110]
+E20260428 02:32:19.038542 69368 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_0, mark it inactive
+E20260428 02:32:19.166582 69358 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_0, local.peer_nic_path: 10.83.77.226:15433@mlx5_10, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:19.166612 69358 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_10, mark it inactive
+E20260428 02:32:19.189497 69297 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:19.189532 69297 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_103, mark it inactive
+E20260428 02:32:19.201661 69368 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:19.201689 69368 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_101, mark it inactive
+E20260428 02:32:21.308343 69343 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3aa01fc0, length: 64, dest_addr: 0x5fc41280, local_nic: mlx5_101, peer_nic: 10.83.77.226:16246@mlx5_102, dest_rkey: 2207148, retry_cnt: 0): transport retry counter exceeded
+E20260428 02:32:21.337597 69319 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_100, local.peer_nic_path: 10.83.77.226:16246@mlx5_10, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:21.337625 69319 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_10, mark it inactive
+E20260428 02:32:21.343910 69344 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_101, local.peer_nic_path: 10.83.77.226:16246@mlx5_13, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:21.343940 69344 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_13, mark it inactive
+E20260428 02:32:21.352867 69376 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:21.352897 69376 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_100, mark it inactive
+E20260428 02:32:21.577380 69306 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x39bcdd40, length: 64, dest_addr: 0x5cdfb9c0, local_nic: mlx5_101, peer_nic: 10.83.77.226:15433@mlx5_101, dest_rkey: 2331022, retry_cnt: 0): transport retry counter exceeded
+E20260428 02:32:25.066814 69343 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3be4ea40, length: 64, dest_addr: 0x5dc29300, local_nic: mlx5_101, peer_nic: 10.83.77.226:16246@mlx5_102, dest_rkey: 2206634, retry_cnt: 0): transport retry counter exceeded
+E20260428 02:32:25.069624 69352 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3a9f9f80, length: 64, dest_addr: 0x5b415680, local_nic: mlx5_103, peer_nic: 10.83.77.226:16246@mlx5_102, dest_rkey: 2211511, retry_cnt: 0): transport retry counter exceeded
+E20260428 02:32:28.827087 69352 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3a9f9f80, length: 64, dest_addr: 0x5b415680, local_nic: mlx5_103, peer_nic: 10.83.77.226:16246@mlx5_100, dest_rkey: 2096312, retry_cnt: 1): transport retry counter exceeded
+E20260428 02:32:32.585667 69352 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3a9f9f80, length: 64, dest_addr: 0x5b415680, local_nic: mlx5_103, peer_nic: 10.83.77.226:16246@mlx5_101, dest_rkey: 2337967, retry_cnt: 2): transport retry counter exceeded
+E20260428 02:32:36.343760 69352 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3a9f9f80, length: 64, dest_addr: 0x5b415680, local_nic: mlx5_103, peer_nic: 10.83.77.226:16246@mlx5_102, dest_rkey: 2211511, retry_cnt: 3): transport retry counter exceeded
+[2026-04-28 02:32:38 TP0] Prefill batch, #new-seq: 1, #new-token: 64, #cached-token: 0, token usage: 0.66, #running-req: 0, #queue-req: 0, #prealloc-req: 25, #inflight-req: 6, cuda graph: False, input throughput (token/s): 75.81
+[2026-04-28 02:32:38 TP0] Req Time Stats(rid=HEALTH_CHECK_1777343558.2023988, bootstrap_room=0, input len=1, output len=1, type=prefill): bootstrap_queue_duration(0.31ms) = bootstrap(0.30ms) + alloc_wait(0.01ms); queue_duration=0.18ms, forward_duration=32.70ms, start=1020367.538, transfer_speed=7.90GB/s, transfer_total=8.00MB, #retries=0
+[2026-04-28 02:32:39] INFO:     127.0.0.1:48930 - "GET /health HTTP/1.1" 200 OK
+E20260428 02:32:40.102058 69352 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3a9f9f80, length: 64, dest_addr: 0x5b415680, local_nic: mlx5_103, peer_nic: 10.83.77.226:16246@mlx5_103, dest_rkey: 2468779, retry_cnt: 4): transport retry counter exceeded
+E20260428 02:32:40.112047 69352 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_103, local.peer_nic_path: 10.83.77.226:16246@mlx5_10, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:40.112072 69352 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_10, mark it inactive
+W20260428 02:32:40.112078 69352 worker_pool.cpp:252] Failed to establish peer endpoints in local RNIC 10.83.77.226:16152@mlx5_103, mark it inactive
+E20260428 02:32:40.119692 69352 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:40.127239 69352 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:40.134768 69352 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:40.142297 70129 rdma_transport.cpp:538] Device 4 is not active
+E20260428 02:32:40.171845 69376 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:40.171877 69376 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_102, mark it inactive
+E20260428 02:32:40.173502 69365 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:40.173534 69365 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_103, mark it inactive
+E20260428 02:32:40.180735 69355 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:40.180763 69355 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_100, mark it inactive
+E20260428 02:32:40.197916 69376 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:40.197942 69376 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_100, mark it inactive
+E20260428 02:32:40.199553 69365 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:40.199579 69365 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_100, mark it inactive
+E20260428 02:32:40.201190 69355 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:40.201215 69355 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_101, mark it inactive
+E20260428 02:32:40.218493 69376 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:40.218520 69376 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_101, mark it inactive
+E20260428 02:32:40.220199 69365 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:40.220225 69365 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_101, mark it inactive
+E20260428 02:32:40.221889 69355 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:40.221911 69355 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_102, mark it inactive
+E20260428 02:32:40.249493 69355 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:40.249521 69355 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_103, mark it inactive
+E20260428 02:32:40.251152 69376 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:40.251178 69376 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_103, mark it inactive
+E20260428 02:32:41.310571 69365 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_0, local.peer_nic_path: 10.83.77.226:16246@mlx5_10, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:41.310598 69365 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_10, mark it inactive
+E20260428 02:32:43.857375 69319 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3f144dc0, length: 512, dest_addr: 0x5ba82080, local_nic: mlx5_100, peer_nic: 10.83.77.226:16246@mlx5_103, dest_rkey: 1960168, retry_cnt: 0): transport retry counter exceeded
+[2026-04-28 02:32:43 TP0] Req Time Stats(rid=e0efa5eca2b84e7291accdf44b9df8fe, bootstrap_room=2662885794867626239, input len=3937, output len=1, type=prefill): bootstrap_queue_duration(290.44ms) = bootstrap(290.43ms) + alloc_wait(0.01ms); queue_duration=0.45ms, forward_duration=90424.50ms, start=1020282.486, transfer_speed=0.01GB/s, transfer_total=496.00MB, #retries=0
+[2026-04-28 02:32:43] INFO:     127.0.0.1:36388 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+E20260428 02:32:43.886003 69347 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_102, local.peer_nic_path: 10.83.77.226:16246@mlx5_12, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:43.886032 69347 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_12, mark it inactive
+E20260428 02:32:43.892378 69320 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_100, local.peer_nic_path: 10.83.77.226:16246@mlx5_13, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:43.892408 69320 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_13, mark it inactive
+E20260428 02:32:43.898779 69344 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_101, local.peer_nic_path: 10.83.77.226:16246@mlx5_12, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:43.898810 69344 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_12, mark it inactive
+E20260428 02:32:43.912963 69379 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:43.912993 69379 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_100, mark it inactive
+E20260428 02:32:43.936089 69376 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:43.936118 69376 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_102, mark it inactive
+E20260428 02:32:43.937731 69379 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:43.937759 69379 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_101, mark it inactive
+E20260428 02:32:47.615381 69346 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3aa02080, length: 64, dest_addr: 0x5fc41380, local_nic: mlx5_102, peer_nic: 10.83.77.226:16246@mlx5_103, dest_rkey: 2471338, retry_cnt: 0): transport retry counter exceeded
+E20260428 02:32:47.619036 69352 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3bd1f040, length: 512, dest_addr: 0x5fc22300, local_nic: mlx5_103, peer_nic: 10.83.77.226:16246@mlx5_103, dest_rkey: 1962730, retry_cnt: 0): transport retry counter exceeded
+W20260428 02:32:47.619077 69352 worker_pool.cpp:311] Too many errors found in local RNIC 10.83.77.226:16152@mlx5_103, mark it inactive
+E20260428 02:32:47.629112 69352 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:47.636706 69352 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:47.644287 69352 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:47.651979 69352 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:47.659565 69352 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:47.667106 69352 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:47.674729 69352 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:47.682256 69352 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:47.689914 70129 rdma_transport.cpp:538] Device 4 is not active
+[2026-04-28 02:32:47 TP1] Prefill transfer failed for request rank=1 req.rid='e383ea4311c24b3087e5290c4cb96298' req.bootstrap_room=2189352915222827285 with exception KVTransferError(bootstrap_room=2189352915222827285): Failed due to an unknown reason from another rank
+[2026-04-28 02:32:47 TP0] Prefill transfer failed for request rank=0 req.rid='e383ea4311c24b3087e5290c4cb96298' req.bootstrap_room=2189352915222827285 with exception KVTransferError(bootstrap_room=2189352915222827285): Failed due to an unknown reason from another rank
+[2026-04-28 02:32:47 TP0] Req Time Stats(rid=e383ea4311c24b3087e5290c4cb96298, bootstrap_room=2189352915222827285, input len=4542, output len=1, type=prefill): bootstrap_queue_duration(235.29ms) = bootstrap(235.29ms) + alloc_wait(0.00ms); queue_duration=0.41ms, forward_duration=94248.94ms, start=1020282.541, transfer_speed=0.00GB/s, transfer_total=0.00MB, #retries=0
+[2026-04-28 02:32:47] INFO:     127.0.0.1:36406 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+E20260428 02:32:47.707875 70129 rdma_transport.cpp:538] Device 4 is not active
+E20260428 02:32:47.717917 70129 rdma_transport.cpp:538] Device 4 is not active
+[2026-04-28 02:32:47 TP0] Prefill transfer failed for request rank=0 req.rid='27b7b39d651f4502a42e9fcb27f47fc5' req.bootstrap_room=1961173865971327758 with exception KVTransferError(bootstrap_room=1961173865971327758): Failed due to an unknown reason from another rank
+[2026-04-28 02:32:47 TP1] Prefill transfer failed for request rank=1 req.rid='27b7b39d651f4502a42e9fcb27f47fc5' req.bootstrap_room=1961173865971327758 with exception KVTransferError(bootstrap_room=1961173865971327758): Failed due to an unknown reason from another rank
+[2026-04-28 02:32:47 TP0] Req Time Stats(rid=27b7b39d651f4502a42e9fcb27f47fc5, bootstrap_room=1961173865971327758, input len=2781, output len=1, type=prefill): bootstrap_queue_duration(153.73ms) = bootstrap(153.72ms) + alloc_wait(0.01ms); queue_duration=205.19ms, forward_duration=93918.56ms, start=1020282.775, transfer_speed=0.00GB/s, transfer_total=0.00MB, #retries=0
+[2026-04-28 02:32:47] INFO:     127.0.0.1:36440 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:32:48 TP0] Prefill batch, #new-seq: 1, #new-token: 192, #cached-token: 27264, token usage: 0.49, #running-req: 0, #queue-req: 0, #prealloc-req: 26, #inflight-req: 3, cuda graph: False, input throughput (token/s): 6.38
+E20260428 02:32:48.862615 69365 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_0, local.peer_nic_path: 10.83.77.226:16246@mlx5_12, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:48.862651 69365 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_12, mark it inactive
+E20260428 02:32:48.864621 69377 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:48.864651 69377 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_103, mark it inactive
+E20260428 02:32:48.882493 69377 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:48.882504 69377 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_101, mark it inactive
+E20260428 02:32:48.899894 69380 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:48.899922 69380 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_101, mark it inactive
+E20260428 02:32:48.901494 69365 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:48.901521 69365 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_101, mark it inactive
+E20260428 02:32:48.903043 69377 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:48.903067 69377 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_100, mark it inactive
+E20260428 02:32:48.920346 69380 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:48.920372 69380 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_102, mark it inactive
+E20260428 02:32:48.922379 69365 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:48.922403 69365 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_102, mark it inactive
+E20260428 02:32:48.944883 69380 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:48.944907 69380 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_103, mark it inactive
+[2026-04-28 02:32:48 TP0] Req Time Stats(rid=fe49d7b887484796a04e5dfc5ca53b9a, bootstrap_room=7985843268262778897, input len=27437, output len=1, type=prefill): bootstrap_queue_duration(3.38ms) = bootstrap(3.38ms) + alloc_wait(0.01ms); queue_duration=0.77ms, forward_duration=95115.21ms, start=1020283.183, transfer_speed=0.04GB/s, transfer_total=3432.00MB, #retries=0
+[2026-04-28 02:32:48] INFO:     127.0.0.1:36516 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+E20260428 02:32:48.986748 69346 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_102, local.peer_nic_path: 10.83.77.226:16246@mlx5_10, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:48.986780 69346 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_10, mark it inactive
+E20260428 02:32:49.438675 69359 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_0, local.peer_nic_path: 10.83.77.226:15433@mlx5_12, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:49.438714 69359 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_12, mark it inactive
+E20260428 02:32:49.449111 69349 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:49.449143 69349 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_100, mark it inactive
+E20260428 02:32:49.455578 69301 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_100, local.peer_nic_path: 10.83.77.226:15433@mlx5_13, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:49.455612 69301 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_13, mark it inactive
+E20260428 02:32:49.462813 69358 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:49.462852 69358 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_100, mark it inactive
+E20260428 02:32:49.463563 69336 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_103, local.peer_nic_path: 10.83.77.226:15433@mlx5_13, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:49.463593 69336 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_13, mark it inactive
+W20260428 02:32:49.463599 69336 worker_pool.cpp:252] Failed to establish peer endpoints in local RNIC 10.83.77.226:15669@mlx5_103, mark it inactive
+E20260428 02:32:49.465404 69350 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:49.465431 69350 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_100, mark it inactive
+E20260428 02:32:49.474303 69359 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:49.474332 69359 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_100, mark it inactive
+E20260428 02:32:49.480268 69336 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:49.507309 69336 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:49.514185 69350 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:49.514210 69350 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_101, mark it inactive
+E20260428 02:32:49.515877 69359 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:49.515902 69359 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_101, mark it inactive
+E20260428 02:32:49.521903 69336 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:49.523406 69349 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:49.523432 69349 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_101, mark it inactive
+E20260428 02:32:49.525039 69358 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:49.525058 69358 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_101, mark it inactive
+E20260428 02:32:49.530987 69336 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:49.557633 69336 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:49.564579 69350 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:49.564604 69350 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_102, mark it inactive
+E20260428 02:32:49.566250 69359 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:49.566274 69359 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_102, mark it inactive
+E20260428 02:32:49.571568 69336 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:49.573230 69349 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:49.573258 69349 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_103, mark it inactive
+E20260428 02:32:49.580253 69358 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:49.580281 69358 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_102, mark it inactive
+E20260428 02:32:49.585470 69336 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:49.612092 69336 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:49.613816 69359 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:49.613839 69359 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_103, mark it inactive
+E20260428 02:32:49.619568 70124 rdma_transport.cpp:538] Device 4 is not active
+[2026-04-28 02:32:49 TP1] Prefill transfer failed for request rank=1 req.rid='b91641e4a5c748e7a73080fd26024b77' req.bootstrap_room=3921416459452394676 with exception KVTransferError(bootstrap_room=3921416459452394676): Failed due to an unknown reason from another rank
+[2026-04-28 02:32:49 TP0] Prefill transfer failed for request rank=0 req.rid='b91641e4a5c748e7a73080fd26024b77' req.bootstrap_room=3921416459452394676 with exception KVTransferError(bootstrap_room=3921416459452394676): Failed due to an unknown reason from another rank
+E20260428 02:32:49.621310 69358 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:49.621330 69358 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_103, mark it inactive
+[2026-04-28 02:32:49 TP0] Req Time Stats(rid=b91641e4a5c748e7a73080fd26024b77, bootstrap_room=3921416459452394676, input len=27441, output len=1, type=prefill): bootstrap_queue_duration(94621.54ms) = bootstrap(94621.53ms) + alloc_wait(0.01ms); queue_duration=1.95ms, forward_duration=1404.60ms, start=1020282.928, transfer_speed=0.00GB/s, transfer_total=0.00MB, #retries=0
+[2026-04-28 02:32:49] INFO:     127.0.0.1:36466 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+E20260428 02:32:50.014492 69380 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Connection timed out [110]
+E20260428 02:32:50.014529 69380 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_0, mark it inactive
+E20260428 02:32:50.014637 69365 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_0, local.peer_nic_path: 10.83.77.226:16246@mlx5_13, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:50.014667 69365 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_13, mark it inactive
+E20260428 02:32:50.016000 69346 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_102, local.peer_nic_path: 10.83.77.226:16246@mlx5_11, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:50.016031 69346 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_11, mark it inactive
+E20260428 02:32:50.035104 69380 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:50.035131 69380 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_100, mark it inactive
+E20260428 02:32:50.036844 69365 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:50.036875 69365 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_100, mark it inactive
+[2026-04-28 02:32:50 TP0] Prefill batch, #new-seq: 2, #new-token: 8192, #cached-token: 19520, token usage: 0.52, #running-req: 0, #queue-req: 0, #prealloc-req: 26, #inflight-req: 2, cuda graph: False, input throughput (token/s): 107.55
+E20260428 02:32:50.075918 69365 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:50.075950 69365 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_103, mark it inactive
+[2026-04-28 02:32:50 TP0] Prefill batch, #new-seq: 1, #new-token: 2496, #cached-token: 0, token usage: 0.52, #running-req: 0, #queue-req: 0, #prealloc-req: 26, #inflight-req: 3, cuda graph: False, input throughput (token/s): 174178.69
+E20260428 02:32:50.654621 69359 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_0, local.peer_nic_path: 10.83.77.226:15433@mlx5_10, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:50.654654 69359 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_10, mark it inactive
+E20260428 02:32:50.655686 69301 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_100, local.peer_nic_path: 10.83.77.226:15433@mlx5_0, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:50.655718 69301 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_0, mark it inactive
+E20260428 02:32:50.663983 69326 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_102, local.peer_nic_path: 10.83.77.226:15433@mlx5_10, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:50.664013 69326 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_10, mark it inactive
+E20260428 02:32:50.665853 69361 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:50.665884 69361 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_102, mark it inactive
+E20260428 02:32:51.102598 69365 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_0, local.peer_nic_path: 10.83.77.226:16246@mlx5_10, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:51.102622 69365 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_10, mark it inactive
+E20260428 02:32:51.678599 69358 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_0, local.peer_nic_path: 10.83.77.226:15433@mlx5_10, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:51.678630 69358 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_10, mark it inactive
+E20260428 02:32:51.717736 69361 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:51.717767 69361 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_100, mark it inactive
+E20260428 02:32:51.740479 69359 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:51.740509 69359 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_100, mark it inactive
+E20260428 02:32:51.752774 69358 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:51.752802 69358 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_100, mark it inactive
+E20260428 02:32:51.771513 69361 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:51.771543 69361 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_103, mark it inactive
+E20260428 02:32:51.778651 69359 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:51.778680 69359 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_101, mark it inactive
+E20260428 02:32:51.796157 69358 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:51.796191 69358 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_103, mark it inactive
+E20260428 02:32:51.797753 69359 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:51.797783 69359 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_102, mark it inactive
+E20260428 02:32:51.910801 69306 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3a4cd7c0, length: 512, dest_addr: 0x5d142940, local_nic: mlx5_101, peer_nic: 10.83.77.226:15433@mlx5_103, dest_rkey: 1959135, retry_cnt: 0): transport retry counter exceeded
+E20260428 02:32:52.719300 69352 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3a9f6100, length: 64, dest_addr: 0x5b6ea400, local_nic: mlx5_103, peer_nic: 10.83.77.226:16246@mlx5_100, dest_rkey: 2092719, retry_cnt: 0): transport retry counter exceeded
+W20260428 02:32:52.719334 69352 worker_pool.cpp:311] Too many errors found in local RNIC 10.83.77.226:16152@mlx5_103, mark it inactive
+E20260428 02:32:52.727481 69352 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:52.735191 69352 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:52.742906 69352 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:52.750572 69352 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:52.758376 69352 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:52.766099 69352 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:52.773831 69352 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:52.781553 69352 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:52.792126 69303 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:52.792156 69303 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_102, mark it inactive
+E20260428 02:32:52.815992 69347 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_102, local.peer_nic_path: 10.83.77.226:16246@mlx5_0, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:52.816022 69347 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_0, mark it inactive
+E20260428 02:32:52.828632 69379 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:52.828663 69379 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_100, mark it inactive
+E20260428 02:32:52.846287 69304 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:52.846315 69304 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_100, mark it inactive
+E20260428 02:32:52.853367 69364 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:52.853397 69364 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_101, mark it inactive
+E20260428 02:32:52.860534 69303 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:52.860560 69303 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_100, mark it inactive
+E20260428 02:32:52.862154 69379 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:52.862181 69379 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_101, mark it inactive
+E20260428 02:32:52.879781 69377 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:52.879810 69377 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_102, mark it inactive
+E20260428 02:32:52.886786 69364 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:52.886811 69364 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_102, mark it inactive
+E20260428 02:32:52.888391 69303 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:52.888417 69303 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_101, mark it inactive
+E20260428 02:32:52.895443 69379 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:52.895475 69379 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_102, mark it inactive
+E20260428 02:32:52.902500 69304 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:52.902523 69304 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_101, mark it inactive
+E20260428 02:32:52.904112 69377 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:52.904142 69377 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_103, mark it inactive
+E20260428 02:32:52.932355 69379 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:52.932381 69379 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_103, mark it inactive
+E20260428 02:32:52.987977 69335 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x39bcddc0, length: 64, dest_addr: 0x5cdfba00, local_nic: mlx5_103, peer_nic: 10.83.77.226:15433@mlx5_100, dest_rkey: 2085779, retry_cnt: 1): transport retry counter exceeded
+W20260428 02:32:52.988009 69335 worker_pool.cpp:311] Too many errors found in local RNIC 10.83.77.226:15669@mlx5_103, mark it inactive
+E20260428 02:32:52.996125 69335 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3a491a00, length: 64, dest_addr: 0x5c9b2480, local_nic: mlx5_103, peer_nic: 10.83.77.226:15433@mlx5_103, dest_rkey: 2472632, retry_cnt: 0): transport retry counter exceeded
+E20260428 02:32:53.011567 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:53.011590 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:53.019304 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:53.019320 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:53.027266 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:53.027289 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:53.034984 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:53.035001 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:53.042747 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:53.042761 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:53.050462 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:53.050480 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:53.058219 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:53.058234 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:53.065955 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:53.982594 69364 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_0, local.peer_nic_path: 10.83.77.226:16246@mlx5_10, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:53.982622 69364 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_10, mark it inactive
+E20260428 02:32:54.006021 69304 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:54.006050 69304 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_103, mark it inactive
+E20260428 02:32:54.007995 69303 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:54.008026 69303 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_103, mark it inactive
+E20260428 02:32:54.326747 69306 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3a2272c0, length: 64, dest_addr: 0x5f3d4580, local_nic: mlx5_101, peer_nic: 10.83.77.226:15433@mlx5_102, dest_rkey: 2199697, retry_cnt: 0): transport retry counter exceeded
+E20260428 02:32:54.353611 69335 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_103, local.peer_nic_path: 10.83.77.226:15433@mlx5_10, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:54.353639 69335 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_10, mark it inactive
+W20260428 02:32:54.353644 69335 worker_pool.cpp:252] Failed to establish peer endpoints in local RNIC 10.83.77.226:15669@mlx5_103, mark it inactive
+E20260428 02:32:54.368599 69368 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:54.368633 69368 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_103, mark it inactive
+E20260428 02:32:54.373970 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:54.375669 69350 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:54.375698 69350 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_101, mark it inactive
+E20260428 02:32:54.402381 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:54.409332 69297 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:54.409361 69297 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_100, mark it inactive
+E20260428 02:32:54.411006 69362 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:54.411036 69362 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_101, mark it inactive
+E20260428 02:32:54.418124 69368 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:54.418154 69368 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_100, mark it inactive
+E20260428 02:32:54.423467 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:54.425158 69350 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:54.425182 69350 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_100, mark it inactive
+E20260428 02:32:54.442883 69358 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:54.442917 69358 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_102, mark it inactive
+E20260428 02:32:54.448233 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:54.460583 69362 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:54.460610 69362 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_102, mark it inactive
+E20260428 02:32:54.476713 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:54.494278 69368 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:54.494307 69368 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_102, mark it inactive
+E20260428 02:32:54.505153 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:54.506843 69350 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:54.506870 69350 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_102, mark it inactive
+E20260428 02:32:54.534096 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:54.550539 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:32:54.552132 69350 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:54.552158 69350 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_103, mark it inactive
+E20260428 02:32:55.582628 69359 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_0, local.peer_nic_path: 10.83.77.226:15433@mlx5_12, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:55.582657 69359 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_12, mark it inactive
+E20260428 02:32:55.584657 69362 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:55.584690 69362 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_103, mark it inactive
+E20260428 02:32:55.608132 69359 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:55.608158 69359 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_100, mark it inactive
+E20260428 02:32:55.609726 69362 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:55.609752 69362 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_100, mark it inactive
+E20260428 02:32:55.632979 69359 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:55.633005 69359 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_101, mark it inactive
+E20260428 02:32:55.661546 69359 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:55.661572 69359 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_103, mark it inactive
+E20260428 02:32:56.473883 69343 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3a9f6100, length: 64, dest_addr: 0x5b6ea400, local_nic: mlx5_101, peer_nic: 10.83.77.226:16246@mlx5_102, dest_rkey: 2207920, retry_cnt: 0): transport retry counter exceeded
+[2026-04-28 02:32:56 TP0] Req Time Stats(rid=2343265400e6404aae37850503004c12, bootstrap_room=6826494175313764459, input len=4269, output len=1, type=prefill): bootstrap_queue_duration(29792.19ms) = bootstrap(29792.18ms) + alloc_wait(0.01ms); queue_duration=0.30ms, forward_duration=73264.88ms, start=1020282.775, transfer_speed=0.01GB/s, transfer_total=536.00MB, #retries=0
+[2026-04-28 02:32:56] INFO:     127.0.0.1:36446 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+E20260428 02:32:56.607656 69364 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:56.607687 69364 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_100, mark it inactive
+E20260428 02:32:56.613843 69320 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_100, local.peer_nic_path: 10.83.77.226:16246@mlx5_12, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:56.613869 69320 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_12, mark it inactive
+E20260428 02:32:56.614686 69319 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:16152@mlx5_100, local.peer_nic_path: 10.83.77.226:16246@mlx5_10, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:56.614715 69319 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_10, mark it inactive
+E20260428 02:32:56.671540 69356 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:56.671569 69356 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_103, mark it inactive
+E20260428 02:32:56.674005 69364 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:56.674032 69364 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:16246@mlx5_103, mark it inactive
+E20260428 02:32:56.734890 69359 rdma_endpoint.cpp:157] Invalid argument: received packet mismatch, local.local_nic_path: 10.83.77.226:15669@mlx5_0, local.peer_nic_path: 10.83.77.226:15433@mlx5_10, peer.local_nic_path: , peer.peer_nic_path: 
+E20260428 02:32:56.734918 69359 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_10, mark it inactive
+[2026-04-28 02:32:58 TP0] Prefill batch, #new-seq: 1, #new-token: 1408, #cached-token: 2880, token usage: 0.52, #running-req: 0, #queue-req: 0, #prealloc-req: 25, #inflight-req: 3, cuda graph: False, input throughput (token/s): 288.02
+E20260428 02:32:58.804344 69297 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:58.804373 69297 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_102, mark it inactive
+E20260428 02:32:58.812654 69368 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:58.812682 69368 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_100, mark it inactive
+E20260428 02:32:58.820969 69367 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:58.820998 69367 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_101, mark it inactive
+E20260428 02:32:58.848656 69297 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:58.848685 69297 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_101, mark it inactive
+E20260428 02:32:58.850478 69367 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:58.850512 69367 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_102, mark it inactive
+E20260428 02:32:58.859351 69368 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:58.859380 69368 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_102, mark it inactive
+E20260428 02:32:58.880753 69297 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:58.880781 69297 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_103, mark it inactive
+E20260428 02:32:58.882512 69368 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:58.882541 69368 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_103, mark it inactive
+E20260428 02:32:58.891497 69367 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:58.891531 69367 worker_pool.cpp:245] Worker: Cannot make connection for endpoint: 10.83.77.226:15433@mlx5_103, mark it inactive
+[2026-04-28 02:32:59] INFO:     127.0.0.1:41702 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:32:59 TP0] Prefill batch, #new-seq: 1, #new-token: 64, #cached-token: 0, token usage: 0.72, #running-req: 0, #queue-req: 3, #prealloc-req: 19, #inflight-req: 4, cuda graph: False, input throughput (token/s): 1332.65
+[2026-04-28 02:32:59] INFO:     127.0.0.1:41702 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:00 TP0] Prefill batch, #new-seq: 3, #new-token: 8192, #cached-token: 4672, token usage: 0.84, #running-req: 0, #queue-req: 1, #prealloc-req: 19, #inflight-req: 6, cuda graph: False, input throughput (token/s): 304.61
+E20260428 02:33:00.232445 69346 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3a9fa1c0, length: 64, dest_addr: 0x5b415800, local_nic: mlx5_102, peer_nic: 10.83.77.226:16246@mlx5_101, dest_rkey: 2337967, retry_cnt: 0): transport retry counter exceeded
+E20260428 02:33:00.236707 69352 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3bd1fe40, length: 512, dest_addr: 0x5fc22b00, local_nic: mlx5_103, peer_nic: 10.83.77.226:16246@mlx5_100, dest_rkey: 1571772, retry_cnt: 1): transport retry counter exceeded
+W20260428 02:33:00.236742 69352 worker_pool.cpp:311] Too many errors found in local RNIC 10.83.77.226:16152@mlx5_103, mark it inactive
+[2026-04-28 02:33:00 TP0] Prefill batch, #new-seq: 3, #new-token: 8192, #cached-token: 192, token usage: 0.87, #running-req: 0, #queue-req: 0, #prealloc-req: 20, #inflight-req: 8, cuda graph: False, input throughput (token/s): 28836.71
+[2026-04-28 02:33:00 TP0] Prefill batch, #new-seq: 2, #new-token: 4224, #cached-token: 128, token usage: 0.87, #running-req: 0, #queue-req: 0, #prealloc-req: 20, #inflight-req: 10, cuda graph: False, input throughput (token/s): 83027.88
+Process Process-1:
+Process Process-2:
+Process Process-3:
+[2026-04-28 02:33:01] SIGTERM received. signum=None frame=None. Draining requests and shutting down...
+[2026-04-28 02:33:01] SIGTERM received. signum=None frame=None. Draining requests and shutting down...
+Traceback (most recent call last):
+Traceback (most recent call last):
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/multiprocessing/process.py", line 314, in _bootstrap
+    self.run()
+  File "/usr/lib/python3.12/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/sglang/python/sglang/srt/managers/detokenizer_manager.py", line 403, in run_detokenizer_process
+    manager.event_loop()
+  File "/sglang/python/sglang/srt/managers/detokenizer_manager.py", line 141, in event_loop
+    recv_obj = self.recv_from_scheduler.recv_pyobj()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/zmq/sugar/socket.py", line 989, in recv_pyobj
+    msg = self.recv(flags)
+          ^^^^^^^^^^^^^^^^
+  File "zmq/backend/cython/_zmq.py", line 1218, in zmq.backend.cython._zmq.Socket.recv
+    def recv(self, flags=0, copy: bint = True, track: bint = False):
+    ^^^^^^^^^^^
+  File "zmq/backend/cython/_zmq.py", line 1253, in zmq.backend.cython._zmq.Socket.recv
+    return _recv_copy(self.handle, flags)
+    ^^^^^^^^^^^
+  File "zmq/backend/cython/_zmq.py", line 1408, in zmq.backend.cython._zmq._recv_copy
+    _check_rc(rc)
+    ^^^^^^^^^^^
+  File "zmq/backend/cython/_zmq.py", line 179, in zmq.backend.cython._zmq._check_rc
+    PyErr_CheckSignals()
+    ^^^^^^^^^^^
+KeyboardInterrupt
+  File "/usr/lib/python3.12/multiprocessing/process.py", line 314, in _bootstrap
+    self.run()
+  File "/usr/lib/python3.12/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/sglang/python/sglang/srt/managers/scheduler.py", line 3661, in run_scheduler_process
+    scheduler.run_event_loop()
+  File "/usr/lib/python3.12/multiprocessing/process.py", line 314, in _bootstrap
+    self.run()
+  File "/sglang/python/sglang/srt/managers/scheduler.py", line 1300, in run_event_loop
+    dispatch_event_loop(self)
+  File "/sglang/python/sglang/srt/managers/scheduler.py", line 3549, in dispatch_event_loop
+    scheduler.event_loop_overlap_disagg_prefill()
+  File "/usr/lib/python3.12/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.12/dist-packages/torch/utils/_contextlib.py", line 120, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/sglang/python/sglang/srt/managers/scheduler.py", line 3661, in run_scheduler_process
+    scheduler.run_event_loop()
+  File "/sglang/python/sglang/srt/disaggregation/prefill.py", line 448, in event_loop_overlap_disagg_prefill
+    self.process_disagg_prefill_inflight_queue()
+  File "/sglang/python/sglang/srt/managers/scheduler.py", line 1300, in run_event_loop
+    dispatch_event_loop(self)
+  File "/sglang/python/sglang/srt/disaggregation/prefill.py", line 590, in process_disagg_prefill_inflight_queue
+    polls = poll_and_all_reduce_attn_cp_tp_group(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/sglang/python/sglang/srt/managers/scheduler.py", line 3549, in dispatch_event_loop
+    scheduler.event_loop_overlap_disagg_prefill()
+  File "/sglang/python/sglang/srt/disaggregation/utils.py", line 70, in poll_and_all_reduce_attn_cp_tp_group
+    polls = poll_and_all_reduce(pollers, attn_tp_cpu_group)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/utils/_contextlib.py", line 120, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/sglang/python/sglang/srt/disaggregation/utils.py", line 59, in poll_and_all_reduce
+    dist.all_reduce(tensor_to_reduce, op=dist.ReduceOp.MIN, group=gloo_group)
+  File "/sglang/python/sglang/srt/disaggregation/prefill.py", line 448, in event_loop_overlap_disagg_prefill
+    self.process_disagg_prefill_inflight_queue()
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/c10d_logger.py", line 81, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/sglang/python/sglang/srt/disaggregation/prefill.py", line 590, in process_disagg_prefill_inflight_queue
+    polls = poll_and_all_reduce_attn_cp_tp_group(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/distributed_c10d.py", line 2942, in all_reduce
+    work.wait()
+  File "/sglang/python/sglang/srt/disaggregation/utils.py", line 70, in poll_and_all_reduce_attn_cp_tp_group
+    polls = poll_and_all_reduce(pollers, attn_tp_cpu_group)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/sglang/python/sglang/srt/disaggregation/utils.py", line 59, in poll_and_all_reduce
+    dist.all_reduce(tensor_to_reduce, op=dist.ReduceOp.MIN, group=gloo_group)
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/c10d_logger.py", line 81, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/distributed_c10d.py", line 2942, in all_reduce
+    work.wait()
+KeyboardInterrupt
+[2026-04-28 02:33:01] INFO:     Shutting down
+[2026-04-28 02:33:01] INFO:     Waiting for connections to close. (CTRL+C to force quit)
+/sglang/python/sglang/srt/entrypoints/openai/serving_chat.py:929: FastAPIDeprecationWarning: ORJSONResponse is deprecated, FastAPI now serializes data directly to JSON bytes via Pydantic when a return type or response model is set, which is faster and doesn't need a custom response class. Read more in the FastAPI docs: https://fastapi.tiangolo.com/advanced/custom-response/#orjson-or-response-model and https://fastapi.tiangolo.com/tutorial/response-model/
+  return self.create_error_response(str(e))
+[2026-04-28 02:33:01] INFO:     127.0.0.1:36480 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:01] INFO:     127.0.0.1:36466 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:01] INFO:     127.0.0.1:36390 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:01] INFO:     127.0.0.1:36494 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:01] INFO:     127.0.0.1:36454 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:01] INFO:     127.0.0.1:36424 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:01] INFO:     127.0.0.1:36508 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:01] INFO:     127.0.0.1:36532 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:01] INFO:     127.0.0.1:36536 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:01] INFO:     127.0.0.1:36558 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:01] INFO:     127.0.0.1:36570 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:01] INFO:     127.0.0.1:36578 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:01] INFO:     127.0.0.1:36544 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:02] INFO:     127.0.0.1:36360 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:02] INFO:     127.0.0.1:36374 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:02] INFO:     127.0.0.1:36600 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:02] INFO:     127.0.0.1:36592 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+E20260428 02:33:02.379539 69306 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x3a205240, length: 512, dest_addr: 0x61443040, local_nic: mlx5_101, peer_nic: 10.83.77.226:15433@mlx5_101, dest_rkey: 1836803, retry_cnt: 0): transport retry counter exceeded
+E20260428 02:33:02.379720 69326 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x38e1cb00, length: 64, dest_addr: 0x5cb582c0, local_nic: mlx5_102, peer_nic: 10.83.77.226:15433@mlx5_102, dest_rkey: 2206889, retry_cnt: 0): transport retry counter exceeded
+E20260428 02:33:02.385154 69335 worker_pool.cpp:297] Worker: Process failed for slice (opcode: 1, source_addr: 0x38e20b40, length: 64, dest_addr: 0x5cb5c300, local_nic: mlx5_103, peer_nic: 10.83.77.226:15433@mlx5_101, dest_rkey: 2341819, retry_cnt: 0): transport retry counter exceeded
+W20260428 02:33:02.385187 69335 worker_pool.cpp:311] Too many errors found in local RNIC 10.83.77.226:15669@mlx5_103, mark it inactive
+E20260428 02:33:02.398430 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:33:02.406044 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:33:02.413792 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:33:02.421422 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:33:02.429080 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:33:02.436695 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+[2026-04-28 02:33:02] INFO:     127.0.0.1:36620 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:02] INFO:     127.0.0.1:36606 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+E20260428 02:33:02.444353 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:33:02.451969 69335 rdma_context.cpp:341] Context is not active: mlx5_103
+E20260428 02:33:02.459631 70124 rdma_transport.cpp:538] Device 4 is not active
+E20260428 02:33:02.460457 70124 rdma_transport.cpp:538] Device 4 is not active
+E20260428 02:33:02.472128 70124 rdma_transport.cpp:538] Device 4 is not active
+E20260428 02:33:02.486900 70124 rdma_transport.cpp:538] Device 4 is not active
+[2026-04-28 02:33:02] Subprocess detokenizer (pid=68474) crashed with exit code 1. Triggering SIGQUIT for cleanup...
+[2026-04-28 02:33:02] SIGQUIT received. signum=None, frame=None. It usually means one child failed.
+E20260428 02:33:02.512537 70124 rdma_transport.cpp:538] Device 4 is not active

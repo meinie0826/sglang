@@ -1,0 +1,779 @@
+/sglang/python/sglang/launch_server.py:51: UserWarning: 'python -m sglang.launch_server' is still supported, but 'sglang serve' is the recommended entrypoint.
+  Example: sglang serve --model-path <model> [options]
+  warnings.warn(
+TensorRT-LLM MHA only supports page_size of 16, 32 or 64, changing page_size from None to 64.
+Cuda graph is disabled for prefill server when piecewise cuda graph is not enabled.
+/sglang/python/sglang/srt/entrypoints/http_server.py:173: FastAPIDeprecationWarning: ORJSONResponse is deprecated, FastAPI now serializes data directly to JSON bytes via Pydantic when a return type or response model is set, which is faster and doesn't need a custom response class. Read more in the FastAPI docs: https://fastapi.tiangolo.com/advanced/custom-response/#orjson-or-response-model and https://fastapi.tiangolo.com/tutorial/response-model/
+  from sglang.srt.utils.json_response import (
+[2026-04-28 02:37:40] server_args=ServerArgs(model_path='/media/ssd1/qwen3-32b', tokenizer_path='/media/ssd1/qwen3-32b', tokenizer_mode='auto', tokenizer_worker_num=1, skip_tokenizer_init=False, load_format='auto', model_loader_extra_config='{}', trust_remote_code=True, context_length=None, is_embedding=False, enable_multimodal=None, revision=None, model_impl='auto', host='127.0.0.1', port=31000, fastapi_root_path='', grpc_mode=False, skip_server_warmup=False, warmups=None, nccl_port=None, checkpoint_engine_wait_weights_before_ready=False, ssl_keyfile=None, ssl_certfile=None, ssl_ca_certs=None, ssl_keyfile_password=None, enable_ssl_refresh=False, dtype='auto', quantization=None, quantization_param_path=None, kv_cache_dtype='auto', enable_fp32_lm_head=False, modelopt_quant=None, modelopt_checkpoint_restore_path=None, modelopt_checkpoint_save_path=None, modelopt_export_path=None, quantize_and_serve=False, rl_quant_profile=None, mem_fraction_static=0.72, max_running_requests=128, max_queued_requests=None, max_total_tokens=65536, chunked_prefill_size=8192, enable_dynamic_chunking=False, max_prefill_tokens=32768, prefill_max_requests=None, schedule_policy='fcfs', enable_priority_scheduling=False, disable_priority_preemption=False, default_priority_value=None, abort_on_priority_when_disabled=False, schedule_low_priority_values_first=False, priority_scheduling_preemption_threshold=10, schedule_conservativeness=1.0, page_size=64, swa_full_tokens_ratio=0.8, disable_hybrid_swa_memory=False, radix_eviction_policy='lru', enable_prefill_delayer=False, prefill_delayer_max_delay_passes=30, prefill_delayer_token_usage_low_watermark=None, prefill_delayer_forward_passes_buckets=None, prefill_delayer_wait_seconds_buckets=None, device='cuda', tp_size=2, pp_size=1, pp_max_micro_batch_size=None, pp_async_batch_depth=0, stream_interval=1, stream_response_default_include_usage=False, incremental_streaming_output=False, enable_streaming_session=False, random_seed=864044190, constrained_json_whitespace_pattern=None, constrained_json_disable_any_whitespace=False, watchdog_timeout=300, soft_watchdog_timeout=None, dist_timeout=None, download_dir=None, model_checksum=None, base_gpu_id=0, gpu_id_step=1, sleep_on_idle=False, use_ray=False, custom_sigquit_handler=None, log_level='info', log_level_http='info', log_requests=False, log_requests_level=2, log_requests_format='text', log_requests_target=None, uvicorn_access_log_exclude_prefixes=[], crash_dump_folder=None, show_time_cost=False, enable_metrics=True, enable_mfu_metrics=False, enable_metrics_for_all_schedulers=False, tokenizer_metrics_custom_labels_header='x-custom-labels', tokenizer_metrics_allowed_custom_labels=None, extra_metric_labels=None, bucket_time_to_first_token=None, bucket_inter_token_latency=None, bucket_e2e_request_latency=None, collect_tokens_histogram=False, prompt_tokens_buckets=None, generation_tokens_buckets=None, gc_warning_threshold_secs=0.0, decode_log_interval=40, enable_request_time_stats_logging=True, kv_events_config=None, enable_trace=False, otlp_traces_endpoint='localhost:4317', export_metrics_to_file=True, export_metrics_to_file_dir='/sglang/artifacts/ttft_online/qwen3_32b_pd_ttft_20260428_023726/prefill/metrics', api_key=None, admin_api_key=None, served_model_name='/media/ssd1/qwen3-32b', weight_version='default', chat_template=None, hf_chat_template_name=None, completion_template=None, file_storage_path='sglang_storage', enable_cache_report=False, reasoning_parser=None, tool_call_parser=None, tool_server=None, sampling_defaults='model', dp_size=1, load_balance_method='follow_bootstrap_room', attn_cp_size=1, moe_dp_size=1, dist_init_addr=None, nnodes=1, node_rank=0, json_model_override_args='{}', preferred_sampling_params=None, enable_lora=None, enable_lora_overlap_loading=None, max_lora_rank=None, lora_target_modules=None, lora_paths=None, max_loaded_loras=None, max_loras_per_batch=8, lora_eviction_policy='lru', lora_backend='csgmv', max_lora_chunk_size=16, experts_shared_outer_loras=None, attention_backend='trtllm_mha', decode_attention_backend=None, prefill_attention_backend=None, sampling_backend='flashinfer', grammar_backend='xgrammar', mm_attention_backend=None, fp8_gemm_runner_backend='auto', fp4_gemm_runner_backend='auto', nsa_prefill_backend=None, nsa_decode_backend=None, disable_flashinfer_autotune=False, mamba_backend='triton', speculative_algorithm=None, speculative_draft_model_path=None, speculative_draft_model_revision=None, speculative_draft_load_format=None, speculative_num_steps=None, speculative_eagle_topk=None, speculative_num_draft_tokens=None, speculative_accept_threshold_single=1.0, speculative_accept_threshold_acc=1.0, speculative_token_map=None, speculative_attention_mode='prefill', speculative_draft_attention_backend=None, speculative_moe_runner_backend='auto', speculative_moe_a2a_backend=None, speculative_draft_model_quantization=None, speculative_ngram_min_bfs_breadth=1, speculative_ngram_max_bfs_breadth=10, speculative_ngram_match_type='BFS', speculative_ngram_max_trie_depth=18, speculative_ngram_capacity=10000000, enable_multi_layer_eagle=False, ep_size=1, moe_a2a_backend='none', moe_runner_backend='auto', flashinfer_mxfp4_moe_precision='default', enable_flashinfer_allreduce_fusion=False, enforce_disable_flashinfer_allreduce_fusion=False, enable_aiter_allreduce_fusion=False, deepep_mode='auto', ep_num_redundant_experts=0, ep_dispatch_algorithm=None, init_expert_location='trivial', enable_eplb=False, eplb_algorithm='auto', eplb_rebalance_num_iterations=1000, eplb_rebalance_layers_per_chunk=None, eplb_min_rebalancing_utilization_threshold=1.0, expert_distribution_recorder_mode=None, expert_distribution_recorder_buffer_size=1000, enable_expert_distribution_metrics=False, deepep_config=None, moe_dense_tp_size=None, elastic_ep_backend=None, enable_elastic_expert_backup=False, mooncake_ib_device=None, max_mamba_cache_size=None, mamba_ssm_dtype=None, mamba_full_memory_ratio=0.9, mamba_scheduler_strategy='no_buffer', mamba_track_interval=256, linear_attn_backend='triton', linear_attn_decode_backend=None, linear_attn_prefill_backend=None, enable_hierarchical_cache=False, hicache_ratio=2.0, hicache_size=0, hicache_write_policy='write_through', hicache_io_backend='kernel', hicache_mem_layout='layer_first', hicache_storage_backend=None, hicache_storage_prefetch_policy='best_effort', hicache_storage_backend_extra_config=None, enable_hisparse=False, hisparse_config=None, enable_lmcache=False, kt_weight_path=None, kt_method='AMXINT4', kt_cpuinfer=None, kt_threadpool_count=2, kt_num_gpu_experts=None, kt_max_deferred_experts_per_token=None, dllm_algorithm=None, dllm_algorithm_config=None, enable_double_sparsity=False, ds_channel_config_path=None, ds_heavy_channel_num=32, ds_heavy_token_num=256, ds_heavy_channel_type='qk', ds_sparse_decode_threshold=4096, cpu_offload_gb=0, offload_group_size=-1, offload_num_in_group=1, offload_prefetch_step=1, offload_mode='cpu', multi_item_scoring_delimiter=None, disable_radix_cache=False, cuda_graph_max_bs=512, cuda_graph_bs=[1, 2, 4, 8, 12, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232, 240, 248, 256, 272, 288, 304, 320, 336, 352, 368, 384, 400, 416, 432, 448, 464, 480, 496, 512], disable_cuda_graph=True, disable_cuda_graph_padding=False, enable_profile_cuda_graph=False, enable_cudagraph_gc=False, enable_layerwise_nvtx_marker=False, enable_nccl_nvls=False, enable_symm_mem=False, disable_flashinfer_cutlass_moe_fp4_allgather=False, enable_tokenizer_batch_encode=False, disable_tokenizer_batch_decode=False, disable_outlines_disk_cache=False, disable_custom_all_reduce=False, enable_mscclpp=False, enable_torch_symm_mem=False, pre_warm_nccl=False, disable_overlap_schedule=False, enable_mixed_chunk=False, enable_dp_attention=False, enable_dp_lm_head=False, enable_two_batch_overlap=False, enable_single_batch_overlap=False, tbo_token_distribution_threshold=0.48, enable_torch_compile=False, disable_piecewise_cuda_graph=True, enforce_piecewise_cuda_graph=False, enable_torch_compile_debug_mode=False, torch_compile_max_bs=32, piecewise_cuda_graph_max_tokens=8192, piecewise_cuda_graph_tokens=[4, 8, 12, 16, 20, 24, 28, 32, 48, 64, 80, 96, 112, 128, 144, 160, 176, 192, 208, 224, 240, 256, 288, 320, 352, 384, 416, 448, 480, 512, 576, 640, 704, 768, 832, 896, 960, 1024, 1280, 1536, 1792, 2048, 2304, 2560, 2816, 3072, 3328, 3584, 3840, 4096, 4608, 5120, 5632, 6144, 6656, 7168, 7680, 8192], piecewise_cuda_graph_compiler='eager', torchao_config='', enable_nan_detection=False, enable_p2p_check=False, triton_attention_reduce_in_fp32=False, triton_attention_num_kv_splits=8, triton_attention_split_tile_size=None, num_continuous_decode_steps=1, delete_ckpt_after_loading=False, enable_memory_saver=False, enable_weights_cpu_backup=False, enable_draft_weights_cpu_backup=False, allow_auto_truncate=False, enable_custom_logit_processor=False, flashinfer_mla_disable_ragged=False, disable_shared_experts_fusion=False, disable_chunked_prefix_cache=False, disable_fast_image_processor=False, keep_mm_feature_on_device=False, enable_return_hidden_states=False, enable_return_routed_experts=False, scheduler_recv_interval=1, numa_node=None, enable_deterministic_inference=False, rl_on_policy_target=None, enable_attn_tp_input_scattered=False, gc_threshold=None, enable_nsa_prefill_context_parallel=False, nsa_prefill_cp_mode='round-robin-split', enable_fused_qk_norm_rope=False, enable_precise_embedding_interpolation=False, enable_fused_moe_sum_all_reduce=False, enable_prefill_context_parallel=False, prefill_cp_mode='in-seq-split', enable_dynamic_batch_tokenizer=False, dynamic_batch_tokenizer_batch_size=32, dynamic_batch_tokenizer_batch_timeout=0.002, debug_tensor_dump_output_folder=None, debug_tensor_dump_layers=None, debug_tensor_dump_input_file=None, debug_tensor_dump_inject=False, disaggregation_mode='prefill', disaggregation_transfer_backend='mooncake', disaggregation_bootstrap_port=8998, disaggregation_ib_device='mlx5_10,mlx5_11,mlx5_12,mlx5_13', disaggregation_decode_enable_offload_kvcache=False, num_reserved_decode_tokens=512, disaggregation_decode_polling_interval=1, encoder_only=False, language_only=False, encoder_transfer_backend='zmq_to_scheduler', encoder_urls=[], enable_adaptive_dispatch_to_encoder=False, custom_weight_loader=[], weight_loader_disable_mmap=False, remote_instance_weight_loader_seed_instance_ip=None, remote_instance_weight_loader_seed_instance_service_port=None, remote_instance_weight_loader_send_weights_group_ports=None, remote_instance_weight_loader_backend='nccl', remote_instance_weight_loader_start_seed_via_transfer_engine=False, engine_info_bootstrap_port=6789, modelexpress_config=None, enable_pdmux=False, pdmux_config_path=None, sm_group_num=8, enable_broadcast_mm_inputs_process=False, enable_prefix_mm_cache=False, mm_enable_dp_encoder=False, mm_process_config={}, limit_mm_data_per_request=None, enable_mm_global_cache=False, decrypted_config_file=None, decrypted_draft_config_file=None, forward_hooks=None)
+[2026-04-28 02:37:41] mp.set_executable /usr/bin/python -> /tmp/sglang_temp_file_1777343861.3437936_1613048.sh (script='#!/bin/sh\nexec numactl --cpunodebind=0 --membind=0 /usr/bin/python "$@"')
+[2026-04-28 02:37:41] mp.set_executable revert to /usr/bin/python
+[2026-04-28 02:37:41] mp.set_executable /usr/bin/python -> /tmp/sglang_temp_file_1777343861.3457413_7329434.sh (script='#!/bin/sh\nexec numactl --cpunodebind=0 --membind=0 /usr/bin/python "$@"')
+[2026-04-28 02:37:41] mp.set_executable revert to /usr/bin/python
+[2026-04-28 02:37:42] CommonKVBootstrapServer started successfully on 127.0.0.1:8998
+[2026-04-28 02:37:42] Using default HuggingFace chat template with detected content format: string
+[2026-04-28 02:37:52 TP0] NUMA affinity is already constrained for process, skipping NUMA node configuration for GPU. Remove your constraints to allow automatic configuration.
+[2026-04-28 02:37:52 TP1] NUMA affinity is already constrained for process, skipping NUMA node configuration for GPU. Remove your constraints to allow automatic configuration.
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+W20260428 02:37:53.412779 71944 transfer_engine_py.cpp:77] Using default malloc/free for protocol: rdma
+I20260428 02:37:53.412868 71944 transfer_engine_impl.cpp:586] Metrics reporting is disabled (set MC_TE_METRIC=1 to enable)
+I20260428 02:37:53.412878 71944 transfer_engine_impl.cpp:105] Transfer Engine parseHostNameWithPort. server_name: 10.83.77.226 port: 12001
+I20260428 02:37:53.412904 71944 transfer_engine_impl.cpp:172] Transfer Engine RPC using P2P handshake, listening on 10.83.77.226:15230
+I20260428 02:37:53.413192 71944 transfer_engine_impl.cpp:217] Auto-discovering topology...
+I20260428 02:37:53.423643 71944 topology.cpp:120] Device mlx5_10 port 1 is available
+I20260428 02:37:53.444407 71944 topology.cpp:120] Device mlx5_11 port 1 is available
+I20260428 02:37:53.465302 71944 topology.cpp:120] Device mlx5_12 port 1 is available
+I20260428 02:37:53.486281 71944 topology.cpp:120] Device mlx5_13 port 1 is available
+I20260428 02:37:53.488175 71944 transfer_engine_impl.cpp:232] Topology discovery complete. Found 4 HCAs.
+I20260428 02:37:53.488185 71944 rdma_transport.cpp:63] [RDMA] Relaxed ordering disabled via MC_IB_PCI_RELAXED_ORDERING=0. Falling back to strict ordering.
+I20260428 02:37:53.488210 71944 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:37:53.506222 71944 rdma_context.cpp:575] Find best gid index: 3 on mlx5_11/ (network state: with network device)
+I20260428 02:37:53.507239 71944 rdma_context.cpp:140] RDMA device: mlx5_11, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0c:c2
+I20260428 02:37:53.507262 71944 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:37:53.512302 71944 rdma_context.cpp:575] Find best gid index: 3 on mlx5_10/ (network state: with network device)
+I20260428 02:37:53.513257 71944 rdma_context.cpp:140] RDMA device: mlx5_10, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0c:42
+I20260428 02:37:53.513271 71944 rdma_context.cpp:77] Using SIEVE endpoint store
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+W20260428 02:37:53.517776 71945 transfer_engine_py.cpp:77] Using default malloc/free for protocol: rdma
+I20260428 02:37:53.517832 71945 transfer_engine_impl.cpp:586] Metrics reporting is disabled (set MC_TE_METRIC=1 to enable)
+I20260428 02:37:53.517839 71945 transfer_engine_impl.cpp:105] Transfer Engine parseHostNameWithPort. server_name: 10.83.77.226 port: 12001
+I20260428 02:37:53.517861 71945 transfer_engine_impl.cpp:172] Transfer Engine RPC using P2P handshake, listening on 10.83.77.226:15040
+I20260428 02:37:53.517918 71945 transfer_engine_impl.cpp:217] Auto-discovering topology...
+I20260428 02:37:53.525627 71945 topology.cpp:120] Device mlx5_10 port 1 is available
+I20260428 02:37:53.530871 71945 topology.cpp:120] Device mlx5_11 port 1 is available
+I20260428 02:37:53.531361 71944 rdma_context.cpp:575] Find best gid index: 3 on mlx5_12/ (network state: with network device)
+I20260428 02:37:53.532616 71944 rdma_context.cpp:140] RDMA device: mlx5_12, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0d:42
+I20260428 02:37:53.532632 71944 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:37:53.536355 71945 topology.cpp:120] Device mlx5_12 port 1 is available
+I20260428 02:37:53.542076 71945 topology.cpp:120] Device mlx5_13 port 1 is available
+I20260428 02:37:53.543172 71945 transfer_engine_impl.cpp:232] Topology discovery complete. Found 4 HCAs.
+I20260428 02:37:53.543179 71945 rdma_transport.cpp:63] [RDMA] Relaxed ordering disabled via MC_IB_PCI_RELAXED_ORDERING=0. Falling back to strict ordering.
+I20260428 02:37:53.543198 71945 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:37:53.547988 71945 rdma_context.cpp:575] Find best gid index: 3 on mlx5_11/ (network state: with network device)
+I20260428 02:37:53.548710 71945 rdma_context.cpp:140] RDMA device: mlx5_11, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0c:c2
+I20260428 02:37:53.548729 71945 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:37:53.550300 71944 rdma_context.cpp:575] Find best gid index: 3 on mlx5_13/ (network state: with network device)
+I20260428 02:37:53.550937 71944 rdma_context.cpp:140] RDMA device: mlx5_13, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0d:c2
+I20260428 02:37:53.550983 71944 transfer_engine_impl.cpp:271] Using RDMA transport (RoCE/iWARP)
+[2026-04-28 02:37:53 TP0] Init torch distributed begin.
+I20260428 02:37:53.566804 71945 rdma_context.cpp:575] Find best gid index: 3 on mlx5_10/ (network state: with network device)
+I20260428 02:37:53.625963 71945 rdma_context.cpp:140] RDMA device: mlx5_10, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0c:42
+I20260428 02:37:53.625998 71945 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:37:53.643467 71945 rdma_context.cpp:575] Find best gid index: 3 on mlx5_12/ (network state: with network device)
+I20260428 02:37:53.644122 71945 rdma_context.cpp:140] RDMA device: mlx5_12, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0d:42
+I20260428 02:37:53.644136 71945 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:37:53.649209 71945 rdma_context.cpp:575] Find best gid index: 3 on mlx5_13/ (network state: with network device)
+I20260428 02:37:53.649750 71945 rdma_context.cpp:140] RDMA device: mlx5_13, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0d:c2
+I20260428 02:37:53.649786 71945 transfer_engine_impl.cpp:271] Using RDMA transport (RoCE/iWARP)
+[2026-04-28 02:37:53 TP1] Init torch distributed begin.
+[Gloo] Rank 1 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+[Gloo] Rank 0 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+[Gloo] Rank 1 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+[Gloo] Rank 0 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+[2026-04-28 02:37:54 TP0] sglang is using nccl==2.28.3
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[2026-04-28 02:37:56 TP0] Init torch distributed ends. elapsed=2.65 s, mem usage=1.16 GB
+[2026-04-28 02:37:56 TP1] Init torch distributed ends. elapsed=2.55 s, mem usage=1.16 GB
+[2026-04-28 02:37:56 TP0] Load weight begin. avail mem=176.58 GB
+[2026-04-28 02:37:56 TP1] Load weight begin. avail mem=176.58 GB
+Multi-thread loading shards:   0% Completed | 0/17 [00:00<?, ?it/s]Multi-thread loading shards:   6% Completed | 1/17 [00:00<00:08,  1.78it/s]Multi-thread loading shards:  12% Completed | 2/17 [00:01<00:09,  1.50it/s]Multi-thread loading shards:  18% Completed | 3/17 [00:02<00:09,  1.44it/s]Multi-thread loading shards:  24% Completed | 4/17 [00:02<00:09,  1.39it/s]Multi-thread loading shards:  29% Completed | 5/17 [00:03<00:08,  1.38it/s]Multi-thread loading shards:  35% Completed | 6/17 [00:04<00:07,  1.39it/s]Multi-thread loading shards:  41% Completed | 7/17 [00:04<00:07,  1.40it/s]Multi-thread loading shards:  47% Completed | 8/17 [00:05<00:06,  1.41it/s]Multi-thread loading shards:  53% Completed | 9/17 [00:06<00:05,  1.43it/s]Multi-thread loading shards:  59% Completed | 10/17 [00:07<00:04,  1.43it/s]Multi-thread loading shards:  65% Completed | 11/17 [00:07<00:04,  1.43it/s]Multi-thread loading shards:  71% Completed | 12/17 [00:08<00:03,  1.43it/s]Multi-thread loading shards:  76% Completed | 13/17 [00:09<00:02,  1.39it/s]Multi-thread loading shards:  82% Completed | 14/17 [00:09<00:02,  1.35it/s]Multi-thread loading shards:  88% Completed | 15/17 [00:10<00:01,  1.31it/s]Multi-thread loading shards:  94% Completed | 16/17 [00:11<00:00,  1.30it/s][2026-04-28 02:38:08 TP1] Load weight end. elapsed=11.86 s, type=Qwen3ForCausalLM, avail mem=145.99 GB, mem usage=30.59 GB.
+Multi-thread loading shards: 100% Completed | 17/17 [00:12<00:00,  1.45it/s]Multi-thread loading shards: 100% Completed | 17/17 [00:12<00:00,  1.41it/s]
+[2026-04-28 02:38:09 TP0] Load weight end. elapsed=12.33 s, type=Qwen3ForCausalLM, avail mem=145.99 GB, mem usage=30.59 GB.
+[2026-04-28 02:38:09 TP0] Using KV cache dtype: torch.bfloat16
+[2026-04-28 02:38:09 TP0] KV Cache is allocated. #tokens: 65536, K size: 4.00 GB, V size: 4.00 GB
+[2026-04-28 02:38:09 TP0] Memory pool end. avail mem=137.71 GB
+[2026-04-28 02:38:09 TP1] KV Cache is allocated. #tokens: 65536, K size: 4.00 GB, V size: 4.00 GB
+[2026-04-28 02:38:09 TP1] Memory pool end. avail mem=137.71 GB
+[2026-04-28 02:38:09 TP0] Disable piecewise CUDA graph because --disable-piecewise-cuda-graph is set
+[2026-04-28 02:38:09 TP1] Disable piecewise CUDA graph because --disable-piecewise-cuda-graph is set
+[2026-04-28 02:38:10 TP0] max_total_num_tokens=65536, chunked_prefill_size=8192, max_prefill_tokens=32768, max_running_requests=128, context_len=40960, available_gpu_mem=136.61 GB
+[2026-04-28 02:38:11] INFO:     Started server process [71661]
+[2026-04-28 02:38:11] INFO:     Waiting for application startup.
+[2026-04-28 02:38:11] Using default chat sampling params from model generation config: {'temperature': 0.6, 'top_k': 20, 'top_p': 0.95}
+[2026-04-28 02:38:11] INFO:     Application startup complete.
+[2026-04-28 02:38:11] INFO:     Uvicorn running on http://127.0.0.1:31000 (Press CTRL+C to quit)
+[2026-04-28 02:38:12] INFO:     127.0.0.1:63438 - "GET /model_info HTTP/1.1" 200 OK
+[2026-04-28 02:38:12] Start of pd disaggregation warmup ...
+2026-04-28 02:38:13,609 - CUTE_DSL - WARNING - [handle_import_error] - Unexpected error during package walk: cutlass.cute.experimental
+[2026-04-28 02:38:13 TP1] Unexpected error during package walk: cutlass.cute.experimental
+2026-04-28 02:38:13,714 - CUTE_DSL - WARNING - [handle_import_error] - Unexpected error during package walk: cutlass.cute.experimental
+[2026-04-28 02:38:13 TP0] Unexpected error during package walk: cutlass.cute.experimental
+[2026-04-28 02:38:14] INFO:     127.0.0.1:33756 - "GET /health HTTP/1.1" 503 Service Unavailable
+[2026-04-28 02:38:14 TP0] Prefill batch, #new-seq: 1, #new-token: 64, #cached-token: 0, token usage: 0.00, #running-req: 0, #queue-req: 0, #prealloc-req: 0, #inflight-req: 1, cuda graph: False, input throughput (token/s): 0.00
+[2026-04-28 02:38:14 TP0] Req Time Stats(rid=20e74e3934be4f9dab1a823512c3f92c, bootstrap_room=0, input len=4, output len=1, type=prefill): bootstrap_queue_duration(0.32ms) = bootstrap(0.30ms) + alloc_wait(0.02ms); queue_duration=1.09ms, forward_duration=2291.40ms, start=1020702.008, transfer_speed=0.48GB/s, transfer_total=8.00MB, #retries=0
+[2026-04-28 02:38:14] INFO:     127.0.0.1:63440 - "POST /generate HTTP/1.1" 200 OK
+[2026-04-28 02:38:14] End of prefill disaggregation mode warmup with status 200, resp: [{'text': '0', 'output_ids': [15], 'meta_info': {'id': '20e74e3934be4f9dab1a823512c3f92c', 'finish_reason': {'type': 'length', 'length': 0}, 'prompt_tokens': 4, 'weight_version': 'default', 'total_retractions': 0, 'forward_entry_time': 1777343892.6753669, 'prefill_finished_time': 1777343894.9492931, 'queue_time': 0.0010945796966552734, 'prefill_waiting_latency': 0.4019467830657959, 'prefill_launch_latency': 1.871497392654419, 'running_requests_on_arrival': 0, 'waiting_requests_on_arrival': 0, 'running_decode_tokens_on_arrival': 0, 'remaining_prefill_chunks_on_arrival': 0, 'waiting_queue_total_chunks_on_arrival': 0, 'reasoning_tokens': 0, 'completion_tokens': 1, 'cached_tokens': 0, 'cached_tokens_details': None, 'dp_rank': None, 'e2e_latency': 2.432670232024975, 'request_received_ts': 1777343892.5366988, 'api_server_dispatch_finish_ts': 1777343892.5370924, 'request_finished_ts': 1777343894.9693692, 'inference_time': 2.2940022388938814, 'decode_throughput': 140588.12752864158, 'ttft': 2.4326631190488115, 'extend_tokens': 4, 'response_sent_to_client_ts': 1777343894.9704323}}]
+[2026-04-28 02:38:14] The server is fired up and ready to roll!
+[2026-04-28 02:38:19 TP0] Prefill batch, #new-seq: 1, #new-token: 64, #cached-token: 0, token usage: 0.00, #running-req: 0, #queue-req: 0, #prealloc-req: 0, #inflight-req: 1, cuda graph: False, input throughput (token/s): 12.92
+[2026-04-28 02:38:19 TP0] Req Time Stats(rid=HEALTH_CHECK_1777343899.8065517, bootstrap_room=0, input len=1, output len=1, type=prefill): bootstrap_queue_duration(0.36ms) = bootstrap(0.34ms) + alloc_wait(0.02ms); queue_duration=0.19ms, forward_duration=96.99ms, start=1020709.142, transfer_speed=7.89GB/s, transfer_total=8.00MB, #retries=0
+[2026-04-28 02:38:20] INFO:     127.0.0.1:33768 - "GET /health HTTP/1.1" 200 OK
+[2026-04-28 02:38:22] INFO:     127.0.0.1:33794 - "PRI %2A HTTP/2.0" 404 Not Found
+[2026-04-28 02:38:22] WARNING:  Invalid HTTP request received.
+[2026-04-28 02:38:22] INFO:     127.0.0.1:33808 - "PRI %2A HTTP/2.0" 404 Not Found
+[2026-04-28 02:38:22] WARNING:  Invalid HTTP request received.
+[2026-04-28 02:38:22 TP0] Prefill batch, #new-seq: 1, #new-token: 64, #cached-token: 0, token usage: 0.00, #running-req: 0, #queue-req: 0, #prealloc-req: 0, #inflight-req: 1, cuda graph: False, input throughput (token/s): 26.44
+[2026-04-28 02:38:22 TP0] Req Time Stats(rid=HEALTH_CHECK_1777343902.2936425, bootstrap_room=0, input len=1, output len=1, type=prefill): bootstrap_queue_duration(0.29ms) = bootstrap(0.28ms) + alloc_wait(0.01ms); queue_duration=0.13ms, forward_duration=31.16ms, start=1020711.628, transfer_speed=8.87GB/s, transfer_total=8.00MB, #retries=0
+[2026-04-28 02:38:23] INFO:     127.0.0.1:33782 - "GET /health HTTP/1.1" 200 OK
+[2026-04-28 02:38:23] INFO:     127.0.0.1:33824 - "GET /server_info HTTP/1.1" 200 OK
+[2026-04-28 02:38:23] INFO:     127.0.0.1:33824 - "GET /model_info HTTP/1.1" 200 OK
+/sglang/python/sglang/srt/entrypoints/openai/serving_chat.py:619: FastAPIDeprecationWarning: ORJSONResponse is deprecated, FastAPI now serializes data directly to JSON bytes via Pydantic when a return type or response model is set, which is faster and doesn't need a custom response class. Read more in the FastAPI docs: https://fastapi.tiangolo.com/advanced/custom-response/#orjson-or-response-model and https://fastapi.tiangolo.com/tutorial/response-model/
+  return self.create_error_response(str(e))
+[2026-04-28 02:38:39] INFO:     127.0.0.1:47434 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:38:39] INFO:     127.0.0.1:47506 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:38:39 TP0] Prefill batch, #new-seq: 1, #new-token: 3008, #cached-token: 0, token usage: 0.17, #running-req: 0, #queue-req: 4, #prealloc-req: 1, #inflight-req: 1, cuda graph: False, input throughput (token/s): 3.74
+[2026-04-28 02:38:39] INFO:     127.0.0.1:47512 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:38:39] INFO:     127.0.0.1:47506 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:38:39] INFO:     127.0.0.1:47512 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:38:39 TP0] Prefill batch, #new-seq: 3, #new-token: 8192, #cached-token: 0, token usage: 0.29, #running-req: 0, #queue-req: 2, #prealloc-req: 1, #inflight-req: 3, cuda graph: False, input throughput (token/s): 12172.89
+[2026-04-28 02:38:39 TP0] Req Time Stats(rid=5396d842d92b48dda6775eb1e8442878, bootstrap_room=5717516667029180696, input len=2963, output len=1, type=prefill): bootstrap_queue_duration(5.60ms) = bootstrap(5.59ms) + alloc_wait(0.01ms); queue_duration=0.22ms, forward_duration=411.60ms, start=1020728.591, transfer_speed=1.48GB/s, transfer_total=376.00MB, #retries=0
+[2026-04-28 02:38:39 TP0] Req Time Stats(rid=350d657eb8be41f1af67a03823189552, bootstrap_room=2303145591577535714, input len=9, output len=1, type=prefill): bootstrap_queue_duration(120.39ms) = bootstrap(120.38ms) + alloc_wait(0.01ms); queue_duration=0.47ms, forward_duration=295.56ms, start=1020728.592, transfer_speed=1.90GB/s, transfer_total=8.00MB, #retries=0
+[2026-04-28 02:38:39] INFO:     127.0.0.1:47512 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:38:39 TP0] Prefill batch, #new-seq: 3, #new-token: 8192, #cached-token: 128, token usage: 0.37, #running-req: 0, #queue-req: 2, #prealloc-req: 1, #inflight-req: 3, cuda graph: False, input throughput (token/s): 38864.23
+[2026-04-28 02:38:39 TP0] Req Time Stats(rid=8bd9110a360e4696bad981bb788d4587, bootstrap_room=3515601603193012306, input len=4687, output len=1, type=prefill): bootstrap_queue_duration(1.69ms) = bootstrap(1.68ms) + alloc_wait(0.00ms); queue_duration=0.43ms, forward_duration=506.19ms, start=1020728.711, transfer_speed=2.70GB/s, transfer_total=592.00MB, #retries=0
+[2026-04-28 02:38:40] INFO:     127.0.0.1:47552 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:38:40] INFO:     127.0.0.1:47422 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:38:40] INFO:     127.0.0.1:47430 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:38:40 TP0] Prefill batch, #new-seq: 3, #new-token: 8192, #cached-token: 0, token usage: 0.43, #running-req: 0, #queue-req: 1, #prealloc-req: 2, #inflight-req: 4, cuda graph: False, input throughput (token/s): 28323.33
+[2026-04-28 02:38:40 TP0] Req Time Stats(rid=bf0c1f3d01a249399fc75a9bdbef2507, bootstrap_room=2677421796631973139, input len=3937, output len=1, type=prefill): bootstrap_queue_duration(1.61ms) = bootstrap(1.61ms) + alloc_wait(0.00ms); queue_duration=0.41ms, forward_duration=795.70ms, start=1020728.711, transfer_speed=1.66GB/s, transfer_total=496.00MB, #retries=0
+[2026-04-28 02:38:40 TP0] Req Time Stats(rid=73867e376afa4fd3ab5cba70cc6f28e2, bootstrap_room=5849677769540312384, input len=4542, output len=1, type=prefill): bootstrap_queue_duration(1.59ms) = bootstrap(1.59ms) + alloc_wait(0.00ms); queue_duration=252.06ms, forward_duration=544.04ms, start=1020728.711, transfer_speed=1.91GB/s, transfer_total=568.00MB, #retries=0
+[2026-04-28 02:38:40] INFO:     127.0.0.1:47558 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:38:40] INFO:     127.0.0.1:47446 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:38:40 TP0] Prefill batch, #new-seq: 2, #new-token: 8192, #cached-token: 0, token usage: 0.42, #running-req: 0, #queue-req: 1, #prealloc-req: 7, #inflight-req: 3, cuda graph: False, input throughput (token/s): 36851.03
+[2026-04-28 02:38:40 TP0] Req Time Stats(rid=ddce5d1ff61046b4888e21a405d7f0c2, bootstrap_room=115541545544871265, input len=4724, output len=1, type=prefill): bootstrap_queue_duration(1.57ms) = bootstrap(1.56ms) + alloc_wait(0.00ms); queue_duration=252.05ms, forward_duration=766.24ms, start=1020728.711, transfer_speed=2.58GB/s, transfer_total=592.00MB, #retries=0
+[2026-04-28 02:38:40 TP0] Req Time Stats(rid=e7be0d30fc9d4f45898f7b5d0a240658, bootstrap_room=2382048075400953230, input len=4888, output len=1, type=prefill): bootstrap_queue_duration(1.55ms) = bootstrap(1.55ms) + alloc_wait(0.00ms); queue_duration=301.46ms, forward_duration=716.83ms, start=1020728.711, transfer_speed=2.68GB/s, transfer_total=616.00MB, #retries=0
+[2026-04-28 02:38:40] INFO:     127.0.0.1:47576 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:38:40] INFO:     127.0.0.1:47588 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:38:40] INFO:     127.0.0.1:47450 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:38:40] INFO:     127.0.0.1:47466 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:38:40] INFO:     127.0.0.1:47600 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:38:40] INFO:     127.0.0.1:47480 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:38:40] INFO:     127.0.0.1:47482 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:38:40 TP0] Prefill batch, #new-seq: 1, #new-token: 8192, #cached-token: 0, token usage: 0.40, #running-req: 0, #queue-req: 1, #prealloc-req: 8, #inflight-req: 1, cuda graph: False, input throughput (token/s): 25728.55
+[2026-04-28 02:38:40 TP0] Req Time Stats(rid=2c85d3df11434a489a9413d64e5bcffc, bootstrap_room=4883564266913157154, input len=2781, output len=1, type=prefill): bootstrap_queue_duration(1.50ms) = bootstrap(1.50ms) + alloc_wait(0.00ms); queue_duration=301.46ms, forward_duration=1036.19ms, start=1020728.711, transfer_speed=1.07GB/s, transfer_total=352.00MB, #retries=0
+[2026-04-28 02:38:40] INFO:     127.0.0.1:47640 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:38:40] INFO:     127.0.0.1:47496 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:38:40] INFO:     127.0.0.1:47676 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:38:40] INFO:     127.0.0.1:47496 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:38:41] INFO:     127.0.0.1:47676 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:38:41] INFO:     127.0.0.1:47676 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:38:41 TP0] Prefill batch, #new-seq: 1, #new-token: 8192, #cached-token: 0, token usage: 0.46, #running-req: 0, #queue-req: 0, #prealloc-req: 15, #inflight-req: 0, cuda graph: False, input throughput (token/s): 19914.25
+[2026-04-28 02:38:41 TP0] Prefill batch, #new-seq: 2, #new-token: 6784, #cached-token: 64, token usage: 0.46, #running-req: 0, #queue-req: 0, #prealloc-req: 20, #inflight-req: 2, cuda graph: False, input throughput (token/s): 32023.83
+[2026-04-28 02:38:41 TP0] Req Time Stats(rid=4ffa092245d34fb99c581d39f8e2faf9, bootstrap_room=8170172706064118059, input len=27441, output len=1, type=prefill): bootstrap_queue_duration(1.73ms) = bootstrap(1.72ms) + alloc_wait(0.01ms); queue_duration=209.12ms, forward_duration=1508.11ms, start=1020729.012, transfer_speed=211.12GB/s, transfer_total=3432.00MB, #retries=0
+[2026-04-28 02:38:41] INFO:     127.0.0.1:47514 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:38:41 TP0] Req Time Stats(rid=f5d5d2c58b864500bfa0a90c3c453e97, bootstrap_room=98569961588971309, input len=2839, output len=1, type=prefill): bootstrap_queue_duration(1.71ms) = bootstrap(1.71ms) + alloc_wait(0.00ms); queue_duration=1044.79ms, forward_duration=681.66ms, start=1020729.012, transfer_speed=14.23GB/s, transfer_total=360.00MB, #retries=0
+[2026-04-28 02:38:41] INFO:     127.0.0.1:47526 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:38:42] INFO:     127.0.0.1:47526 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:38:43 TP0] Prefill batch, #new-seq: 1, #new-token: 4160, #cached-token: 128, token usage: 0.07, #running-req: 0, #queue-req: 0, #prealloc-req: 22, #inflight-req: 1, cuda graph: False, input throughput (token/s): 2731.44
+[2026-04-28 02:38:43 TP0] Req Time Stats(rid=18dbf1eba5dc4da7bdaa74d4d0f4e9e8, bootstrap_room=4193290103890926609, input len=4269, output len=1, type=prefill): bootstrap_queue_duration(4353.29ms) = bootstrap(4353.28ms) + alloc_wait(0.01ms); queue_duration=0.33ms, forward_duration=153.72ms, start=1020728.711, transfer_speed=26.33GB/s, transfer_total=536.00MB, #retries=0
+[2026-04-28 02:38:43] INFO:     127.0.0.1:47434 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:38:44 TP0] Prefill batch, #new-seq: 1, #new-token: 256, #cached-token: 2816, token usage: 0.05, #running-req: 0, #queue-req: 0, #prealloc-req: 22, #inflight-req: 1, cuda graph: False, input throughput (token/s): 9388.99
+[2026-04-28 02:38:44 TP0] Req Time Stats(rid=9c5123f62c254b23a9d4de0c64ef8b9e, bootstrap_room=3414940389823289573, input len=3042, output len=1, type=prefill): bootstrap_queue_duration(4383.58ms) = bootstrap(4383.58ms) + alloc_wait(0.01ms); queue_duration=0.33ms, forward_duration=52.89ms, start=1020729.221, transfer_speed=23.86GB/s, transfer_total=384.00MB, #retries=0
+[2026-04-28 02:38:44] INFO:     127.0.0.1:47530 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:38:53] INFO:     127.0.0.1:51116 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:38:53] INFO:     127.0.0.1:51116 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:38:54 TP0] Prefill batch, #new-seq: 1, #new-token: 8192, #cached-token: 0, token usage: 0.25, #running-req: 0, #queue-req: 0, #prealloc-req: 27, #inflight-req: 0, cuda graph: False, input throughput (token/s): 26.00
+[2026-04-28 02:38:54 TP0] Prefill batch, #new-seq: 1, #new-token: 8192, #cached-token: 0, token usage: 0.38, #running-req: 0, #queue-req: 0, #prealloc-req: 28, #inflight-req: 0, cuda graph: False, input throughput (token/s): 28180.59
+[2026-04-28 02:38:54 TP0] Prefill batch, #new-seq: 1, #new-token: 8192, #cached-token: 0, token usage: 0.49, #running-req: 0, #queue-req: 0, #prealloc-req: 28, #inflight-req: 0, cuda graph: False, input throughput (token/s): 19228.03
+[2026-04-28 02:38:55 TP0] Prefill batch, #new-seq: 1, #new-token: 7488, #cached-token: 0, token usage: 0.49, #running-req: 0, #queue-req: 0, #prealloc-req: 28, #inflight-req: 1, cuda graph: False, input throughput (token/s): 22373.93
+[2026-04-28 02:38:55 TP0] Req Time Stats(rid=fef928b82ff442e8b504bdc227bc79e6, bootstrap_room=4128951092370503062, input len=32046, output len=1, type=prefill): bootstrap_queue_duration(13654.93ms) = bootstrap(13654.92ms) + alloc_wait(0.01ms); queue_duration=0.95ms, forward_duration=1428.18ms, start=1020729.515, transfer_speed=132.62GB/s, transfer_total=4008.00MB, #retries=0
+[2026-04-28 02:38:55] INFO:     127.0.0.1:47546 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:38:58] INFO:     127.0.0.1:47546 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:38:58 TP0] Prefill batch, #new-seq: 1, #new-token: 6272, #cached-token: 19392, token usage: 0.46, #running-req: 0, #queue-req: 0, #prealloc-req: 26, #inflight-req: 1, cuda graph: False, input throughput (token/s): 2232.84
+[2026-04-28 02:38:58 TP0] Prefill batch, #new-seq: 1, #new-token: 4544, #cached-token: 0, token usage: 0.65, #running-req: 0, #queue-req: 0, #prealloc-req: 26, #inflight-req: 2, cuda graph: False, input throughput (token/s): 61508.85
+[2026-04-28 02:38:58 TP0] Req Time Stats(rid=fb65274cded24ce08fcbe517bd92e57b, bootstrap_room=3700591162238476294, input len=25633, output len=1, type=prefill): bootstrap_queue_duration(18068.89ms) = bootstrap(18068.88ms) + alloc_wait(0.01ms); queue_duration=1.36ms, forward_duration=442.64ms, start=1020729.515, transfer_speed=29.89GB/s, transfer_total=3208.00MB, #retries=0
+[2026-04-28 02:38:58] INFO:     127.0.0.1:47506 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:38:59 TP0] Prefill batch, #new-seq: 2, #new-token: 8192, #cached-token: 23488, token usage: 0.55, #running-req: 0, #queue-req: 0, #prealloc-req: 26, #inflight-req: 2, cuda graph: False, input throughput (token/s): 12424.14
+[2026-04-28 02:38:59 TP0] Req Time Stats(rid=d975eb2085994955a55e51cc1716d542, bootstrap_room=7016916713562805006, input len=4516, output len=1, type=prefill): bootstrap_queue_duration(18109.51ms) = bootstrap(18109.50ms) + alloc_wait(0.01ms); queue_duration=0.20ms, forward_duration=767.14ms, start=1020729.515, transfer_speed=1.51GB/s, transfer_total=568.00MB, #retries=0
+[2026-04-28 02:38:59 TP0] Prefill batch, #new-seq: 1, #new-token: 64, #cached-token: 0, token usage: 0.48, #running-req: 0, #queue-req: 0, #prealloc-req: 26, #inflight-req: 2, cuda graph: False, input throughput (token/s): 3292883.73
+[2026-04-28 02:38:59] INFO:     127.0.0.1:47512 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:38:59 TP0] Req Time Stats(rid=aa4b4436c2d840d9b534d6ced92dcb80, bootstrap_room=5023559472485280420, input len=27437, output len=1, type=prefill): bootstrap_queue_duration(18412.10ms) = bootstrap(18412.09ms) + alloc_wait(0.01ms); queue_duration=1.53ms, forward_duration=561.70ms, start=1020729.515, transfer_speed=33.49GB/s, transfer_total=3432.00MB, #retries=0
+[2026-04-28 02:38:59] INFO:     127.0.0.1:47556 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:38:59 TP0] Req Time Stats(rid=e39d6c7419ea491585e43bbed42d4227, bootstrap_room=1604305728616453463, input len=4249, output len=1, type=prefill): bootstrap_queue_duration(18412.10ms) = bootstrap(18412.10ms) + alloc_wait(0.00ms); queue_duration=1.50ms, forward_duration=581.29ms, start=1020729.515, transfer_speed=4.48GB/s, transfer_total=536.00MB, #retries=0
+[2026-04-28 02:38:59] INFO:     127.0.0.1:47552 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:39:02 TP0] Prefill batch, #new-seq: 1, #new-token: 3904, #cached-token: 128, token usage: 0.06, #running-req: 0, #queue-req: 0, #prealloc-req: 26, #inflight-req: 1, cuda graph: False, input throughput (token/s): 18.49
+[2026-04-28 02:39:02 TP0] Req Time Stats(rid=ae3bf118e24e46c09aa8d45c7cb22534, bootstrap_room=4871653106524157536, input len=3980, output len=1, type=prefill): bootstrap_queue_duration(21997.98ms) = bootstrap(21997.97ms) + alloc_wait(0.01ms); queue_duration=0.32ms, forward_duration=140.67ms, start=1020729.732, transfer_speed=31.46GB/s, transfer_total=504.00MB, #retries=0
+[2026-04-28 02:39:02] INFO:     127.0.0.1:47574 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:39:03] INFO:     127.0.0.1:47574 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:39:03] INFO:     127.0.0.1:47574 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:39:07 TP0] Prefill batch, #new-seq: 1, #new-token: 7040, #cached-token: 0, token usage: 0.11, #running-req: 0, #queue-req: 0, #prealloc-req: 26, #inflight-req: 1, cuda graph: False, input throughput (token/s): 724.83
+[2026-04-28 02:39:07 TP0] Req Time Stats(rid=29c8281a6fa74130a38cca493078a7e1, bootstrap_room=9177773313472025746, input len=6995, output len=1, type=prefill): bootstrap_queue_duration(26960.86ms) = bootstrap(26960.85ms) + alloc_wait(0.01ms); queue_duration=0.27ms, forward_duration=254.58ms, start=1020730.054, transfer_speed=30.76GB/s, transfer_total=880.00MB, #retries=0
+[2026-04-28 02:39:07] INFO:     127.0.0.1:47422 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:39:13] INFO:     127.0.0.1:62648 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:39:13 TP0] Prefill batch, #new-seq: 1, #new-token: 3648, #cached-token: 128, token usage: 0.13, #running-req: 0, #queue-req: 0, #prealloc-req: 25, #inflight-req: 1, cuda graph: False, input throughput (token/s): 1360.83
+[2026-04-28 02:39:13 TP0] Prefill batch, #new-seq: 1, #new-token: 4608, #cached-token: 128, token usage: 0.13, #running-req: 0, #queue-req: 0, #prealloc-req: 26, #inflight-req: 2, cuda graph: False, input throughput (token/s): 25356.29
+[2026-04-28 02:39:13 TP0] Req Time Stats(rid=eab850b164cd431f8ce2c013e5fb2421, bootstrap_room=833746226551798312, input len=3753, output len=1, type=prefill): bootstrap_queue_duration(32243.86ms) = bootstrap(32243.86ms) + alloc_wait(0.01ms); queue_duration=0.29ms, forward_duration=262.22ms, start=1020730.054, transfer_speed=3.17GB/s, transfer_total=472.00MB, #retries=0
+[2026-04-28 02:39:13] INFO:     127.0.0.1:47576 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:39:13 TP0] Req Time Stats(rid=d9c3e90bdfe8429f80312d796155468e, bootstrap_room=3320699949275807294, input len=4721, output len=1, type=prefill): bootstrap_queue_duration(32287.11ms) = bootstrap(32287.10ms) + alloc_wait(0.01ms); queue_duration=0.30ms, forward_duration=266.81ms, start=1020730.054, transfer_speed=11.71GB/s, transfer_total=592.00MB, #retries=0
+[2026-04-28 02:39:13] INFO:     127.0.0.1:47608 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:39:13 TP0] Prefill batch, #new-seq: 1, #new-token: 7424, #cached-token: 18176, token usage: 0.39, #running-req: 0, #queue-req: 0, #prealloc-req: 26, #inflight-req: 1, cuda graph: False, input throughput (token/s): 12781.73
+[2026-04-28 02:39:13 TP0] Req Time Stats(rid=f0672ea436e6478ca43061cd7a7abdc1, bootstrap_room=5478928316817028372, input len=25577, output len=1, type=prefill): bootstrap_queue_duration(32508.89ms) = bootstrap(32508.88ms) + alloc_wait(0.01ms); queue_duration=1.38ms, forward_duration=447.92ms, start=1020730.054, transfer_speed=33.63GB/s, transfer_total=3200.00MB, #retries=0
+[2026-04-28 02:39:13] INFO:     127.0.0.1:47614 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:39:16 TP0] Prefill batch, #new-seq: 1, #new-token: 1408, #cached-token: 2880, token usage: 0.27, #running-req: 0, #queue-req: 1, #prealloc-req: 20, #inflight-req: 1, cuda graph: False, input throughput (token/s): 2725.32
+[2026-04-28 02:39:16 TP0] Prefill batch, #new-seq: 5, #new-token: 8192, #cached-token: 5248, token usage: 0.37, #running-req: 0, #queue-req: 0, #prealloc-req: 20, #inflight-req: 5, cuda graph: False, input throughput (token/s): 32800.08
+[2026-04-28 02:39:16 TP0] Req Time Stats(rid=85f16a234253451ebd88afc350a9cea8, bootstrap_room=2450949166034905770, input len=4227, output len=1, type=prefill): bootstrap_queue_duration(35296.33ms) = bootstrap(35296.33ms) + alloc_wait(0.01ms); queue_duration=0.48ms, forward_duration=337.12ms, start=1020730.054, transfer_speed=11.77GB/s, transfer_total=536.00MB, #retries=0
+[2026-04-28 02:39:16] INFO:     127.0.0.1:47588 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:39:16] INFO:     127.0.0.1:47588 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:39:16 TP0] Prefill batch, #new-seq: 2, #new-token: 6848, #cached-token: 128, token usage: 0.28, #running-req: 0, #queue-req: 0, #prealloc-req: 20, #inflight-req: 6, cuda graph: False, input throughput (token/s): 46911.25
+[2026-04-28 02:39:16 TP0] Req Time Stats(rid=7399c2b06f1d40babc87a8815f35709d, bootstrap_room=9017099797235143618, input len=1254, output len=1, type=prefill): bootstrap_queue_duration(35336.06ms) = bootstrap(35336.06ms) + alloc_wait(0.01ms); queue_duration=0.96ms, forward_duration=471.79ms, start=1020730.054, transfer_speed=0.88GB/s, transfer_total=160.00MB, #retries=0
+[2026-04-28 02:39:16 TP0] Req Time Stats(rid=97773ccdd25741559f576764b9ff18d9, bootstrap_room=6939114111346438065, input len=9, output len=1, type=prefill): bootstrap_queue_duration(35336.02ms) = bootstrap(35336.02ms) + alloc_wait(0.00ms); queue_duration=0.93ms, forward_duration=471.79ms, start=1020730.054, transfer_speed=0.04GB/s, transfer_total=8.00MB, #retries=0
+[2026-04-28 02:39:16 TP0] Req Time Stats(rid=12d4e538abae447f99be12e42e8a8f18, bootstrap_room=7730086088627261829, input len=5520, output len=1, type=prefill): bootstrap_queue_duration(34927.57ms) = bootstrap(34927.57ms) + alloc_wait(0.00ms); queue_duration=0.92ms, forward_duration=471.79ms, start=1020730.463, transfer_speed=3.84GB/s, transfer_total=696.00MB, #retries=0
+[2026-04-28 02:39:16 TP0] Req Time Stats(rid=573c84f21a9a4d6088f8bdfcedc621f4, bootstrap_room=1646854010985179528, input len=3836, output len=1, type=prefill): bootstrap_queue_duration(34927.54ms) = bootstrap(34927.53ms) + alloc_wait(0.00ms); queue_duration=0.90ms, forward_duration=471.79ms, start=1020730.463, transfer_speed=2.65GB/s, transfer_total=480.00MB, #retries=0
+[2026-04-28 02:39:16 TP0] Req Time Stats(rid=e2731dece75744aa969089710adc9d90, bootstrap_room=2652086321426131012, input len=5851, output len=1, type=prefill): bootstrap_queue_duration(34927.51ms) = bootstrap(34927.51ms) + alloc_wait(0.00ms); queue_duration=0.89ms, forward_duration=481.67ms, start=1020730.463, transfer_speed=57.47GB/s, transfer_total=736.00MB, #retries=0
+[2026-04-28 02:39:16 TP0] Req Time Stats(rid=bb14710e8d384f5f9851b5ec9861c447, bootstrap_room=2832039138622543261, input len=3760, output len=1, type=prefill): bootstrap_queue_duration(34927.49ms) = bootstrap(34927.49ms) + alloc_wait(0.00ms); queue_duration=256.00ms, forward_duration=242.91ms, start=1020730.463, transfer_speed=16.41GB/s, transfer_total=472.00MB, #retries=0
+[2026-04-28 02:39:16] INFO:     127.0.0.1:47624 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:39:16] INFO:     127.0.0.1:47652 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:39:16] INFO:     127.0.0.1:47658 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:39:16] INFO:     127.0.0.1:47600 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:39:16] INFO:     127.0.0.1:47640 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:39:16] INFO:     127.0.0.1:47662 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:39:18] INFO:     127.0.0.1:47662 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:39:18] INFO:     127.0.0.1:47662 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:39:18] INFO:     127.0.0.1:47640 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:39:18] INFO:     127.0.0.1:47662 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:39:18] INFO:     127.0.0.1:47662 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:39:20] INFO:     127.0.0.1:47652 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:39:20] INFO:     127.0.0.1:47652 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:39:21] INFO:     127.0.0.1:47658 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:39:21] INFO:     127.0.0.1:47658 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:39:21] INFO:     127.0.0.1:47658 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:39:21] INFO:     127.0.0.1:47658 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:39:22] INFO:     127.0.0.1:33912 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:39:22 TP0] Prefill batch, #new-seq: 1, #new-token: 8064, #cached-token: 19392, token usage: 0.42, #running-req: 0, #queue-req: 0, #prealloc-req: 25, #inflight-req: 1, cuda graph: False, input throughput (token/s): 1134.70
+[2026-04-28 02:39:22 TP0] Prefill batch, #new-seq: 1, #new-token: 64, #cached-token: 0, token usage: 0.42, #running-req: 0, #queue-req: 0, #prealloc-req: 26, #inflight-req: 2, cuda graph: False, input throughput (token/s): 203833.15
+[2026-04-28 02:39:22 TP0] Req Time Stats(rid=HEALTH_CHECK_1777343962.3013742, bootstrap_room=0, input len=1, output len=1, type=prefill): bootstrap_queue_duration(1.14ms) = bootstrap(1.13ms) + alloc_wait(0.01ms); queue_duration=0.13ms, forward_duration=31.57ms, start=1020771.904, transfer_speed=9.31GB/s, transfer_total=8.00MB, #retries=0
+[2026-04-28 02:39:22 TP0] Req Time Stats(rid=fd44a453d10a460cafbe63dff15fc391, bootstrap_room=1113160639201432457, input len=27441, output len=1, type=prefill): bootstrap_queue_duration(41047.05ms) = bootstrap(41047.04ms) + alloc_wait(0.01ms); queue_duration=1.65ms, forward_duration=492.61ms, start=1020730.463, transfer_speed=31.04GB/s, transfer_total=3432.00MB, #retries=0
+[2026-04-28 02:39:22] INFO:     127.0.0.1:47496 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:39:23] INFO:     127.0.0.1:33918 - "GET /health HTTP/1.1" 200 OK
+[2026-04-28 02:39:28 TP0] Prefill batch, #new-seq: 1, #new-token: 256, #cached-token: 25344, token usage: 0.39, #running-req: 0, #queue-req: 0, #prealloc-req: 26, #inflight-req: 1, cuda graph: False, input throughput (token/s): 11.18
+[2026-04-28 02:39:28 TP0] Req Time Stats(rid=546b47a01498401aaf6c0e2ce807c7a8, bootstrap_room=3066530329441017741, input len=25582, output len=1, type=prefill): bootstrap_queue_duration(46899.96ms) = bootstrap(46899.95ms) + alloc_wait(0.01ms); queue_duration=1.68ms, forward_duration=136.82ms, start=1020730.717, transfer_speed=31.89GB/s, transfer_total=3200.00MB, #retries=0
+[2026-04-28 02:39:28] INFO:     127.0.0.1:47676 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:39:33] INFO:     127.0.0.1:47676 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:39:33] INFO:     127.0.0.1:47676 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:39:33 TP0] Prefill batch, #new-seq: 1, #new-token: 192, #cached-token: 25408, token usage: 0.52, #running-req: 0, #queue-req: 0, #prealloc-req: 25, #inflight-req: 1, cuda graph: False, input throughput (token/s): 50.13
+[2026-04-28 02:39:33 TP0] Prefill batch, #new-seq: 2, #new-token: 8192, #cached-token: 128, token usage: 0.54, #running-req: 0, #queue-req: 0, #prealloc-req: 25, #inflight-req: 2, cuda graph: False, input throughput (token/s): 784.78
+[2026-04-28 02:39:33 TP0] Req Time Stats(rid=0df3b929c5544f3fba7cb4133edf0ff6, bootstrap_room=7037619729524851686, input len=25561, output len=1, type=prefill): bootstrap_queue_duration(50624.00ms) = bootstrap(50624.00ms) + alloc_wait(0.01ms); queue_duration=1.62ms, forward_duration=327.10ms, start=1020732.059, transfer_speed=12.66GB/s, transfer_total=3200.00MB, #retries=0
+[2026-04-28 02:39:33] INFO:     127.0.0.1:47526 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:39:33 TP0] Prefill batch, #new-seq: 1, #new-token: 1152, #cached-token: 0, token usage: 0.14, #running-req: 0, #queue-req: 0, #prealloc-req: 26, #inflight-req: 2, cuda graph: False, input throughput (token/s): 637608.47
+[2026-04-28 02:39:33 TP0] Req Time Stats(rid=48204e334fd749a6aea6b5b7b3d0484e, bootstrap_room=5311050924172154968, input len=4925, output len=1, type=prefill): bootstrap_queue_duration(49612.27ms) = bootstrap(49612.26ms) + alloc_wait(0.01ms); queue_duration=0.45ms, forward_duration=305.53ms, start=1020733.110, transfer_speed=30.71GB/s, transfer_total=616.00MB, #retries=0
+[2026-04-28 02:39:33] INFO:     127.0.0.1:47514 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:39:33 TP0] Req Time Stats(rid=d5dab74a35c6413a95345bd09f6c65ef, bootstrap_room=8530673986988895054, input len=4497, output len=1, type=prefill): bootstrap_queue_duration(49081.75ms) = bootstrap(49081.75ms) + alloc_wait(0.00ms); queue_duration=0.41ms, forward_duration=324.13ms, start=1020733.641, transfer_speed=22.24GB/s, transfer_total=568.00MB, #retries=0
+[2026-04-28 02:39:33] INFO:     127.0.0.1:47434 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:39:37 TP0] Prefill batch, #new-seq: 1, #new-token: 2688, #cached-token: 128, token usage: 0.04, #running-req: 0, #queue-req: 0, #prealloc-req: 25, #inflight-req: 1, cuda graph: False, input throughput (token/s): 283.55
+[2026-04-28 02:39:37 TP0] Req Time Stats(rid=440b445529ad4158bfa14e8b86fbb6cd, bootstrap_room=8385846661246576131, input len=2791, output len=1, type=prefill): bootstrap_queue_duration(53334.33ms) = bootstrap(53334.33ms) + alloc_wait(0.01ms); queue_duration=0.28ms, forward_duration=95.49ms, start=1020733.666, transfer_speed=31.59GB/s, transfer_total=352.00MB, #retries=0
+[2026-04-28 02:39:37] INFO:     127.0.0.1:47482 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:39:42 TP0] Prefill batch, #new-seq: 1, #new-token: 6272, #cached-token: 19392, token usage: 0.39, #running-req: 0, #queue-req: 0, #prealloc-req: 28, #inflight-req: 1, cuda graph: False, input throughput (token/s): 545.98
+[2026-04-28 02:39:42 TP0] Req Time Stats(rid=a03eb83064df4eeca4b70f28c7234b43, bootstrap_room=105681166115356343, input len=25633, output len=1, type=prefill): bootstrap_queue_duration(56578.73ms) = bootstrap(56578.72ms) + alloc_wait(0.01ms); queue_duration=1.41ms, forward_duration=393.55ms, start=1020735.129, transfer_speed=33.06GB/s, transfer_total=3208.00MB, #retries=0
+[2026-04-28 02:39:42] INFO:     127.0.0.1:47530 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:39:48 TP0] Prefill batch, #new-seq: 1, #new-token: 8192, #cached-token: 0, token usage: 0.21, #running-req: 0, #queue-req: 0, #prealloc-req: 27, #inflight-req: 0, cuda graph: False, input throughput (token/s): 1004.47
+[2026-04-28 02:39:49 TP0] Prefill batch, #new-seq: 1, #new-token: 5760, #cached-token: 0, token usage: 0.21, #running-req: 0, #queue-req: 0, #prealloc-req: 28, #inflight-req: 1, cuda graph: False, input throughput (token/s): 42913.48
+[2026-04-28 02:39:49 TP0] Req Time Stats(rid=c8306583d8294028ae20f1566c9cc318, bootstrap_room=74727066890750799, input len=13916, output len=1, type=prefill): bootstrap_queue_duration(62639.36ms) = bootstrap(62639.35ms) + alloc_wait(0.01ms); queue_duration=0.39ms, forward_duration=515.56ms, start=1020735.311, transfer_speed=74.91GB/s, transfer_total=1744.00MB, #retries=0
+[2026-04-28 02:39:49] INFO:     127.0.0.1:51098 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:39:56 TP0] Prefill batch, #new-seq: 1, #new-token: 128, #cached-token: 25536, token usage: 0.51, #running-req: 0, #queue-req: 0, #prealloc-req: 23, #inflight-req: 1, cuda graph: False, input throughput (token/s): 745.87
+[2026-04-28 02:39:57 TP0] Prefill batch, #new-seq: 4, #new-token: 7680, #cached-token: 0, token usage: 0.51, #running-req: 0, #queue-req: 0, #prealloc-req: 23, #inflight-req: 5, cuda graph: False, input throughput (token/s): 691.29
+[2026-04-28 02:39:57 TP0] Req Time Stats(rid=670244c31ca54f6b824795083ded836c, bootstrap_room=6280326829708510852, input len=25614, output len=1, type=prefill): bootstrap_queue_duration(70532.26ms) = bootstrap(70532.25ms) + alloc_wait(0.01ms); queue_duration=1.71ms, forward_duration=272.00ms, start=1020735.548, transfer_speed=16.66GB/s, transfer_total=3208.00MB, #retries=0
+[2026-04-28 02:39:57 TP0] Req Time Stats(rid=97994848462b4b9ea30b85f86d15c945, bootstrap_room=5907543019803623106, input len=392, output len=1, type=prefill): bootstrap_queue_duration(68975.59ms) = bootstrap(68975.58ms) + alloc_wait(0.01ms); queue_duration=0.42ms, forward_duration=234.39ms, start=1020737.147, transfer_speed=7.40GB/s, transfer_total=56.00MB, #retries=0
+[2026-04-28 02:39:57] INFO:     127.0.0.1:51102 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:39:57] INFO:     127.0.0.1:51108 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:39:57 TP0] Req Time Stats(rid=b805e1f9d97a4d2b89c455c123b7e925, bootstrap_room=5595158263880161045, input len=4393, output len=1, type=prefill): bootstrap_queue_duration(68343.00ms) = bootstrap(68342.99ms) + alloc_wait(0.00ms); queue_duration=0.37ms, forward_duration=245.80ms, start=1020737.779, transfer_speed=29.35GB/s, transfer_total=552.00MB, #retries=0
+[2026-04-28 02:39:57 TP0] Req Time Stats(rid=b10c3a6f8bee47268fd40805a134d892, bootstrap_room=8932489460222446383, input len=9, output len=1, type=prefill): bootstrap_queue_duration(62634.39ms) = bootstrap(62634.38ms) + alloc_wait(0.00ms); queue_duration=0.36ms, forward_duration=246.78ms, start=1020743.488, transfer_speed=0.41GB/s, transfer_total=8.00MB, #retries=0
+[2026-04-28 02:39:57] INFO:     127.0.0.1:51114 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:39:57] INFO:     127.0.0.1:51116 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:39:57 TP0] Req Time Stats(rid=a4e26afa0e984a36bf2e6abaf2984974, bootstrap_room=4780691909257851937, input len=2702, output len=1, type=prefill): bootstrap_queue_duration(58196.32ms) = bootstrap(58196.32ms) + alloc_wait(0.00ms); queue_duration=0.34ms, forward_duration=255.43ms, start=1020747.926, transfer_speed=12.24GB/s, transfer_total=344.00MB, #retries=0
+[2026-04-28 02:39:57] INFO:     127.0.0.1:47546 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:39:57] INFO:     127.0.0.1:47546 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:39:58 TP0] Prefill batch, #new-seq: 1, #new-token: 8064, #cached-token: 19392, token usage: 0.42, #running-req: 0, #queue-req: 0, #prealloc-req: 23, #inflight-req: 1, cuda graph: False, input throughput (token/s): 6541.21
+[2026-04-28 02:39:58 TP0] Req Time Stats(rid=86b5839f019e43589d55beb22f9db6ab, bootstrap_room=8291827622728328593, input len=27441, output len=1, type=prefill): bootstrap_queue_duration(59209.33ms) = bootstrap(59209.32ms) + alloc_wait(0.01ms); queue_duration=1.54ms, forward_duration=494.20ms, start=1020747.926, transfer_speed=31.51GB/s, transfer_total=3432.00MB, #retries=0
+[2026-04-28 02:39:58] INFO:     127.0.0.1:47546 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:39:58] INFO:     127.0.0.1:65348 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:39:58] INFO:     127.0.0.1:65348 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:39:58] INFO:     127.0.0.1:47546 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:39:59] INFO:     127.0.0.1:65348 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:39:59] INFO:     127.0.0.1:65348 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:39:59] INFO:     127.0.0.1:65348 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:40:02 TP0] Prefill batch, #new-seq: 1, #new-token: 3136, #cached-token: 0, token usage: 0.05, #running-req: 0, #queue-req: 0, #prealloc-req: 24, #inflight-req: 1, cuda graph: False, input throughput (token/s): 1809.18
+[2026-04-28 02:40:02 TP0] Req Time Stats(rid=ac700e5ee0a443d687749af285908daa, bootstrap_room=5706482236760829744, input len=3109, output len=1, type=prefill): bootstrap_queue_duration(60107.91ms) = bootstrap(60107.90ms) + alloc_wait(0.01ms); queue_duration=0.23ms, forward_duration=111.91ms, start=1020751.776, transfer_speed=28.45GB/s, transfer_total=392.00MB, #retries=0
+[2026-04-28 02:40:02] INFO:     127.0.0.1:35312 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:40:02] INFO:     127.0.0.1:47552 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:40:02] INFO:     127.0.0.1:47552 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:40:05] INFO:     127.0.0.1:35312 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+Token indices sequence length is longer than the specified maximum sequence length for this model (139461 > 131072). Running this sequence through the model will result in indexing errors
+[2026-04-28 02:40:05] INFO:     127.0.0.1:48024 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:40:11 TP0] Prefill batch, #new-seq: 1, #new-token: 64, #cached-token: 27392, token usage: 0.42, #running-req: 0, #queue-req: 0, #prealloc-req: 27, #inflight-req: 1, cuda graph: False, input throughput (token/s): 365.35
+[2026-04-28 02:40:11 TP0] Req Time Stats(rid=06af9340f02743e4b9e774e78e8934f2, bootstrap_room=8964773750807290270, input len=27441, output len=1, type=prefill): bootstrap_queue_duration(67316.00ms) = bootstrap(67315.99ms) + alloc_wait(0.01ms); queue_duration=1.61ms, forward_duration=149.56ms, start=1020753.204, transfer_speed=31.92GB/s, transfer_total=3432.00MB, #retries=0
+[2026-04-28 02:40:11] INFO:     127.0.0.1:48042 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:40:11] INFO:     127.0.0.1:47574 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:40:11 TP0] Prefill batch, #new-seq: 1, #new-token: 256, #cached-token: 27264, token usage: 0.42, #running-req: 0, #queue-req: 0, #prealloc-req: 25, #inflight-req: 1, cuda graph: False, input throughput (token/s): 191.71
+[2026-04-28 02:40:11 TP0] Prefill batch, #new-seq: 1, #new-token: 64, #cached-token: 0, token usage: 0.42, #running-req: 0, #queue-req: 0, #prealloc-req: 25, #inflight-req: 2, cuda graph: False, input throughput (token/s): 188132.65
+[2026-04-28 02:40:11 TP0] Req Time Stats(rid=d0309a8137854e48b49a041b6abb5d1b, bootstrap_room=5942708045721322009, input len=27462, output len=1, type=prefill): bootstrap_queue_duration(63575.94ms) = bootstrap(63575.93ms) + alloc_wait(0.01ms); queue_duration=1.64ms, forward_duration=177.94ms, start=1020757.245, transfer_speed=33.21GB/s, transfer_total=3440.00MB, #retries=0
+[2026-04-28 02:40:11 TP0] Req Time Stats(rid=acf4aace915f48408df44350db005eeb, bootstrap_room=5656853572625588588, input len=9, output len=1, type=prefill): bootstrap_queue_duration(58437.83ms) = bootstrap(58437.82ms) + alloc_wait(0.01ms); queue_duration=0.14ms, forward_duration=147.32ms, start=1020762.417, transfer_speed=0.08GB/s, transfer_total=8.00MB, #retries=0
+[2026-04-28 02:40:11] INFO:     127.0.0.1:48042 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:40:11] INFO:     127.0.0.1:62636 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:40:11] INFO:     127.0.0.1:62648 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:40:12] INFO:     127.0.0.1:62636 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:40:22 TP0] Prefill batch, #new-seq: 1, #new-token: 64, #cached-token: 0, token usage: 0.00, #running-req: 0, #queue-req: 0, #prealloc-req: 28, #inflight-req: 1, cuda graph: False, input throughput (token/s): 5.95
+[2026-04-28 02:40:22 TP0] Req Time Stats(rid=HEALTH_CHECK_1777344022.2944117, bootstrap_room=0, input len=1, output len=1, type=prefill): bootstrap_queue_duration(0.34ms) = bootstrap(0.33ms) + alloc_wait(0.01ms); queue_duration=0.15ms, forward_duration=32.13ms, start=1020831.629, transfer_speed=8.81GB/s, transfer_total=8.00MB, #retries=0
+[2026-04-28 02:40:23] INFO:     127.0.0.1:56636 - "GET /health HTTP/1.1" 200 OK
+[2026-04-28 02:40:25 TP0] Prefill batch, #new-seq: 1, #new-token: 64, #cached-token: 27456, token usage: 0.47, #running-req: 0, #queue-req: 0, #prealloc-req: 26, #inflight-req: 1, cuda graph: False, input throughput (token/s): 19.13
+[2026-04-28 02:40:25 TP0] Prefill batch, #new-seq: 1, #new-token: 3008, #cached-token: 0, token usage: 0.47, #running-req: 0, #queue-req: 0, #prealloc-req: 26, #inflight-req: 2, cuda graph: False, input throughput (token/s): 1266.50
+[2026-04-28 02:40:25 TP0] Req Time Stats(rid=afce24cf9e184a7b94dec2fcab960263, bootstrap_room=8687310147985672286, input len=27462, output len=1, type=prefill): bootstrap_queue_duration(72369.22ms) = bootstrap(72369.21ms) + alloc_wait(0.01ms); queue_duration=1.62ms, forward_duration=180.48ms, start=1020762.562, transfer_speed=31.31GB/s, transfer_total=3440.00MB, #retries=0
+[2026-04-28 02:40:25 TP0] Req Time Stats(rid=6f33ec28ed8247afa2a3124986483690, bootstrap_room=8430519202120813973, input len=2963, output len=1, type=prefill): bootstrap_queue_duration(69575.79ms) = bootstrap(69575.78ms) + alloc_wait(0.01ms); queue_duration=0.18ms, forward_duration=158.38ms, start=1020765.390, transfer_speed=5.44GB/s, transfer_total=376.00MB, #retries=0
+[2026-04-28 02:40:25] INFO:     127.0.0.1:35302 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:40:25] INFO:     127.0.0.1:62650 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:40:25] INFO:     127.0.0.1:47614 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:40:26] INFO:     127.0.0.1:47614 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:40:26 TP0] Prefill batch, #new-seq: 1, #new-token: 64, #cached-token: 27456, token usage: 0.49, #running-req: 0, #queue-req: 0, #prealloc-req: 25, #inflight-req: 1, cuda graph: False, input throughput (token/s): 3208.28
+[2026-04-28 02:40:26 TP0] Prefill batch, #new-seq: 1, #new-token: 4352, #cached-token: 128, token usage: 0.49, #running-req: 0, #queue-req: 0, #prealloc-req: 25, #inflight-req: 2, cuda graph: False, input throughput (token/s): 707.01
+[2026-04-28 02:40:26 TP0] Req Time Stats(rid=d803c1dd04954ee39a7657632e2150de, bootstrap_room=4513064302826083080, input len=27462, output len=1, type=prefill): bootstrap_queue_duration(69984.31ms) = bootstrap(69984.31ms) + alloc_wait(0.01ms); queue_duration=1.64ms, forward_duration=178.92ms, start=1020765.936, transfer_speed=31.57GB/s, transfer_total=3440.00MB, #retries=0
+[2026-04-28 02:40:26 TP0] Req Time Stats(rid=bb5d3643bffe43a1ae385f421135a093, bootstrap_room=2326399169547546548, input len=4429, output len=1, type=prefill): bootstrap_queue_duration(67715.51ms) = bootstrap(67715.50ms) + alloc_wait(0.01ms); queue_duration=0.27ms, forward_duration=162.89ms, start=1020768.238, transfer_speed=17.34GB/s, transfer_total=560.00MB, #retries=0
+[2026-04-28 02:40:27] INFO:     127.0.0.1:62650 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:40:27] INFO:     127.0.0.1:47588 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:40:27] INFO:     127.0.0.1:47640 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:40:27] INFO:     127.0.0.1:47640 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:40:27] INFO:     127.0.0.1:47640 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:40:27] INFO:     127.0.0.1:47640 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:40:30 TP0] Prefill batch, #new-seq: 1, #new-token: 2368, #cached-token: 0, token usage: 0.04, #running-req: 0, #queue-req: 0, #prealloc-req: 24, #inflight-req: 1, cuda graph: False, input throughput (token/s): 1098.43
+[2026-04-28 02:40:30 TP0] Prefill batch, #new-seq: 1, #new-token: 192, #cached-token: 0, token usage: 0.04, #running-req: 0, #queue-req: 0, #prealloc-req: 25, #inflight-req: 2, cuda graph: False, input throughput (token/s): 562863.51
+[2026-04-28 02:40:30 TP0] Req Time Stats(rid=f2ed4054d032402faa0160ec145cb116, bootstrap_room=7448504194816470052, input len=2314, output len=1, type=prefill): bootstrap_queue_duration(71614.82ms) = bootstrap(71614.81ms) + alloc_wait(0.01ms); queue_duration=0.22ms, forward_duration=125.79ms, start=1020768.319, transfer_speed=21.97GB/s, transfer_total=296.00MB, #retries=0
+[2026-04-28 02:40:30 TP0] Req Time Stats(rid=bb8fe9700c2246619ad8baaa627473ac, bootstrap_room=1422927541204204106, input len=158, output len=1, type=prefill): bootstrap_queue_duration(70304.95ms) = bootstrap(70304.94ms) + alloc_wait(0.01ms); queue_duration=0.16ms, forward_duration=83.37ms, start=1020769.674, transfer_speed=2.12GB/s, transfer_total=24.00MB, #retries=0
+[2026-04-28 02:40:30] INFO:     127.0.0.1:47662 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:40:30] INFO:     127.0.0.1:47652 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:40:31] INFO:     127.0.0.1:47652 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:40:31] INFO:     127.0.0.1:47652 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:40:37 TP0] Prefill batch, #new-seq: 1, #new-token: 64, #cached-token: 27456, token usage: 0.42, #running-req: 0, #queue-req: 0, #prealloc-req: 24, #inflight-req: 1, cuda graph: False, input throughput (token/s): 27.53
+[2026-04-28 02:40:37 TP0] Prefill batch, #new-seq: 1, #new-token: 64, #cached-token: 0, token usage: 0.42, #running-req: 0, #queue-req: 0, #prealloc-req: 24, #inflight-req: 2, cuda graph: False, input throughput (token/s): 12759.81
+[2026-04-28 02:40:37 TP0] Req Time Stats(rid=39c48456cc704d9eaba7276329ca62d8, bootstrap_room=6801510059122375382, input len=27462, output len=1, type=prefill): bootstrap_queue_duration(76178.51ms) = bootstrap(76178.50ms) + alloc_wait(0.01ms); queue_duration=1.65ms, forward_duration=170.27ms, start=1020770.780, transfer_speed=31.89GB/s, transfer_total=3440.00MB, #retries=0
+[2026-04-28 02:40:37 TP0] Req Time Stats(rid=d331b52d9d394393ae49186252dc8fbd, bootstrap_room=6200857027563741217, input len=9, output len=1, type=prefill): bootstrap_queue_duration(75440.22ms) = bootstrap(75440.22ms) + alloc_wait(0.01ms); queue_duration=0.14ms, forward_duration=139.35ms, start=1020771.552, transfer_speed=0.08GB/s, transfer_total=8.00MB, #retries=0
+[2026-04-28 02:40:38] INFO:     127.0.0.1:48066 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:40:38] INFO:     127.0.0.1:47658 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:40:38] INFO:     127.0.0.1:33912 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:40:38] INFO:     127.0.0.1:47658 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:40:38] INFO:     127.0.0.1:47658 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:40:40 TP0] Prefill batch, #new-seq: 1, #new-token: 64, #cached-token: 27456, token usage: 0.42, #running-req: 0, #queue-req: 0, #prealloc-req: 26, #inflight-req: 1, cuda graph: False, input throughput (token/s): 21.62
+[2026-04-28 02:40:40 TP0] Req Time Stats(rid=a2249a1cb104430dbcc6fda2795e8aa3, bootstrap_room=1882397331101221896, input len=27462, output len=1, type=prefill): bootstrap_queue_duration(78049.30ms) = bootstrap(78049.29ms) + alloc_wait(0.01ms); queue_duration=1.65ms, forward_duration=141.33ms, start=1020771.904, transfer_speed=31.84GB/s, transfer_total=3440.00MB, #retries=0
+[2026-04-28 02:40:40] INFO:     127.0.0.1:33914 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:40:42] INFO:     127.0.0.1:48072 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:40:42] INFO:     127.0.0.1:48072 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:40:43] INFO:     127.0.0.1:48072 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:40:53] INFO:     127.0.0.1:59658 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:40:53 TP0] Prefill batch, #new-seq: 1, #new-token: 6400, #cached-token: 20096, token usage: 0.40, #running-req: 0, #queue-req: 0, #prealloc-req: 27, #inflight-req: 1, cuda graph: False, input throughput (token/s): 4.98
+[2026-04-28 02:40:53 TP0] Req Time Stats(rid=7eee7e0369374c51a3ea9373f78766b2, bootstrap_room=413718092348808652, input len=26490, output len=1, type=prefill): bootstrap_queue_duration(89935.23ms) = bootstrap(89935.22ms) + alloc_wait(0.01ms); queue_duration=1.60ms, forward_duration=410.11ms, start=1020772.605, transfer_speed=32.46GB/s, transfer_total=3312.00MB, #retries=0
+[2026-04-28 02:40:53] INFO:     127.0.0.1:47496 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:40:54 TP0] Prefill batch, #new-seq: 1, #new-token: 64, #cached-token: 26432, token usage: 0.47, #running-req: 0, #queue-req: 0, #prealloc-req: 26, #inflight-req: 1, cuda graph: False, input throughput (token/s): 5291.25
+[2026-04-28 02:40:54 TP0] Prefill batch, #new-seq: 1, #new-token: 1856, #cached-token: 2688, token usage: 0.47, #running-req: 0, #queue-req: 0, #prealloc-req: 26, #inflight-req: 2, cuda graph: False, input throughput (token/s): 2724.41
+[2026-04-28 02:40:54 TP0] Req Time Stats(rid=7c3b8c5e97214c93ad9272fb440e63fb, bootstrap_room=781701094381988323, input len=26490, output len=1, type=prefill): bootstrap_queue_duration(86242.90ms) = bootstrap(86242.89ms) + alloc_wait(0.01ms); queue_duration=1.56ms, forward_duration=183.63ms, start=1020777.734, transfer_speed=32.21GB/s, transfer_total=3312.00MB, #retries=0
+[2026-04-28 02:40:54 TP0] Req Time Stats(rid=e6fec409570440de95546dae82561b0a, bootstrap_room=1271706924709752956, input len=4513, output len=1, type=prefill): bootstrap_queue_duration(81291.72ms) = bootstrap(81291.71ms) + alloc_wait(0.01ms); queue_duration=0.43ms, forward_duration=163.45ms, start=1020782.722, transfer_speed=6.02GB/s, transfer_total=568.00MB, #retries=0
+[2026-04-28 02:40:54] INFO:     127.0.0.1:47496 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:40:54] INFO:     127.0.0.1:55252 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:40:54] INFO:     127.0.0.1:47676 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:40:55] INFO:     127.0.0.1:47676 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:40:55] INFO:     127.0.0.1:47676 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:40:55] INFO:     127.0.0.1:47676 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:40:55] INFO:     127.0.0.1:47676 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:40:56] INFO:     127.0.0.1:47676 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:00] INFO:     127.0.0.1:54564 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:00] INFO:     127.0.0.1:54564 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:08] INFO:     127.0.0.1:57708 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:08 TP0] Prefill batch, #new-seq: 1, #new-token: 7616, #cached-token: 20096, token usage: 0.42, #running-req: 0, #queue-req: 0, #prealloc-req: 27, #inflight-req: 1, cuda graph: False, input throughput (token/s): 136.38
+[2026-04-28 02:41:08 TP0] Req Time Stats(rid=103cc477951046a4b6fc59b6b12215dc, bootstrap_room=4354743053267694702, input len=27659, output len=1, type=prefill): bootstrap_queue_duration(94307.40ms) = bootstrap(94307.40ms) + alloc_wait(0.01ms); queue_duration=1.48ms, forward_duration=500.57ms, start=1020783.014, transfer_speed=26.28GB/s, transfer_total=3464.00MB, #retries=0
+[2026-04-28 02:41:08] INFO:     127.0.0.1:55266 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:41:08 TP0] Prefill batch, #new-seq: 1, #new-token: 64, #cached-token: 27392, token usage: 0.42, #running-req: 0, #queue-req: 0, #prealloc-req: 26, #inflight-req: 1, cuda graph: False, input throughput (token/s): 46602.99
+[2026-04-28 02:41:08 TP0] Prefill batch, #new-seq: 1, #new-token: 64, #cached-token: 0, token usage: 0.42, #running-req: 0, #queue-req: 0, #prealloc-req: 26, #inflight-req: 2, cuda graph: False, input throughput (token/s): 17943.53
+[2026-04-28 02:41:08 TP0] Req Time Stats(rid=6c8f54256bec447c8a55625c04c8bc73, bootstrap_room=6141187256804027522, input len=27441, output len=1, type=prefill): bootstrap_queue_duration(90657.43ms) = bootstrap(90657.43ms) + alloc_wait(0.01ms); queue_duration=1.56ms, forward_duration=171.04ms, start=1020787.131, transfer_speed=32.45GB/s, transfer_total=3432.00MB, #retries=0
+[2026-04-28 02:41:08 TP0] Req Time Stats(rid=fc712a09673f4cf08c94c80d9263f9c9, bootstrap_room=3653554284524929979, input len=11, output len=1, type=prefill): bootstrap_queue_duration(90448.85ms) = bootstrap(90448.84ms) + alloc_wait(0.01ms); queue_duration=0.13ms, forward_duration=138.13ms, start=1020787.375, transfer_speed=0.08GB/s, transfer_total=8.00MB, #retries=0
+[2026-04-28 02:41:08] INFO:     127.0.0.1:55266 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:08] INFO:     127.0.0.1:47434 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:41:08] INFO:     127.0.0.1:47482 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:41:08] INFO:     127.0.0.1:47482 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:09] INFO:     127.0.0.1:47482 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:09] INFO:     127.0.0.1:47434 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:09] INFO:     127.0.0.1:47482 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:09] INFO:     127.0.0.1:47434 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:09] INFO:     127.0.0.1:47482 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:10] INFO:     127.0.0.1:47482 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:21 TP0] Prefill batch, #new-seq: 1, #new-token: 64, #cached-token: 26432, token usage: 0.48, #running-req: 0, #queue-req: 0, #prealloc-req: 26, #inflight-req: 1, cuda graph: False, input throughput (token/s): 5.05
+[2026-04-28 02:41:21 TP0] Prefill batch, #new-seq: 1, #new-token: 5056, #cached-token: 0, token usage: 0.48, #running-req: 0, #queue-req: 0, #prealloc-req: 27, #inflight-req: 2, cuda graph: False, input throughput (token/s): 538.72
+[2026-04-28 02:41:21 TP0] Req Time Stats(rid=13ef2c0690fd40d199d011caab5514b8, bootstrap_room=2880539325520486400, input len=26490, output len=1, type=prefill): bootstrap_queue_duration(100129.31ms) = bootstrap(100129.30ms) + alloc_wait(0.01ms); queue_duration=1.63ms, forward_duration=194.25ms, start=1020790.318, transfer_speed=26.69GB/s, transfer_total=3312.00MB, #retries=0
+[2026-04-28 02:41:21] INFO:     127.0.0.1:38096 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:41:21 TP0] Req Time Stats(rid=452190a300c340b6a0ab286f76bfbd21, bootstrap_room=6494019996496116691, input len=5006, output len=1, type=prefill): bootstrap_queue_duration(98732.62ms) = bootstrap(98732.61ms) + alloc_wait(0.01ms); queue_duration=0.24ms, forward_duration=179.48ms, start=1020791.749, transfer_speed=30.64GB/s, transfer_total=632.00MB, #retries=0
+[2026-04-28 02:41:21] INFO:     127.0.0.1:38108 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:41:22 TP0] Prefill batch, #new-seq: 1, #new-token: 64, #cached-token: 0, token usage: 0.00, #running-req: 0, #queue-req: 0, #prealloc-req: 27, #inflight-req: 1, cuda graph: False, input throughput (token/s): 4968.99
+[2026-04-28 02:41:22 TP0] Req Time Stats(rid=HEALTH_CHECK_1777344082.2939973, bootstrap_room=0, input len=1, output len=1, type=prefill): bootstrap_queue_duration(0.30ms) = bootstrap(0.29ms) + alloc_wait(0.01ms); queue_duration=0.11ms, forward_duration=30.05ms, start=1020891.629, transfer_speed=9.72GB/s, transfer_total=8.00MB, #retries=0
+[2026-04-28 02:41:23] INFO:     127.0.0.1:51894 - "GET /health HTTP/1.1" 200 OK
+[2026-04-28 02:41:24 TP0] Prefill batch, #new-seq: 1, #new-token: 64, #cached-token: 26432, token usage: 0.40, #running-req: 0, #queue-req: 0, #prealloc-req: 26, #inflight-req: 1, cuda graph: False, input throughput (token/s): 27.54
+[2026-04-28 02:41:24 TP0] Req Time Stats(rid=b703fe92cfc343bc86780bacc6243e22, bootstrap_room=6196642370982424755, input len=26490, output len=1, type=prefill): bootstrap_queue_duration(95690.24ms) = bootstrap(95690.23ms) + alloc_wait(0.01ms); queue_duration=1.56ms, forward_duration=135.67ms, start=1020798.255, transfer_speed=32.19GB/s, transfer_total=3312.00MB, #retries=0
+[2026-04-28 02:41:24] INFO:     127.0.0.1:39798 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:41:25] INFO:     127.0.0.1:39798 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:33 TP0] Prefill batch, #new-seq: 1, #new-token: 3456, #cached-token: 23168, token usage: 0.53, #running-req: 0, #queue-req: 0, #prealloc-req: 22, #inflight-req: 1, cuda graph: False, input throughput (token/s): 7.55
+[2026-04-28 02:41:33] INFO:     127.0.0.1:46304 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:33 TP0] Prefill batch, #new-seq: 5, #new-token: 7808, #cached-token: 0, token usage: 0.52, #running-req: 0, #queue-req: 0, #prealloc-req: 22, #inflight-req: 6, cuda graph: False, input throughput (token/s): 15462.28
+[2026-04-28 02:41:33 TP0] Req Time Stats(rid=1b7ec2400db7461198771e3c80d3e772, bootstrap_room=3135430227441148793, input len=26575, output len=1, type=prefill): bootstrap_queue_duration(95914.41ms) = bootstrap(95914.40ms) + alloc_wait(0.01ms); queue_duration=1.68ms, forward_duration=409.81ms, start=1020806.356, transfer_speed=14.38GB/s, transfer_total=3328.00MB, #retries=0
+[2026-04-28 02:41:33 TP0] Req Time Stats(rid=94626709c7d34135a6aa653d7cd1f948, bootstrap_room=4814664125239262014, input len=2043, output len=1, type=prefill): bootstrap_queue_duration(93868.13ms) = bootstrap(93868.12ms) + alloc_wait(0.01ms); queue_duration=0.44ms, forward_duration=374.03ms, start=1020808.444, transfer_speed=28.01GB/s, transfer_total=256.00MB, #retries=0
+[2026-04-28 02:41:33 TP0] Req Time Stats(rid=ca3e8c869a994458ae2cd8f710d15cd8, bootstrap_room=7522786773539262488, input len=1300, output len=1, type=prefill): bootstrap_queue_duration(93530.24ms) = bootstrap(93530.23ms) + alloc_wait(0.00ms); queue_duration=0.40ms, forward_duration=382.81ms, start=1020808.782, transfer_speed=9.57GB/s, transfer_total=168.00MB, #retries=0
+[2026-04-28 02:41:33 TP0] Req Time Stats(rid=d16206dfa02c41718706915abc01628f, bootstrap_room=6733811777393919303, input len=1301, output len=1, type=prefill): bootstrap_queue_duration(89997.00ms) = bootstrap(89997.00ms) + alloc_wait(0.00ms); queue_duration=0.38ms, forward_duration=384.21ms, start=1020812.315, transfer_speed=9.04GB/s, transfer_total=168.00MB, #retries=0
+[2026-04-28 02:41:33 TP0] Req Time Stats(rid=3cbac13d01af4903869f978cae1657c6, bootstrap_room=8349583967031096866, input len=1861, output len=1, type=prefill): bootstrap_queue_duration(87768.23ms) = bootstrap(87768.23ms) + alloc_wait(0.00ms); queue_duration=0.37ms, forward_duration=391.48ms, start=1020814.544, transfer_speed=9.37GB/s, transfer_total=240.00MB, #retries=0
+[2026-04-28 02:41:33 TP0] Req Time Stats(rid=6a4235c76c814d1f8de15ce02513f16b, bootstrap_room=4112326809994363664, input len=1106, output len=1, type=prefill): bootstrap_queue_duration(87259.45ms) = bootstrap(87259.45ms) + alloc_wait(0.00ms); queue_duration=0.36ms, forward_duration=396.24ms, start=1020815.053, transfer_speed=4.78GB/s, transfer_total=144.00MB, #retries=0
+[2026-04-28 02:41:33] INFO:     127.0.0.1:46304 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:33] INFO:     127.0.0.1:35306 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:41:33] INFO:     127.0.0.1:47546 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:41:33] INFO:     127.0.0.1:65348 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:41:33] INFO:     127.0.0.1:47552 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:41:33] INFO:     127.0.0.1:35312 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:41:33] INFO:     127.0.0.1:48024 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:41:33] INFO:     127.0.0.1:48024 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:33] INFO:     127.0.0.1:48024 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:33] INFO:     127.0.0.1:48024 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:34] INFO:     127.0.0.1:48024 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:34] INFO:     127.0.0.1:48024 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:34] INFO:     127.0.0.1:48024 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:34] INFO:     127.0.0.1:48024 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:35] INFO:     127.0.0.1:35312 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:35 TP0] Prefill batch, #new-seq: 1, #new-token: 8192, #cached-token: 64, token usage: 0.25, #running-req: 0, #queue-req: 0, #prealloc-req: 22, #inflight-req: 0, cuda graph: False, input throughput (token/s): 3179.04
+[2026-04-28 02:41:35] INFO:     127.0.0.1:35312 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:36 TP0] Prefill batch, #new-seq: 1, #new-token: 8192, #cached-token: 0, token usage: 0.37, #running-req: 0, #queue-req: 0, #prealloc-req: 22, #inflight-req: 0, cuda graph: False, input throughput (token/s): 25482.54
+[2026-04-28 02:41:36 TP0] Prefill batch, #new-seq: 1, #new-token: 7744, #cached-token: 0, token usage: 0.37, #running-req: 0, #queue-req: 0, #prealloc-req: 23, #inflight-req: 1, cuda graph: False, input throughput (token/s): 22439.19
+[2026-04-28 02:41:36 TP0] Req Time Stats(rid=111c5871592a40d686deddfef0539a8c, bootstrap_room=56812786379877845, input len=24169, output len=1, type=prefill): bootstrap_queue_duration(87492.23ms) = bootstrap(87492.23ms) + alloc_wait(0.01ms); queue_duration=1.12ms, forward_duration=987.62ms, start=1020817.379, transfer_speed=78.35GB/s, transfer_total=3024.00MB, #retries=0
+[2026-04-28 02:41:36] INFO:     127.0.0.1:48026 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:41:41] INFO:     127.0.0.1:48026 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:41] INFO:     127.0.0.1:49778 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:42] INFO:     127.0.0.1:49778 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:42] INFO:     127.0.0.1:49794 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:42] INFO:     127.0.0.1:49794 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:42] INFO:     127.0.0.1:49794 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:42] INFO:     127.0.0.1:49794 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:42] INFO:     127.0.0.1:49794 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:47 TP0] Prefill batch, #new-seq: 1, #new-token: 8192, #cached-token: 0, token usage: 0.25, #running-req: 0, #queue-req: 2, #prealloc-req: 24, #inflight-req: 0, cuda graph: False, input throughput (token/s): 714.82
+[2026-04-28 02:41:47 TP0] Prefill batch, #new-seq: 1, #new-token: 8192, #cached-token: 0, token usage: 0.33, #running-req: 0, #queue-req: 0, #prealloc-req: 25, #inflight-req: 0, cuda graph: False, input throughput (token/s): 25483.29
+[2026-04-28 02:41:47 TP0] Prefill batch, #new-seq: 3, #new-token: 5312, #cached-token: 128, token usage: 0.33, #running-req: 0, #queue-req: 0, #prealloc-req: 25, #inflight-req: 3, cuda graph: False, input throughput (token/s): 40524.72
+[2026-04-28 02:41:47 TP0] Req Time Stats(rid=3760c8b47f83404c8806c54b0fb787aa, bootstrap_room=480715901483539803, input len=18804, output len=1, type=prefill): bootstrap_queue_duration(95484.20ms) = bootstrap(95484.19ms) + alloc_wait(0.01ms); queue_duration=0.54ms, forward_duration=833.40ms, start=1020820.906, transfer_speed=49.53GB/s, transfer_total=2352.00MB, #retries=0
+[2026-04-28 02:41:47 TP0] Req Time Stats(rid=cc9dbeb26a134df287b02a3b92590e22, bootstrap_room=6289345335562139687, input len=1714, output len=1, type=prefill): bootstrap_queue_duration(95245.90ms) = bootstrap(95245.90ms) + alloc_wait(0.01ms); queue_duration=228.84ms, forward_duration=564.64ms, start=1020821.185, transfer_speed=4.62GB/s, transfer_total=216.00MB, #retries=0
+[2026-04-28 02:41:47 TP0] Req Time Stats(rid=59640d994dd14586ae74056a712d8dbc, bootstrap_room=7925307362979341286, input len=1243, output len=1, type=prefill): bootstrap_queue_duration(94180.11ms) = bootstrap(94180.11ms) + alloc_wait(0.00ms); queue_duration=228.80ms, forward_duration=564.64ms, start=1020822.251, transfer_speed=3.44GB/s, transfer_total=160.00MB, #retries=0
+[2026-04-28 02:41:47] INFO:     127.0.0.1:42430 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:47] INFO:     127.0.0.1:62648 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:41:47] INFO:     127.0.0.1:62636 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:41:47] INFO:     127.0.0.1:47574 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:41:48 TP0] Prefill batch, #new-seq: 1, #new-token: 8192, #cached-token: 128, token usage: 0.54, #running-req: 0, #queue-req: 0, #prealloc-req: 22, #inflight-req: 0, cuda graph: False, input throughput (token/s): 19249.69
+[2026-04-28 02:41:48] INFO:     127.0.0.1:62648 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:48 TP0] Prefill batch, #new-seq: 3, #new-token: 8192, #cached-token: 18816, token usage: 0.54, #running-req: 0, #queue-req: 0, #prealloc-req: 23, #inflight-req: 2, cuda graph: False, input throughput (token/s): 22738.19
+[2026-04-28 02:41:48 TP0] Prefill batch, #new-seq: 1, #new-token: 192, #cached-token: 0, token usage: 0.54, #running-req: 0, #queue-req: 0, #prealloc-req: 23, #inflight-req: 3, cuda graph: False, input throughput (token/s): 5274846.30
+[2026-04-28 02:41:48] INFO:     127.0.0.1:62648 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:48 TP0] Req Time Stats(rid=439be1965f974b2095bb14b35ed689e6, bootstrap_room=1964076524978317768, input len=14224, output len=1, type=prefill): bootstrap_queue_duration(81761.19ms) = bootstrap(81761.18ms) + alloc_wait(0.01ms); queue_duration=0.64ms, forward_duration=657.90ms, start=1020835.419, transfer_speed=68.75GB/s, transfer_total=1784.00MB, #retries=0
+[2026-04-28 02:41:48] INFO:     127.0.0.1:47614 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:41:48 TP0] Req Time Stats(rid=3ef859625fe840f591eea77d7cfff592, bootstrap_room=5039121251439725128, input len=20208, output len=1, type=prefill): bootstrap_queue_duration(79935.76ms) = bootstrap(79935.76ms) + alloc_wait(0.00ms); queue_duration=47.28ms, forward_duration=684.06ms, start=1020837.244, transfer_speed=25.64GB/s, transfer_total=2528.00MB, #retries=0
+[2026-04-28 02:41:48 TP0] Req Time Stats(rid=daa489441ced4e8e80ed9feb9a9eba5f, bootstrap_room=2424142594317832860, input len=996, output len=1, type=prefill): bootstrap_queue_duration(77129.95ms) = bootstrap(77129.95ms) + alloc_wait(0.00ms); queue_duration=47.27ms, forward_duration=687.04ms, start=1020840.050, transfer_speed=1.28GB/s, transfer_total=128.00MB, #retries=0
+[2026-04-28 02:41:48] INFO:     127.0.0.1:47614 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:48] INFO:     127.0.0.1:47640 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:41:48] INFO:     127.0.0.1:47588 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:41:48] INFO:     127.0.0.1:47588 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:49] INFO:     127.0.0.1:47588 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:54] INFO:     127.0.0.1:42228 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:54 TP0] Prefill batch, #new-seq: 1, #new-token: 2432, #cached-token: 20160, token usage: 0.34, #running-req: 0, #queue-req: 0, #prealloc-req: 24, #inflight-req: 1, cuda graph: False, input throughput (token/s): 30.57
+[2026-04-28 02:41:54 TP0] Req Time Stats(rid=4b4c22daef21460f87a913b602009fef, bootstrap_room=6841347732241668517, input len=22547, output len=1, type=prefill): bootstrap_queue_duration(82964.65ms) = bootstrap(82964.64ms) + alloc_wait(0.01ms); queue_duration=1.39ms, forward_duration=221.76ms, start=1020840.998, transfer_speed=31.30GB/s, transfer_total=2824.00MB, #retries=0
+[2026-04-28 02:41:54] INFO:     127.0.0.1:47652 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:41:56 TP0] Prefill batch, #new-seq: 1, #new-token: 1536, #cached-token: 0, token usage: 0.02, #running-req: 0, #queue-req: 0, #prealloc-req: 24, #inflight-req: 1, cuda graph: False, input throughput (token/s): 1372.05
+[2026-04-28 02:41:56 TP0] Req Time Stats(rid=3f49e19e2b994efe9fb9ae452a703e5e, bootstrap_room=3134328788270820111, input len=1522, output len=1, type=prefill): bootstrap_queue_duration(78146.80ms) = bootstrap(78146.79ms) + alloc_wait(0.01ms); queue_duration=0.17ms, forward_duration=62.13ms, start=1020847.667, transfer_speed=29.47GB/s, transfer_total=192.00MB, #retries=0
+[2026-04-28 02:41:56] INFO:     127.0.0.1:47652 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:56] INFO:     127.0.0.1:47658 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:41:58] INFO:     127.0.0.1:47652 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:58 TP0] Prefill batch, #new-seq: 1, #new-token: 5696, #cached-token: 64, token usage: 0.11, #running-req: 0, #queue-req: 0, #prealloc-req: 23, #inflight-req: 1, cuda graph: False, input throughput (token/s): 991.33
+[2026-04-28 02:41:58 TP0] Prefill batch, #new-seq: 1, #new-token: 1280, #cached-token: 64, token usage: 0.11, #running-req: 0, #queue-req: 0, #prealloc-req: 23, #inflight-req: 2, cuda graph: False, input throughput (token/s): 649837.59
+[2026-04-28 02:41:58 TP0] Req Time Stats(rid=d9cf44725b3f45e8a34cfcfd07203ec9, bootstrap_room=3922211329147546900, input len=5738, output len=1, type=prefill): bootstrap_queue_duration(78847.01ms) = bootstrap(78847.00ms) + alloc_wait(0.01ms); queue_duration=0.33ms, forward_duration=244.39ms, start=1020848.350, transfer_speed=31.38GB/s, transfer_total=720.00MB, #retries=0
+[2026-04-28 02:41:58] INFO:     127.0.0.1:33912 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:41:58 TP0] Req Time Stats(rid=f2eb915e71e443d692eb4fd3da466a2f, bootstrap_room=6620755919693693496, input len=1342, output len=1, type=prefill): bootstrap_queue_duration(77249.96ms) = bootstrap(77249.95ms) + alloc_wait(0.01ms); queue_duration=0.21ms, forward_duration=208.67ms, start=1020849.987, transfer_speed=9.12GB/s, transfer_total=168.00MB, #retries=0
+[2026-04-28 02:41:58] INFO:     127.0.0.1:48066 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:41:58] INFO:     127.0.0.1:33912 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:58] INFO:     127.0.0.1:33912 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:58] INFO:     127.0.0.1:33912 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:58] INFO:     127.0.0.1:33912 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:59] INFO:     127.0.0.1:33912 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:59] INFO:     127.0.0.1:33912 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:59] INFO:     127.0.0.1:33912 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:59 TP0] Prefill batch, #new-seq: 1, #new-token: 8192, #cached-token: 704, token usage: 0.27, #running-req: 0, #queue-req: 1, #prealloc-req: 20, #inflight-req: 0, cuda graph: False, input throughput (token/s): 876.71
+[2026-04-28 02:41:59] INFO:     127.0.0.1:33912 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:41:59 TP0] Prefill batch, #new-seq: 2, #new-token: 8192, #cached-token: 768, token usage: 0.40, #running-req: 0, #queue-req: 0, #prealloc-req: 20, #inflight-req: 1, cuda graph: False, input throughput (token/s): 27227.27
+[2026-04-28 02:41:59] INFO:     127.0.0.1:48066 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:00] INFO:     127.0.0.1:33912 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:00 TP0] Prefill batch, #new-seq: 2, #new-token: 8192, #cached-token: 64, token usage: 0.41, #running-req: 0, #queue-req: 0, #prealloc-req: 20, #inflight-req: 2, cuda graph: False, input throughput (token/s): 26458.61
+[2026-04-28 02:42:00 TP0] Req Time Stats(rid=99a26cbc7b5d4f03b553ffa3cd665d86, bootstrap_room=3089692941108660431, input len=14672, output len=1, type=prefill): bootstrap_queue_duration(76685.40ms) = bootstrap(76685.39ms) + alloc_wait(0.01ms); queue_duration=0.87ms, forward_duration=877.31ms, start=1020851.937, transfer_speed=5.74GB/s, transfer_total=1840.00MB, #retries=0
+[2026-04-28 02:42:00 TP0] Prefill batch, #new-seq: 1, #new-token: 704, #cached-token: 0, token usage: 0.18, #running-req: 0, #queue-req: 0, #prealloc-req: 20, #inflight-req: 2, cuda graph: False, input throughput (token/s): 1859805.78
+[2026-04-28 02:42:00 TP0] Req Time Stats(rid=2557de54c5cc4909903eebe885cd6a44, bootstrap_room=619598204004059820, input len=10661, output len=1, type=prefill): bootstrap_queue_duration(76071.20ms) = bootstrap(76071.19ms) + alloc_wait(0.01ms); queue_duration=1.45ms, forward_duration=864.89ms, start=1020852.590, transfer_speed=42.97GB/s, transfer_total=1336.00MB, #retries=0
+[2026-04-28 02:42:00 TP0] Req Time Stats(rid=c4abf558e7d74d3b9afc6e49ffc7fc13, bootstrap_room=7271990735027204115, input len=1408, output len=1, type=prefill): bootstrap_queue_duration(65805.76ms) = bootstrap(65805.76ms) + alloc_wait(0.00ms); queue_duration=230.38ms, forward_duration=640.75ms, start=1020862.856, transfer_speed=5.77GB/s, transfer_total=176.00MB, #retries=0
+[2026-04-28 02:42:00] INFO:     127.0.0.1:48066 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:00] INFO:     127.0.0.1:33912 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:00] INFO:     127.0.0.1:33914 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:42:00] INFO:     127.0.0.1:48072 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:42:00] INFO:     127.0.0.1:59658 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:42:00] INFO:     127.0.0.1:33914 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:00] INFO:     127.0.0.1:33914 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:01] INFO:     127.0.0.1:33914 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:01] INFO:     127.0.0.1:33914 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:01] INFO:     127.0.0.1:33914 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:01] INFO:     127.0.0.1:33914 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:01] INFO:     127.0.0.1:33914 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:02] INFO:     127.0.0.1:33914 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:02] INFO:     127.0.0.1:33914 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:02] INFO:     127.0.0.1:33914 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:02] INFO:     127.0.0.1:48072 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:03] INFO:     127.0.0.1:48072 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:03] INFO:     127.0.0.1:48072 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:03] INFO:     127.0.0.1:59658 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:03] INFO:     127.0.0.1:59658 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:03] INFO:     127.0.0.1:48072 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:03] INFO:     127.0.0.1:59658 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:04] INFO:     127.0.0.1:48072 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:04] INFO:     127.0.0.1:48072 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:04 TP0] Prefill batch, #new-seq: 1, #new-token: 8192, #cached-token: 576, token usage: 0.26, #running-req: 0, #queue-req: 2, #prealloc-req: 20, #inflight-req: 0, cuda graph: False, input throughput (token/s): 160.64
+[2026-04-28 02:42:04] INFO:     127.0.0.1:33912 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:04 TP0] Prefill batch, #new-seq: 1, #new-token: 8192, #cached-token: 0, token usage: 0.38, #running-req: 0, #queue-req: 0, #prealloc-req: 21, #inflight-req: 0, cuda graph: False, input throughput (token/s): 24976.32
+[2026-04-28 02:42:04] INFO:     127.0.0.1:33912 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:05 TP0] Prefill batch, #new-seq: 3, #new-token: 8000, #cached-token: 64, token usage: 0.38, #running-req: 0, #queue-req: 0, #prealloc-req: 21, #inflight-req: 3, cuda graph: False, input throughput (token/s): 27239.37
+[2026-04-28 02:42:05 TP0] Req Time Stats(rid=df1ac382974c47ea8df1e7d43aa4f438, bootstrap_room=8279302399902821884, input len=20639, output len=1, type=prefill): bootstrap_queue_duration(67939.34ms) = bootstrap(67939.33ms) + alloc_wait(0.01ms); queue_duration=0.90ms, forward_duration=912.78ms, start=1020865.678, transfer_speed=136.23GB/s, transfer_total=2584.00MB, #retries=0
+[2026-04-28 02:42:05 TP0] Req Time Stats(rid=48222a4e5ab945a4befca6a87fd05412, bootstrap_room=5054160766511612724, input len=9, output len=1, type=prefill): bootstrap_queue_duration(64130.40ms) = bootstrap(64130.39ms) + alloc_wait(0.01ms); queue_duration=231.22ms, forward_duration=642.46ms, start=1020869.528, transfer_speed=0.42GB/s, transfer_total=8.00MB, #retries=0
+[2026-04-28 02:42:05] INFO:     127.0.0.1:33912 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:05] INFO:     127.0.0.1:47676 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:42:05] INFO:     127.0.0.1:54564 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:42:05 TP0] Req Time Stats(rid=3b1bcd58fca64db9bd865fdefe219136, bootstrap_room=462679015901714995, input len=4241, output len=1, type=prefill): bootstrap_queue_duration(55960.50ms) = bootstrap(55960.49ms) + alloc_wait(0.00ms); queue_duration=231.18ms, forward_duration=657.99ms, start=1020877.698, transfer_speed=15.60GB/s, transfer_total=536.00MB, #retries=0
+[2026-04-28 02:42:05] INFO:     127.0.0.1:57708 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:42:05] INFO:     127.0.0.1:57708 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:05] INFO:     127.0.0.1:57708 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:05] INFO:     127.0.0.1:57708 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:06] INFO:     127.0.0.1:57708 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:06] INFO:     127.0.0.1:57708 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:06] INFO:     127.0.0.1:47676 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:07] INFO:     127.0.0.1:57708 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:07 TP0] Prefill batch, #new-seq: 1, #new-token: 8192, #cached-token: 512, token usage: 0.26, #running-req: 0, #queue-req: 2, #prealloc-req: 18, #inflight-req: 0, cuda graph: False, input throughput (token/s): 3924.28
+[2026-04-28 02:42:07] INFO:     127.0.0.1:47676 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:07] INFO:     127.0.0.1:57708 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:07 TP0] Prefill batch, #new-seq: 1, #new-token: 8192, #cached-token: 0, token usage: 0.38, #running-req: 0, #queue-req: 0, #prealloc-req: 18, #inflight-req: 0, cuda graph: False, input throughput (token/s): 25387.33
+[2026-04-28 02:42:07] INFO:     127.0.0.1:47676 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:07] INFO:     127.0.0.1:57708 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:07 TP0] Prefill batch, #new-seq: 3, #new-token: 8192, #cached-token: 64, token usage: 0.46, #running-req: 0, #queue-req: 0, #prealloc-req: 18, #inflight-req: 2, cuda graph: False, input throughput (token/s): 21477.54
+[2026-04-28 02:42:07] INFO:     127.0.0.1:47676 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:08 TP0] Prefill batch, #new-seq: 1, #new-token: 4672, #cached-token: 0, token usage: 0.46, #running-req: 0, #queue-req: 0, #prealloc-req: 18, #inflight-req: 3, cuda graph: False, input throughput (token/s): 54797.35
+[2026-04-28 02:42:08 TP0] Req Time Stats(rid=8825544a51fb4a81be9301e1bcfe4822, bootstrap_room=2108443873446016124, input len=24332, output len=1, type=prefill): bootstrap_queue_duration(57418.11ms) = bootstrap(57418.10ms) + alloc_wait(0.01ms); queue_duration=0.93ms, forward_duration=1117.74ms, start=1020878.873, transfer_speed=19.32GB/s, transfer_total=3048.00MB, #retries=0
+[2026-04-28 02:42:08 TP0] Req Time Stats(rid=8c834d494ea64049b9d9ea9b311ab0f1, bootstrap_room=44877343661407795, input len=9, output len=1, type=prefill): bootstrap_queue_duration(56944.86ms) = bootstrap(56944.86ms) + alloc_wait(0.01ms); queue_duration=226.62ms, forward_duration=852.79ms, start=1020879.385, transfer_speed=0.05GB/s, transfer_total=8.00MB, #retries=0
+[2026-04-28 02:42:08 TP0] Req Time Stats(rid=d4cd22af1dc74bbb8047bda28e70b6e0, bootstrap_room=4462438221095116735, input len=5338, output len=1, type=prefill): bootstrap_queue_duration(45803.82ms) = bootstrap(45803.82ms) + alloc_wait(0.00ms); queue_duration=226.58ms, forward_duration=868.10ms, start=1020890.526, transfer_speed=35.64GB/s, transfer_total=672.00MB, #retries=0
+[2026-04-28 02:42:08] INFO:     127.0.0.1:47676 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:08] INFO:     127.0.0.1:54564 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:08] INFO:     127.0.0.1:47676 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:08] INFO:     127.0.0.1:33912 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:08] INFO:     127.0.0.1:47482 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:42:08] INFO:     127.0.0.1:54564 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:08] INFO:     127.0.0.1:47434 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:42:09] INFO:     127.0.0.1:47676 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:09] INFO:     127.0.0.1:33912 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:09] INFO:     127.0.0.1:51884 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:42:09 TP0] Prefill batch, #new-seq: 1, #new-token: 5056, #cached-token: 0, token usage: 0.08, #running-req: 0, #queue-req: 0, #prealloc-req: 21, #inflight-req: 1, cuda graph: False, input throughput (token/s): 3349.91
+[2026-04-28 02:42:09 TP0] Req Time Stats(rid=3e1777be54b44303a362a08dd934173b, bootstrap_room=6288847586941345325, input len=5012, output len=1, type=prefill): bootstrap_queue_duration(44641.14ms) = bootstrap(44641.13ms) + alloc_wait(0.01ms); queue_duration=0.22ms, forward_duration=178.20ms, start=1020894.003, transfer_speed=28.67GB/s, transfer_total=632.00MB, #retries=0
+[2026-04-28 02:42:09] INFO:     127.0.0.1:47482 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:09] INFO:     127.0.0.1:38108 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:42:09] INFO:     127.0.0.1:51884 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:10] INFO:     127.0.0.1:47434 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:10] INFO:     127.0.0.1:51884 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:10] INFO:     127.0.0.1:47434 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:10] INFO:     127.0.0.1:51884 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:10] INFO:     127.0.0.1:47434 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:11] INFO:     127.0.0.1:51884 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:11] INFO:     127.0.0.1:47434 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:11 TP0] Prefill batch, #new-seq: 1, #new-token: 1792, #cached-token: 0, token usage: 0.16, #running-req: 0, #queue-req: 0, #prealloc-req: 19, #inflight-req: 1, cuda graph: False, input throughput (token/s): 2267.65
+[2026-04-28 02:42:11] INFO:     127.0.0.1:47482 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:11 TP0] Prefill batch, #new-seq: 3, #new-token: 8192, #cached-token: 832, token usage: 0.26, #running-req: 0, #queue-req: 0, #prealloc-req: 20, #inflight-req: 3, cuda graph: False, input throughput (token/s): 8170.86
+[2026-04-28 02:42:11 TP0] Req Time Stats(rid=b5345e8304b94a41804a975b3d1d13c0, bootstrap_room=4574154228998366032, input len=1763, output len=1, type=prefill): bootstrap_queue_duration(45712.12ms) = bootstrap(45712.11ms) + alloc_wait(0.01ms); queue_duration=0.21ms, forward_duration=302.06ms, start=1020895.237, transfer_speed=0.99GB/s, transfer_total=224.00MB, #retries=0
+[2026-04-28 02:42:12] INFO:     127.0.0.1:47482 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:12] INFO:     127.0.0.1:39798 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:42:12 TP0] Prefill batch, #new-seq: 1, #new-token: 6208, #cached-token: 0, token usage: 0.23, #running-req: 0, #queue-req: 0, #prealloc-req: 20, #inflight-req: 3, cuda graph: False, input throughput (token/s): 35295.95
+[2026-04-28 02:42:12 TP0] Req Time Stats(rid=792866e4001c40c885634c68ba7e8e75, bootstrap_room=1508596162557827648, input len=1732, output len=1, type=prefill): bootstrap_queue_duration(36726.71ms) = bootstrap(36726.70ms) + alloc_wait(0.01ms); queue_duration=0.93ms, forward_duration=493.30ms, start=1020904.262, transfer_speed=0.93GB/s, transfer_total=224.00MB, #retries=0
+[2026-04-28 02:42:12 TP0] Req Time Stats(rid=f2b1cf8f4335404f919cd0db7321de0e, bootstrap_room=3376553056245576233, input len=1573, output len=1, type=prefill): bootstrap_queue_duration(35531.40ms) = bootstrap(35531.40ms) + alloc_wait(0.00ms); queue_duration=0.87ms, forward_duration=493.31ms, start=1020905.458, transfer_speed=0.84GB/s, transfer_total=200.00MB, #retries=0
+[2026-04-28 02:42:12 TP0] Req Time Stats(rid=a360996826a04e829838b031aefde9f8, bootstrap_room=1081575464726711775, input len=11798, output len=1, type=prefill): bootstrap_queue_duration(30260.20ms) = bootstrap(30260.20ms) + alloc_wait(0.00ms); queue_duration=0.85ms, forward_duration=534.07ms, start=1020910.729, transfer_speed=34.38GB/s, transfer_total=1480.00MB, #retries=0
+[2026-04-28 02:42:12] INFO:     127.0.0.1:39798 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:12 TP0] Prefill batch, #new-seq: 1, #new-token: 8192, #cached-token: 576, token usage: 0.26, #running-req: 0, #queue-req: 2, #prealloc-req: 17, #inflight-req: 0, cuda graph: False, input throughput (token/s): 21214.28
+[2026-04-28 02:42:12] INFO:     127.0.0.1:39798 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:12] INFO:     127.0.0.1:48024 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:42:12] INFO:     127.0.0.1:35312 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:42:12 TP0] Prefill batch, #new-seq: 1, #new-token: 8192, #cached-token: 0, token usage: 0.38, #running-req: 0, #queue-req: 1, #prealloc-req: 17, #inflight-req: 0, cuda graph: False, input throughput (token/s): 25214.81
+[2026-04-28 02:42:13 TP0] Prefill batch, #new-seq: 2, #new-token: 8192, #cached-token: 0, token usage: 0.42, #running-req: 0, #queue-req: 0, #prealloc-req: 18, #inflight-req: 2, cuda graph: False, input throughput (token/s): 22494.78
+[2026-04-28 02:42:13 TP0] Prefill batch, #new-seq: 1, #new-token: 2240, #cached-token: 64, token usage: 0.42, #running-req: 0, #queue-req: 0, #prealloc-req: 18, #inflight-req: 3, cuda graph: False, input throughput (token/s): 173657.41
+[2026-04-28 02:42:13 TP0] Req Time Stats(rid=bf979f5476b04810a26ce42ba5236ca8, bootstrap_room=3865339378077121519, input len=21706, output len=1, type=prefill): bootstrap_queue_duration(30597.82ms) = bootstrap(30597.81ms) + alloc_wait(0.01ms); queue_duration=0.88ms, forward_duration=1028.52ms, start=1020910.886, transfer_speed=52.98GB/s, transfer_total=2720.00MB, #retries=0
+[2026-04-28 02:42:13 TP0] Req Time Stats(rid=91f6c403f877466885f50195290ee25d, bootstrap_room=7851150882366611413, input len=3358, output len=1, type=prefill): bootstrap_queue_duration(30065.40ms) = bootstrap(30065.40ms) + alloc_wait(0.00ms); queue_duration=293.20ms, forward_duration=736.18ms, start=1020911.419, transfer_speed=8.33GB/s, transfer_total=424.00MB, #retries=0
+[2026-04-28 02:42:13] INFO:     127.0.0.1:48806 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:13 TP0] Req Time Stats(rid=b5e7f0b0c439462ca34478930399a53b, bootstrap_room=1161588321704555005, input len=2283, output len=1, type=prefill): bootstrap_queue_duration(29142.81ms) = bootstrap(29142.81ms) + alloc_wait(0.00ms); queue_duration=618.50ms, forward_duration=451.88ms, start=1020912.341, transfer_speed=6.46GB/s, transfer_total=288.00MB, #retries=0
+[2026-04-28 02:42:13 TP0] Prefill batch, #new-seq: 1, #new-token: 2624, #cached-token: 64, token usage: 0.04, #running-req: 0, #queue-req: 0, #prealloc-req: 17, #inflight-req: 1, cuda graph: False, input throughput (token/s): 25104.04
+[2026-04-28 02:42:13 TP0] Req Time Stats(rid=0401906a381f4d5aba247e5747503bd7, bootstrap_room=4931732632598640194, input len=2687, output len=1, type=prefill): bootstrap_queue_duration(25856.26ms) = bootstrap(25856.26ms) + alloc_wait(0.01ms); queue_duration=0.23ms, forward_duration=96.77ms, start=1020916.658, transfer_speed=29.49GB/s, transfer_total=336.00MB, #retries=0
+[2026-04-28 02:42:13] INFO:     127.0.0.1:39798 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:13] INFO:     127.0.0.1:48026 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:42:13] INFO:     127.0.0.1:35312 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:13] INFO:     127.0.0.1:39798 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:13] INFO:     127.0.0.1:49766 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:42:13] INFO:     127.0.0.1:49778 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:42:13] INFO:     127.0.0.1:35312 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:13] INFO:     127.0.0.1:49794 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:42:13] INFO:     127.0.0.1:42428 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:42:14] INFO:     127.0.0.1:48026 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:14] INFO:     127.0.0.1:49794 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:14 TP0] Prefill batch, #new-seq: 1, #new-token: 8192, #cached-token: 0, token usage: 0.25, #running-req: 0, #queue-req: 0, #prealloc-req: 19, #inflight-req: 0, cuda graph: False, input throughput (token/s): 2100.16
+[2026-04-28 02:42:14] INFO:     127.0.0.1:49778 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:14] INFO:     127.0.0.1:49794 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:14 TP0] Prefill batch, #new-seq: 1, #new-token: 8192, #cached-token: 0, token usage: 0.38, #running-req: 0, #queue-req: 0, #prealloc-req: 19, #inflight-req: 0, cuda graph: False, input throughput (token/s): 25221.00
+[2026-04-28 02:42:15] INFO:     127.0.0.1:49778 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:15] INFO:     127.0.0.1:49794 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:15 TP0] Prefill batch, #new-seq: 1, #new-token: 8192, #cached-token: 0, token usage: 0.40, #running-req: 0, #queue-req: 0, #prealloc-req: 19, #inflight-req: 0, cuda graph: False, input throughput (token/s): 22008.36
+[2026-04-28 02:42:15] INFO:     127.0.0.1:49778 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:15 TP0] Prefill batch, #new-seq: 1, #new-token: 1792, #cached-token: 0, token usage: 0.40, #running-req: 0, #queue-req: 0, #prealloc-req: 19, #inflight-req: 1, cuda graph: False, input throughput (token/s): 78323.10
+[2026-04-28 02:42:15 TP0] Req Time Stats(rid=560e9d575f9d45c0b4b6dacc65e5562c, bootstrap_room=3088233018264974699, input len=26306, output len=1, type=prefill): bootstrap_queue_duration(26131.17ms) = bootstrap(26131.16ms) + alloc_wait(0.01ms); queue_duration=0.57ms, forward_duration=1070.06ms, start=1020917.457, transfer_speed=427.12GB/s, transfer_total=3296.00MB, #retries=0
+[2026-04-28 02:42:15] INFO:     127.0.0.1:49794 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:15] INFO:     127.0.0.1:49778 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:15] INFO:     127.0.0.1:49794 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:16] INFO:     127.0.0.1:49778 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:16] INFO:     127.0.0.1:62636 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:42:16] INFO:     127.0.0.1:49794 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:16] INFO:     127.0.0.1:49794 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:16] INFO:     127.0.0.1:49766 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:16] INFO:     127.0.0.1:49794 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:16] INFO:     127.0.0.1:62636 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:16 TP0] Prefill batch, #new-seq: 1, #new-token: 7808, #cached-token: 768, token usage: 0.26, #running-req: 0, #queue-req: 0, #prealloc-req: 18, #inflight-req: 1, cuda graph: False, input throughput (token/s): 1080.96
+[2026-04-28 02:42:17] INFO:     127.0.0.1:62636 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:17] INFO:     127.0.0.1:62636 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:17 TP0] Prefill batch, #new-seq: 2, #new-token: 8192, #cached-token: 64, token usage: 0.26, #running-req: 0, #queue-req: 0, #prealloc-req: 18, #inflight-req: 2, cuda graph: False, input throughput (token/s): 26536.53
+[2026-04-28 02:42:17 TP0] Req Time Stats(rid=cacc646aadca4781bd23828d4ef206a0, bootstrap_room=6544729946385219555, input len=8570, output len=1, type=prefill): bootstrap_queue_duration(27587.80ms) = bootstrap(27587.79ms) + alloc_wait(0.01ms); queue_duration=0.60ms, forward_duration=549.90ms, start=1020918.466, transfer_speed=3.54GB/s, transfer_total=1072.00MB, #retries=0
+[2026-04-28 02:42:17 TP0] Prefill batch, #new-seq: 1, #new-token: 320, #cached-token: 0, token usage: 0.13, #running-req: 0, #queue-req: 0, #prealloc-req: 18, #inflight-req: 2, cuda graph: False, input throughput (token/s): 3252604.45
+[2026-04-28 02:42:17 TP0] Req Time Stats(rid=972473f56d914a75a3986cc7be6e1d24, bootstrap_room=8906658473886342442, input len=7103, output len=1, type=prefill): bootstrap_queue_duration(24986.10ms) = bootstrap(24986.09ms) + alloc_wait(0.01ms); queue_duration=0.49ms, forward_duration=535.03ms, start=1020921.109, transfer_speed=31.13GB/s, transfer_total=888.00MB, #retries=0
+[2026-04-28 02:42:17 TP0] Req Time Stats(rid=6526bd86e3464d8fa4cc3c0063e35608, bootstrap_room=1472630064850260168, input len=1469, output len=1, type=prefill): bootstrap_queue_duration(21993.86ms) = bootstrap(21993.85ms) + alloc_wait(0.00ms); queue_duration=0.45ms, forward_duration=540.44ms, start=1020924.102, transfer_speed=5.86GB/s, transfer_total=184.00MB, #retries=0
+[2026-04-28 02:42:17] INFO:     127.0.0.1:49794 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:17] INFO:     127.0.0.1:47588 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:42:17] INFO:     127.0.0.1:47640 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:42:17] INFO:     127.0.0.1:42228 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:42:18 TP0] Prefill batch, #new-seq: 1, #new-token: 1280, #cached-token: 64, token usage: 0.02, #running-req: 0, #queue-req: 0, #prealloc-req: 19, #inflight-req: 1, cuda graph: False, input throughput (token/s): 187.29
+[2026-04-28 02:42:18 TP0] Req Time Stats(rid=111465edd495436e9a2bd67ea4f60a8d, bootstrap_room=8406218585413662214, input len=1338, output len=1, type=prefill): bootstrap_queue_duration(22132.26ms) = bootstrap(22132.25ms) + alloc_wait(0.01ms); queue_duration=0.27ms, forward_duration=47.91ms, start=1020926.139, transfer_speed=30.79GB/s, transfer_total=168.00MB, #retries=0
+[2026-04-28 02:42:19] INFO:     127.0.0.1:47640 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:19] INFO:     127.0.0.1:47658 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:42:19] INFO:     127.0.0.1:47658 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:19] INFO:     127.0.0.1:47658 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:19] INFO:     127.0.0.1:47640 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:20] INFO:     127.0.0.1:47640 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:20] INFO:     127.0.0.1:47640 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:20] INFO:     127.0.0.1:47640 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:20] INFO:     127.0.0.1:47640 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:21] INFO:     127.0.0.1:47640 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:21] INFO:     127.0.0.1:47640 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:21 TP0] Prefill batch, #new-seq: 1, #new-token: 8192, #cached-token: 128, token usage: 0.25, #running-req: 0, #queue-req: 3, #prealloc-req: 13, #inflight-req: 0, cuda graph: False, input throughput (token/s): 545.13
+[2026-04-28 02:42:21 TP0] Prefill batch, #new-seq: 4, #new-token: 8192, #cached-token: 192, token usage: 0.34, #running-req: 0, #queue-req: 0, #prealloc-req: 13, #inflight-req: 3, cuda graph: False, input throughput (token/s): 30745.12
+[2026-04-28 02:42:21] INFO:     127.0.0.1:47588 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:21 TP0] Prefill batch, #new-seq: 4, #new-token: 5568, #cached-token: 192, token usage: 0.34, #running-req: 0, #queue-req: 0, #prealloc-req: 13, #inflight-req: 7, cuda graph: False, input throughput (token/s): 48864.57
+[2026-04-28 02:42:21 TP0] Req Time Stats(rid=f86be359b497471daf03bb503e68f1c7, bootstrap_room=3462848205645260911, input len=10919, output len=1, type=prefill): bootstrap_queue_duration(20579.18ms) = bootstrap(20579.17ms) + alloc_wait(0.01ms); queue_duration=0.54ms, forward_duration=702.07ms, start=1020929.817, transfer_speed=7.82GB/s, transfer_total=1368.00MB, #retries=0
+[2026-04-28 02:42:21 TP0] Req Time Stats(rid=c3c12e0538fb40a2aa43265eaad0560b, bootstrap_room=4011768582041597618, input len=1659, output len=1, type=prefill): bootstrap_queue_duration(18494.30ms) = bootstrap(18494.29ms) + alloc_wait(0.01ms); queue_duration=1.22ms, forward_duration=661.63ms, start=1020931.942, transfer_speed=1.19GB/s, transfer_total=208.00MB, #retries=0
+[2026-04-28 02:42:21 TP0] Req Time Stats(rid=377d65976df04624ba80817bb5b2056c, bootstrap_room=257666440907378304, input len=2378, output len=1, type=prefill): bootstrap_queue_duration(16963.22ms) = bootstrap(16963.22ms) + alloc_wait(0.00ms); queue_duration=1.18ms, forward_duration=661.63ms, start=1020933.473, transfer_speed=1.75GB/s, transfer_total=304.00MB, #retries=0
+[2026-04-28 02:42:21 TP0] Req Time Stats(rid=1da051eeeabf484f8cb31a5eb903521e, bootstrap_room=1539731014243411116, input len=1816, output len=1, type=prefill): bootstrap_queue_duration(16548.20ms) = bootstrap(16548.20ms) + alloc_wait(0.00ms); queue_duration=1.17ms, forward_duration=661.63ms, start=1020933.888, transfer_speed=61.06GB/s, transfer_total=232.00MB, #retries=0
+[2026-04-28 02:42:21 TP0] Req Time Stats(rid=9891a85f5f7a4479a744649fc7f4047b, bootstrap_room=3508302700925128613, input len=1133, output len=1, type=prefill): bootstrap_queue_duration(13025.49ms) = bootstrap(13025.49ms) + alloc_wait(0.00ms); queue_duration=231.47ms, forward_duration=434.38ms, start=1020937.410, transfer_speed=22.51GB/s, transfer_total=144.00MB, #retries=0
+[2026-04-28 02:42:21 TP0] Req Time Stats(rid=c6144f24cedd414e9e77282ccea99152, bootstrap_room=3400498291631920160, input len=2085, output len=1, type=prefill): bootstrap_queue_duration(11826.08ms) = bootstrap(11826.08ms) + alloc_wait(0.00ms); queue_duration=231.46ms, forward_duration=442.57ms, start=1020938.610, transfer_speed=18.28GB/s, transfer_total=264.00MB, #retries=0
+[2026-04-28 02:42:21 TP0] Req Time Stats(rid=19c7741473c546dd8aa2edcb53d763c2, bootstrap_room=5859772262944616299, input len=2247, output len=1, type=prefill): bootstrap_queue_duration(11806.76ms) = bootstrap(11806.76ms) + alloc_wait(0.00ms); queue_duration=231.45ms, forward_duration=452.03ms, start=1020938.629, transfer_speed=12.29GB/s, transfer_total=288.00MB, #retries=0
+[2026-04-28 02:42:21] INFO:     127.0.0.1:47640 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:22] INFO:     127.0.0.1:47588 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:22] INFO:     127.0.0.1:33914 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:42:22] INFO:     127.0.0.1:59658 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:42:22] INFO:     127.0.0.1:48072 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:42:22] INFO:     127.0.0.1:48066 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:42:22] INFO:     127.0.0.1:57708 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:42:22] INFO:     127.0.0.1:54564 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:42:22] INFO:     127.0.0.1:47676 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:42:22] INFO:     127.0.0.1:59658 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:22 TP0] Prefill batch, #new-seq: 1, #new-token: 64, #cached-token: 0, token usage: 0.00, #running-req: 0, #queue-req: 0, #prealloc-req: 14, #inflight-req: 1, cuda graph: False, input throughput (token/s): 9888.94
+[2026-04-28 02:42:22 TP0] Req Time Stats(rid=HEALTH_CHECK_1777344142.2941563, bootstrap_room=0, input len=1, output len=1, type=prefill): bootstrap_queue_duration(0.30ms) = bootstrap(0.29ms) + alloc_wait(0.01ms); queue_duration=0.12ms, forward_duration=30.98ms, start=1020951.629, transfer_speed=9.39GB/s, transfer_total=8.00MB, #retries=0
+Process Process-1:
+Process Process-2:
+Process Process-3:
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/multiprocessing/process.py", line 314, in _bootstrap
+    self.run()
+  File "/usr/lib/python3.12/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/sglang/python/sglang/srt/managers/scheduler.py", line 3661, in run_scheduler_process
+    scheduler.run_event_loop()
+  File "/sglang/python/sglang/srt/managers/scheduler.py", line 1300, in run_event_loop
+    dispatch_event_loop(self)
+  File "/sglang/python/sglang/srt/managers/scheduler.py", line 3549, in dispatch_event_loop
+    scheduler.event_loop_overlap_disagg_prefill()
+  File "/usr/local/lib/python3.12/dist-packages/torch/utils/_contextlib.py", line 120, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/sglang/python/sglang/srt/disaggregation/prefill.py", line 419, in event_loop_overlap_disagg_prefill
+    while True:
+          ^^^^
+KeyboardInterrupt
+Traceback (most recent call last):
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/multiprocessing/process.py", line 314, in _bootstrap
+    self.run()
+  File "/usr/lib/python3.12/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/sglang/python/sglang/srt/managers/scheduler.py", line 3661, in run_scheduler_process
+    scheduler.run_event_loop()
+  File "/sglang/python/sglang/srt/managers/scheduler.py", line 1300, in run_event_loop
+    dispatch_event_loop(self)
+  File "/sglang/python/sglang/srt/managers/scheduler.py", line 3549, in dispatch_event_loop
+    scheduler.event_loop_overlap_disagg_prefill()
+  File "/usr/local/lib/python3.12/dist-packages/torch/utils/_contextlib.py", line 120, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/sglang/python/sglang/srt/disaggregation/prefill.py", line 446, in event_loop_overlap_disagg_prefill
+    self.self_check_during_idle()
+  File "/sglang/python/sglang/srt/managers/scheduler_runtime_checker_mixin.py", line 377, in self_check_during_idle
+    self.check_memory()
+  File "/sglang/python/sglang/srt/managers/scheduler_runtime_checker_mixin.py", line 279, in check_memory
+    memory_leak, token_msg = self._check_radix_cache_memory()
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/sglang/python/sglang/srt/managers/scheduler_runtime_checker_mixin.py", line 186, in _check_radix_cache_memory
+    session_held = self._session_held_tokens()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/sglang/python/sglang/srt/managers/scheduler_runtime_checker_mixin.py", line 25, in _session_held_tokens
+    if isinstance(self.tree_cache, SessionAwareCache):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/typing.py", line 1878, in __instancecheck__
+    return super().__instancecheck__(instance)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen abc>", line 117, in __instancecheck__
+KeyboardInterrupt
+  File "/usr/lib/python3.12/multiprocessing/process.py", line 314, in _bootstrap
+    self.run()
+  File "/usr/lib/python3.12/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/sglang/python/sglang/srt/managers/detokenizer_manager.py", line 403, in run_detokenizer_process
+    manager.event_loop()
+  File "/sglang/python/sglang/srt/managers/detokenizer_manager.py", line 141, in event_loop
+    recv_obj = self.recv_from_scheduler.recv_pyobj()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/zmq/sugar/socket.py", line 989, in recv_pyobj
+    msg = self.recv(flags)
+          ^^^^^^^^^^^^^^^^
+  File "zmq/backend/cython/_zmq.py", line 1218, in zmq.backend.cython._zmq.Socket.recv
+    def recv(self, flags=0, copy: bint = True, track: bint = False):
+    ^^^^^^^^^^^
+  File "zmq/backend/cython/_zmq.py", line 1253, in zmq.backend.cython._zmq.Socket.recv
+    return _recv_copy(self.handle, flags)
+    ^^^^^^^^^^^
+  File "zmq/backend/cython/_zmq.py", line 1408, in zmq.backend.cython._zmq._recv_copy
+    _check_rc(rc)
+    ^^^^^^^^^^^
+  File "zmq/backend/cython/_zmq.py", line 179, in zmq.backend.cython._zmq._check_rc
+    PyErr_CheckSignals()
+    ^^^^^^^^^^^
+KeyboardInterrupt
+[2026-04-28 02:42:22] INFO:     127.0.0.1:47676 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:22] SIGTERM received. signum=None frame=None. Draining requests and shutting down...
+[2026-04-28 02:42:22] SIGTERM received. signum=None frame=None. Draining requests and shutting down...
+[2026-04-28 02:42:22] INFO:     Shutting down
+[2026-04-28 02:42:22] INFO:     Waiting for connections to close. (CTRL+C to force quit)
+[2026-04-28 02:42:23] INFO:     127.0.0.1:49178 - "GET /health HTTP/1.1" 200 OK
+[2026-04-28 02:42:23] Gracefully exiting... Remaining number of requests 345. Remaining requests remaining_rids=['20e74e3934be4f9dab1a823512c3f92c', '5396d842d92b48dda6775eb1e8442878', '350d657eb8be41f1af67a03823189552', '1d3e28149d1246b6b31b7ade0a1f6cc7', '8bd9110a360e4696bad981bb788d4587', '18dbf1eba5dc4da7bdaa74d4d0f4e9e8', 'bf0c1f3d01a249399fc75a9bdbef2507', '73867e376afa4fd3ab5cba70cc6f28e2', 'ddce5d1ff61046b4888e21a405d7f0c2', 'e7be0d30fc9d4f45898f7b5d0a240658', '2c85d3df11434a489a9413d64e5bcffc', 'f93ff77698b444f88ed12d1db3f62d11', '467b02e97621419e8bb829e22e54e77d', 'e88d5c8854ab44f18d25eff48125be3e', '4ffa092245d34fb99c581d39f8e2faf9', 'c545baaecc754b50bc716bd67cc1ba49', 'f5d5d2c58b864500bfa0a90c3c453e97', '9c5123f62c254b23a9d4de0c64ef8b9e', '1ea68560b7c141d1b94ee8c22f794786', 'fef928b82ff442e8b504bdc227bc79e6', 'fb65274cded24ce08fcbe517bd92e57b', '607966b93bfe44dca2668459de85c51f', 'd975eb2085994955a55e51cc1716d542', 'aa4b4436c2d840d9b534d6ced92dcb80', 'e39d6c7419ea491585e43bbed42d4227', 'e809672229554c148f701882d546da42', 'ae3bf118e24e46c09aa8d45c7cb22534', '43f0072d8f1a4c818e3a7705b50df4ec', '29c8281a6fa74130a38cca493078a7e1', '7ebe87de51d54710bc5581977e828885', 'eab850b164cd431f8ce2c013e5fb2421', '20eb56e13afe411e804e4fdb3f5d0ab5', '85f16a234253451ebd88afc350a9cea8', 'd9c3e90bdfe8429f80312d796155468e', '7399c2b06f1d40babc87a8815f35709d', 'f0672ea436e6478ca43061cd7a7abdc1', '97773ccdd25741559f576764b9ff18d9', '62f91f524c0b4277bbcb032b93ac95cd', '12d4e538abae447f99be12e42e8a8f18', '573c84f21a9a4d6088f8bdfcedc621f4', 'e2731dece75744aa969089710adc9d90', 'bb14710e8d384f5f9851b5ec9861c447', '926079e2485a4ee1af59809e4fdb44da', '240bc58cbec949548e87faeb264ba61a', 'fd44a453d10a460cafbe63dff15fc391', '8a242c28e9c84bd88c4d3d7d4783f5dc', '86db9595782844438671809456763884', '546b47a01498401aaf6c0e2ce807c7a8', '23c5519f21274a37ab8336ec2b788a19', '0df3b929c5544f3fba7cb4133edf0ff6', '48204e334fd749a6aea6b5b7b3d0484e', 'd5dab74a35c6413a95345bd09f6c65ef', '440b445529ad4158bfa14e8b86fbb6cd', 'a03eb83064df4eeca4b70f28c7234b43', 'c8306583d8294028ae20f1566c9cc318', '670244c31ca54f6b824795083ded836c', '97994848462b4b9ea30b85f86d15c945', 'b805e1f9d97a4d2b89c455c123b7e925', '27587de81edb4afbba69fae0c7798125', 'e03cc364e8ec45bc956132815f1b1d81', 'b10c3a6f8bee47268fd40805a134d892', '9d3da70e3e464b5687ceac5a68de8152', 'a4e26afa0e984a36bf2e6abaf2984974', '86b5839f019e43589d55beb22f9db6ab', 'ac700e5ee0a443d687749af285908daa', 'ba380fd916e1462aa3e7a4579ce0c84d', '324c351546f14661a1558ba89ee3e29d', '06af9340f02743e4b9e774e78e8934f2', 'd0309a8137854e48b49a041b6abb5d1b', '8db4e1fd63944bc48aa21185af750cc8', 'acf4aace915f48408df44350db005eeb', 'afce24cf9e184a7b94dec2fcab960263', '6f33ec28ed8247afa2a3124986483690', '6f8f35c55ee844ec874d212c479020c6', 'd803c1dd04954ee39a7657632e2150de', '1001ffbc79074933ab5000f047dbe9fa', '168db7efe3c143f8888d09ad865f6a5e', '7da6ba23b99b4554a3d48c6740ba6331', 'a1d0f2ede3b34ef4ba22b44a1299c54e', 'bb5d3643bffe43a1ae385f421135a093', '94da038d34a4409198839e8c7edb9cdc', 'f2ed4054d032402faa0160ec145cb116', 'aa7cf22fc1fb448e8ab9a875c5c5d534', 'b9730fb024fb461bb120a34ef29d7a33', 'bb8fe9700c2246619ad8baaa627473ac', 'e6201e1348644c78b9f96b0ec314fcca', 'cd11e67aaf3e49c083fe03ee10a851de', 'a80f01b89b974fba9dddade0c190e50b', '9b007dd704e141efa72c9776cdeddd33', '39c48456cc704d9eaba7276329ca62d8', '67c09618c0524a14bab175e7bcac7357', 'd331b52d9d394393ae49186252dc8fbd', 'a2249a1cb104430dbcc6fda2795e8aa3', '7eee7e0369374c51a3ea9373f78766b2', '7c3b8c5e97214c93ad9272fb440e63fb', '9963b7b100714a9bb280e766157aa4d7', 'aa8bd0a708304f119c6ecf9cdd500a63', 'e6fec409570440de95546dae82561b0a', '103cc477951046a4b6fc59b6b12215dc', '6c8f54256bec447c8a55625c04c8bc73', 'fc712a09673f4cf08c94c80d9263f9c9', '13ef2c0690fd40d199d011caab5514b8', '452190a300c340b6a0ab286f76bfbd21', 'b703fe92cfc343bc86780bacc6243e22', '1b7ec2400db7461198771e3c80d3e772', '392bf99341a64316835487d16e59e473', '6fbc8f9680f344ada53c8fa4e830813d', '8baed32695b84223a014b53cf32b473b', '102d73eb18bc44ee968e5040a4d813a2', 'e1d23428a16642e4af0aa07f09958e2c', '94626709c7d34135a6aa653d7cd1f948', 'fc296ca022aa43c2a3250a9a7fe09b1e', '034421cfc0554841ab9034be9e5e1695', 'ca3e8c869a994458ae2cd8f710d15cd8', '0cede314f2c240cabde90ad1d22dfc08', 'c4092818d303464f9b75b26056a62ccf', 'd16206dfa02c41718706915abc01628f', '178ca590dd2c441599d2868880c90aeb', '3cbac13d01af4903869f978cae1657c6', 'b76c8858e69c40c4a310a54977243be2', '6a4235c76c814d1f8de15ce02513f16b', '111c5871592a40d686deddfef0539a8c', '509ea024c99c470a98a5a964d8a31f93', '3760c8b47f83404c8806c54b0fb787aa', '324c176870174329b435b74494123f1b', 'cc9dbeb26a134df287b02a3b92590e22', 'fecce3fa952946fe8af0b4f9e50ddfe8', '59640d994dd14586ae74056a712d8dbc', 'a10c5820e76745de972edca0cbcef86f', 'ceb27d88ac954387b0e4d169c41481aa', '439be1965f974b2095bb14b35ed689e6', '619c7f6bf8fe4a66a4f1651955385eec', '59fe4e31c9d84d1d97fc7478b41a96a3', '52203e856e12452a909230dbc3a740c9', '0770ade19202479198c0c863ad940ff5', '3ef859625fe840f591eea77d7cfff592', 'daa489441ced4e8e80ed9feb9a9eba5f', '94125b2ce0734b7d93188ccc862fd64f', '623e182b9bdc4f0eb102d76f7b45359b', '4b4c22daef21460f87a913b602009fef', '9c76a2c4893e4dc3b7979fca15934da8', '9cfefb0dddcc462f9a4c2391d2a419d6', '36f67d77f63140908f487ffe8a57efce', '3f49e19e2b994efe9fb9ae452a703e5e', 'd9cf44725b3f45e8a34cfcfd07203ec9', 'f2eb915e71e443d692eb4fd3da466a2f', '99a26cbc7b5d4f03b553ffa3cd665d86', 'fc789e62e87c4e45a42fb88a82a6167e', '717cf52806ed418bbc9caa08b4c660db', 'eaead6a3233c45698eb22c98ee2afd0a', '2557de54c5cc4909903eebe885cd6a44', '307833bd2a0f4382ba3fb7b8ecae8097', 'c4abf558e7d74d3b9afc6e49ffc7fc13', '5471699ee86746a5ac301b8dfc26db01', '133cbfa139be4dc49540a5758c90da32', 'db74b3a4d06445148466f1f374e633f9', '143ff2658c5c4b95b867252253213dab', 'f35e5fbfdd2c486285f3224d27893083', '5bc9d5658c454e74bb05249a542beb2b', 'df1ac382974c47ea8df1e7d43aa4f438', 'c09c49bd0da6420993296c7dafb637b9', 'fba93f5239e24e188de7b6cc814431d2', '48222a4e5ab945a4befca6a87fd05412', 'f7b9ef09d2a34d3f802739b5ea857506', '3b1bcd58fca64db9bd865fdefe219136', 'e2581c93ce8845aaaa37e4a8b07e4ae8', '0b88d9a562d642f980bfadde6f6ab792', '5cb99aaa43554f74a063b2da7ed61ae2', '2db1e538720d47808a01590cb6de96f3', 'bc4027b95c7a44c39323997cea08da45', '5e58c9241cef4e9c89bf69306349c168', '8825544a51fb4a81be9301e1bcfe4822', '2c1451992d5d40cfa0858d2cbe850b47', '205a64ca306e414f8acd8389bf06eded', '8c834d494ea64049b9d9ea9b311ab0f1', 'd4cd22af1dc74bbb8047bda28e70b6e0', '3e1777be54b44303a362a08dd934173b', '1f8f5209a30f4f1b96601ed8ca59cbfa', 'b5345e8304b94a41804a975b3d1d13c0', '3bb4add52239448b92e66c57940b7b39', '6ff62140f5f4458596e2c5adbc2bfd53', 'a9e645c14c0647baa3a41cc4579a8afa', '22bbfc383aaa43228477880f4487938d', 'ed943b854b2d44ba8f5439d9120d2d2f', '20cd94ccd8a644279b29ba9d9941d0d1', 'e31bbd2be6354bfab74ff4626a2eae54', 'dd1eb3c8371a4d58b4134babc52296b0', 'a42ab5ebeeaa4d7cb11affe0e4fcd8ee', '792866e4001c40c885634c68ba7e8e75', '8340ff89904b4c429370d693579284f7', 'c868ec934eb7489381b0840bd4855eee', 'f2b1cf8f4335404f919cd0db7321de0e', 'c02f7752cfbb4256b8d3df7e96b561fc', 'a360996826a04e829838b031aefde9f8', 'bf979f5476b04810a26ce42ba5236ca8', 'ff1afe60828b451e83f6339653b6a51f', 'bd2477ffb54a44caa88370a98eb2b5c1', '91f6c403f877466885f50195290ee25d', '6340e8f81085466abdccc1df368d2bd6', 'faa4dba9876c48888833de3b3efecf18', '94128840273142da9748cad75508ab49', 'b7029e3c78db46869ab42ea60bca730e', 'a676e1d114604c8bae46787acd776ac8', 'b5e7f0b0c439462ca34478930399a53b', '0401906a381f4d5aba247e5747503bd7', 'a9fb05f3a09141bbb53be2e34e0a2931', '560e9d575f9d45c0b4b6dacc65e5562c', '4f17afd49dd74328b4cbd7f99ea2fae2', 'd8ca386ecdf84d6d8182a90a20a4b7ea', '15985e7eaa284458bc26f6a9f75ea3c3', 'e4d8a381c87e45f0b5e5816157c629ce', '06c39f5ad5604b009ffc4798272e6672', 'cacc646aadca4781bd23828d4ef206a0', '972473f56d914a75a3986cc7be6e1d24', 'd945630ad8084e5fac3edef190233661', '6526bd86e3464d8fa4cc3c0063e35608', 'ee7485acf33b41a68c50ac160ba3af41', '111465edd495436e9a2bd67ea4f60a8d', '52345f0ae7804023990a048e8e6b8c3c', '198a7662dbfc4b4cbd735d1033e28a36', '98eab97b041544f6ba8f9e1e54d52067', '8431adb544f343eebd0a0a5b7ef58131', '9886162d241d49fa9154fcf220f93320', 'd8717420d93547cd9d23cb22f4699b26', 'f078e78c16154877bb807efff3c312bc', 'e36d3549a0c945898fba0dce33813ff9', 'f8f61e393bc34baf9a29b433a3a3d11e', 'af0f688f3c1647e9a1ffb80764c4b6dc', 'a70ca0be0707432eaee45684589a5850', '1ee956414963458a990c75910b07792b', '0efad14f91e240c18d844d02bfabd8f9', 'f86be359b497471daf03bb503e68f1c7', '243170fc3744421081a1b7064921fecd', '59c5604b7e43414dbbee599c1d38b626', '4964ca95b1a54d4f8a270bf6b6bbf549', '9654b1f121264d6597bdec9bc0076bed', 'f9588ed3e82c498e81eb3f5cdc4c33ce', '4aa226ec784f433998fe0fb47ea81fd0', '3d1104a2668942e78d734bcb5c891232', '53a0f5fc93924d20829f81cc28f3ff02', '6c83191043634b988ad70c61a24bb630', '68ef20ad31f44b2eb1e3f9a9f8530c66', 'c3c12e0538fb40a2aa43265eaad0560b', '89a85336a0f64896a826cc462aa19da8', '2041dd9dee7c464598c0a36b8efbc524', '7ff8ae0314624d56a69eb4850186e21d', '6bcf6d3eeb124d1099dfb17b767b52ed', 'a49b385abe2f4b31835bc711fefe11be', '9618d6f0e4cb4dca8ff9923fc7b1b0f0', '637836949a3642d78c6853dbcb0bf477', 'f615ef07b5fc4cf0aab97f1991fa3b25', '377d65976df04624ba80817bb5b2056c', 'e134dc53ca094ea69cd750ace39643ce', '1da051eeeabf484f8cb31a5eb903521e', 'cc9885bd35f14893bba25b5224e7fa59', 'c8b7c6a6f2604d69b378129ec77821a3', '08df79661e954382b9c98998d57c570f', '51b55c0b1edc461a97f3823c482e7b83', '65e3c1ca41f94c17a419df6b5e62a675', '350f4e7c4981413cba2f0067f944d34a', '60df0afd6cfe42f58038adfdd8b4f1e9', 'a6c9b22a46d344a088445215572a68a4', 'bd2a6f658b424dc7901d9949f0fdcc03', 'ca96ad63b9d24da69fe268541013e419', '2ba16cc6fe5f4561914d5384d951efaf', '9ab08fa658c24c778b1bdb779f181208', 'cc133260d419441980303e7496664b0b', '3a536fe4a67848db92810c10efc60c34', 'e0506c80a2d249358d4845d90b1f57a5', '9891a85f5f7a4479a744649fc7f4047b', '2d8fb86e54df44fd88660de5342a36ca', '2bde94f58ae8467d89f9fcdfaba28bf3', 'eb48500cd3b14aa7a02c23e17af9b52d', '750ebbc1d35c4cdf8c33699feb29c1de', '994112eba4c1400286df75d081a38982', '06ec575483ee46db9d43471a31685993', 'a8333b1a70cf4f0198fca7a844b4d486', 'c6144f24cedd414e9e77282ccea99152', '19c7741473c546dd8aa2edcb53d763c2', '132715bdfd914974926782158820ac45', '5416eabe4f2b4e579151b49d52d34ef9', 'f26f42074e0d48fe8f005921082c2ffd', '3690f8f2e62c46369d7313764ff08473', '5b69b97c5a324232852af938d72626c6', 'be9c92fa99444c83ba3777bc2651cde4', 'c01dc5cc17d743b8a9d31d9db247c6a4', '4da0f34780824bc0b94c509dc2f243f8', '6a24c02767dc4b5fb5a55dfb9872fd0a', '349f3b924c824e8c945f70c263ee67a1', 'ebf4c74a63fb4aaa9ef34fc19b1e8058', '09e427013eac4303a2d8b15b0588e7cf', '0dc9577662e24f9c98abad7ae3604ab1', '92cba57064124ea0a7ce8d71e16899b1', 'd3499832e74c4b4eb53afdc7b5694b38', 'c2df8e63d66b456883c790673a8bcb98', '795d79cd752543c194b1decc5e0ac791', 'e969cef606054885b330daf88e7211e4', 'd42a8930fb6e48589e19ab4083245f76', 'f2143714402040769d9c42f950920e91', '21666a17d2c249fd908288907f8d01fd', '7d4763454c1d4eca8a497946e06149c1', 'aec27cc1850d4cbe830cbe724f691264', 'd8b638e4b3644ba988d045e5e2b506a2', '4bf3c631267a495085059f96632cde6b', '18968b46aa3743efa0812f0286395c42', 'dfa3129261f848d48fc616f36768761c', '2b0c1d518b9643fd809e47b4102d5376', 'a7ec86a131034ae79feede27daf670ca', '23a93d705e864651af3af011f4ebbc02', '238f4f0496d846ada61010085a3fb9af', '178d52cf02d44aa3b7c7a65a763c8bb1', '9775895418a74fa7a33fc1f63ee5e3d2', '44d8335fc6c0466e8ed4b7aa3841e119', '3c17bd4c1f0140aab5f00b83c07b00ef', 'c63da02522b44477bf734098eb57a949', '82de23a1b44c4ca7a447797aee0bbc21', '6186567086f4495f9dcad27b80dec6b4', '3b5e222396514f30ba03acab7e2f23a1', '3618a8281a8341d0bf3bef0c87a7ad4c', '68596da4e9324bd2940aa6eaad3c649e', 'f22801dbf93a4c3ab62834cc4c63c995', 'd9a00a45651a46cb8f0986a7f19befb2', '6b5fb1317fa64507ba36a63b21b53115', 'dfe17f77db8c4d4b8ab5e4d722f64f13', 'f434e3b027164d919746c77ccab3363c', 'fb993d886961441aa38b5f03d9bcfb54', 'fb8f9419483b45b9b5b86fbf2cb5763b', 'b84dfb7ae6cd4f8193e5d61f75d85d0e', 'd8c74bd65120419e9a87669ddd28b1fa', '7ab7c5c42fe44a448ee0ee6a43a51207', '0d1e9b6204204908a55db5d081141847', 'ee0d5c4bd68c4254bc536c67a4ce8f24', 'e8a0adee5dfa428687201d12093f6312', '1bb568f1141f4d9391c60fa837a0cae8', '92e9c730faa64d9e879f49ade26fbb6d', '2caa2ca3bc0d4903919c4dfd343cd318', '0596376ee05b440aad12de364fa4bc11', 'e5d3f7aa58d44c27893b7b1d1dfe8117', 'b39f1e85583540b0ac362e44ae3ecac8', '259d83947463491bb2362c79d54dfaaf', 'd0b59aab2bdd44198f01f91d882acf4a', 'c63986214fc442cd8adec4b690f55d29', '02729bac9f1f4504b0e0a4bd090024c1', '55d7427a11f6411bb477ce9bf7f540c7', '2ac5bef7cdc443bb92a9dc53b23625be'].
+[2026-04-28 02:42:23] INFO:     127.0.0.1:47658 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:23] INFO:     127.0.0.1:51884 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:23] INFO:     127.0.0.1:47434 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:24] INFO:     127.0.0.1:38108 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:24] INFO:     127.0.0.1:49778 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:42:24] Subprocess detokenizer (pid=71946) crashed with exit code 1. Triggering SIGQUIT for cleanup...
+[2026-04-28 02:42:24] SIGQUIT received. signum=None, frame=None. It usually means one child failed.

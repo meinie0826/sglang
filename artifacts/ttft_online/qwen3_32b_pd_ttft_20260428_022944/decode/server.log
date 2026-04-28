@@ -1,0 +1,509 @@
+/sglang/python/sglang/launch_server.py:51: UserWarning: 'python -m sglang.launch_server' is still supported, but 'sglang serve' is the recommended entrypoint.
+  Example: sglang serve --model-path <model> [options]
+  warnings.warn(
+TensorRT-LLM MHA only supports page_size of 16, 32 or 64, changing page_size from None to 64.
+KV cache is forced as chunk cache for decode server
+No IB devices specified for Mooncake backend, falling back to auto discovery.
+/sglang/python/sglang/srt/entrypoints/http_server.py:173: FastAPIDeprecationWarning: ORJSONResponse is deprecated, FastAPI now serializes data directly to JSON bytes via Pydantic when a return type or response model is set, which is faster and doesn't need a custom response class. Read more in the FastAPI docs: https://fastapi.tiangolo.com/advanced/custom-response/#orjson-or-response-model and https://fastapi.tiangolo.com/tutorial/response-model/
+  from sglang.srt.utils.json_response import (
+[2026-04-28 02:29:56] server_args=ServerArgs(model_path='/media/ssd1/qwen3-32b', tokenizer_path='/media/ssd1/qwen3-32b', tokenizer_mode='auto', tokenizer_worker_num=1, skip_tokenizer_init=False, load_format='auto', model_loader_extra_config='{}', trust_remote_code=True, context_length=None, is_embedding=False, enable_multimodal=None, revision=None, model_impl='auto', host='127.0.0.1', port=31001, fastapi_root_path='', grpc_mode=False, skip_server_warmup=False, warmups=None, nccl_port=None, checkpoint_engine_wait_weights_before_ready=False, ssl_keyfile=None, ssl_certfile=None, ssl_ca_certs=None, ssl_keyfile_password=None, enable_ssl_refresh=False, dtype='auto', quantization=None, quantization_param_path=None, kv_cache_dtype='auto', enable_fp32_lm_head=False, modelopt_quant=None, modelopt_checkpoint_restore_path=None, modelopt_checkpoint_save_path=None, modelopt_export_path=None, quantize_and_serve=False, rl_quant_profile=None, mem_fraction_static=0.72, max_running_requests=128, max_queued_requests=None, max_total_tokens=65536, chunked_prefill_size=8192, enable_dynamic_chunking=False, max_prefill_tokens=32768, prefill_max_requests=None, schedule_policy='fcfs', enable_priority_scheduling=False, disable_priority_preemption=False, default_priority_value=None, abort_on_priority_when_disabled=False, schedule_low_priority_values_first=False, priority_scheduling_preemption_threshold=10, schedule_conservativeness=1.0, page_size=64, swa_full_tokens_ratio=0.8, disable_hybrid_swa_memory=False, radix_eviction_policy='lru', enable_prefill_delayer=False, prefill_delayer_max_delay_passes=30, prefill_delayer_token_usage_low_watermark=None, prefill_delayer_forward_passes_buckets=None, prefill_delayer_wait_seconds_buckets=None, device='cuda', tp_size=2, pp_size=1, pp_max_micro_batch_size=None, pp_async_batch_depth=0, stream_interval=1, stream_response_default_include_usage=False, incremental_streaming_output=False, enable_streaming_session=False, random_seed=100229605, constrained_json_whitespace_pattern=None, constrained_json_disable_any_whitespace=False, watchdog_timeout=300, soft_watchdog_timeout=None, dist_timeout=None, download_dir=None, model_checksum=None, base_gpu_id=0, gpu_id_step=1, sleep_on_idle=False, use_ray=False, custom_sigquit_handler=None, log_level='info', log_level_http='info', log_requests=False, log_requests_level=2, log_requests_format='text', log_requests_target=None, uvicorn_access_log_exclude_prefixes=[], crash_dump_folder=None, show_time_cost=False, enable_metrics=True, enable_mfu_metrics=False, enable_metrics_for_all_schedulers=False, tokenizer_metrics_custom_labels_header='x-custom-labels', tokenizer_metrics_allowed_custom_labels=None, extra_metric_labels=None, bucket_time_to_first_token=None, bucket_inter_token_latency=None, bucket_e2e_request_latency=None, collect_tokens_histogram=False, prompt_tokens_buckets=None, generation_tokens_buckets=None, gc_warning_threshold_secs=0.0, decode_log_interval=40, enable_request_time_stats_logging=True, kv_events_config=None, enable_trace=False, otlp_traces_endpoint='localhost:4317', export_metrics_to_file=True, export_metrics_to_file_dir='/sglang/artifacts/ttft_online/qwen3_32b_pd_ttft_20260428_022944/decode/metrics', api_key=None, admin_api_key=None, served_model_name='/media/ssd1/qwen3-32b', weight_version='default', chat_template=None, hf_chat_template_name=None, completion_template=None, file_storage_path='sglang_storage', enable_cache_report=False, reasoning_parser=None, tool_call_parser=None, tool_server=None, sampling_defaults='model', dp_size=1, load_balance_method='round_robin', attn_cp_size=1, moe_dp_size=1, dist_init_addr=None, nnodes=1, node_rank=0, json_model_override_args='{}', preferred_sampling_params=None, enable_lora=None, enable_lora_overlap_loading=None, max_lora_rank=None, lora_target_modules=None, lora_paths=None, max_loaded_loras=None, max_loras_per_batch=8, lora_eviction_policy='lru', lora_backend='csgmv', max_lora_chunk_size=16, experts_shared_outer_loras=None, attention_backend='trtllm_mha', decode_attention_backend=None, prefill_attention_backend=None, sampling_backend='flashinfer', grammar_backend='xgrammar', mm_attention_backend=None, fp8_gemm_runner_backend='auto', fp4_gemm_runner_backend='auto', nsa_prefill_backend=None, nsa_decode_backend=None, disable_flashinfer_autotune=False, mamba_backend='triton', speculative_algorithm=None, speculative_draft_model_path=None, speculative_draft_model_revision=None, speculative_draft_load_format=None, speculative_num_steps=None, speculative_eagle_topk=None, speculative_num_draft_tokens=None, speculative_accept_threshold_single=1.0, speculative_accept_threshold_acc=1.0, speculative_token_map=None, speculative_attention_mode='prefill', speculative_draft_attention_backend=None, speculative_moe_runner_backend='auto', speculative_moe_a2a_backend=None, speculative_draft_model_quantization=None, speculative_ngram_min_bfs_breadth=1, speculative_ngram_max_bfs_breadth=10, speculative_ngram_match_type='BFS', speculative_ngram_max_trie_depth=18, speculative_ngram_capacity=10000000, enable_multi_layer_eagle=False, ep_size=1, moe_a2a_backend='none', moe_runner_backend='auto', flashinfer_mxfp4_moe_precision='default', enable_flashinfer_allreduce_fusion=False, enforce_disable_flashinfer_allreduce_fusion=False, enable_aiter_allreduce_fusion=False, deepep_mode='auto', ep_num_redundant_experts=0, ep_dispatch_algorithm=None, init_expert_location='trivial', enable_eplb=False, eplb_algorithm='auto', eplb_rebalance_num_iterations=1000, eplb_rebalance_layers_per_chunk=None, eplb_min_rebalancing_utilization_threshold=1.0, expert_distribution_recorder_mode=None, expert_distribution_recorder_buffer_size=1000, enable_expert_distribution_metrics=False, deepep_config=None, moe_dense_tp_size=None, elastic_ep_backend=None, enable_elastic_expert_backup=False, mooncake_ib_device=None, max_mamba_cache_size=None, mamba_ssm_dtype=None, mamba_full_memory_ratio=0.9, mamba_scheduler_strategy='no_buffer', mamba_track_interval=256, linear_attn_backend='triton', linear_attn_decode_backend=None, linear_attn_prefill_backend=None, enable_hierarchical_cache=False, hicache_ratio=2.0, hicache_size=0, hicache_write_policy='write_through', hicache_io_backend='kernel', hicache_mem_layout='layer_first', hicache_storage_backend=None, hicache_storage_prefetch_policy='best_effort', hicache_storage_backend_extra_config=None, enable_hisparse=False, hisparse_config=None, enable_lmcache=False, kt_weight_path=None, kt_method='AMXINT4', kt_cpuinfer=None, kt_threadpool_count=2, kt_num_gpu_experts=None, kt_max_deferred_experts_per_token=None, dllm_algorithm=None, dllm_algorithm_config=None, enable_double_sparsity=False, ds_channel_config_path=None, ds_heavy_channel_num=32, ds_heavy_token_num=256, ds_heavy_channel_type='qk', ds_sparse_decode_threshold=4096, cpu_offload_gb=0, offload_group_size=-1, offload_num_in_group=1, offload_prefetch_step=1, offload_mode='cpu', multi_item_scoring_delimiter=None, disable_radix_cache=True, cuda_graph_max_bs=512, cuda_graph_bs=[1, 2, 4, 8, 12, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232, 240, 248, 256, 272, 288, 304, 320, 336, 352, 368, 384, 400, 416, 432, 448, 464, 480, 496, 512], disable_cuda_graph=False, disable_cuda_graph_padding=False, enable_profile_cuda_graph=False, enable_cudagraph_gc=False, enable_layerwise_nvtx_marker=False, enable_nccl_nvls=False, enable_symm_mem=False, disable_flashinfer_cutlass_moe_fp4_allgather=False, enable_tokenizer_batch_encode=False, disable_tokenizer_batch_decode=False, disable_outlines_disk_cache=False, disable_custom_all_reduce=False, enable_mscclpp=False, enable_torch_symm_mem=False, pre_warm_nccl=False, disable_overlap_schedule=False, enable_mixed_chunk=False, enable_dp_attention=False, enable_dp_lm_head=False, enable_two_batch_overlap=False, enable_single_batch_overlap=False, tbo_token_distribution_threshold=0.48, enable_torch_compile=False, disable_piecewise_cuda_graph=True, enforce_piecewise_cuda_graph=False, enable_torch_compile_debug_mode=False, torch_compile_max_bs=32, piecewise_cuda_graph_max_tokens=8192, piecewise_cuda_graph_tokens=[4, 8, 12, 16, 20, 24, 28, 32, 48, 64, 80, 96, 112, 128, 144, 160, 176, 192, 208, 224, 240, 256, 288, 320, 352, 384, 416, 448, 480, 512, 576, 640, 704, 768, 832, 896, 960, 1024, 1280, 1536, 1792, 2048, 2304, 2560, 2816, 3072, 3328, 3584, 3840, 4096, 4608, 5120, 5632, 6144, 6656, 7168, 7680, 8192], piecewise_cuda_graph_compiler='eager', torchao_config='', enable_nan_detection=False, enable_p2p_check=False, triton_attention_reduce_in_fp32=False, triton_attention_num_kv_splits=8, triton_attention_split_tile_size=None, num_continuous_decode_steps=1, delete_ckpt_after_loading=False, enable_memory_saver=False, enable_weights_cpu_backup=False, enable_draft_weights_cpu_backup=False, allow_auto_truncate=False, enable_custom_logit_processor=False, flashinfer_mla_disable_ragged=False, disable_shared_experts_fusion=False, disable_chunked_prefix_cache=False, disable_fast_image_processor=False, keep_mm_feature_on_device=False, enable_return_hidden_states=False, enable_return_routed_experts=False, scheduler_recv_interval=1, numa_node=None, enable_deterministic_inference=False, rl_on_policy_target=None, enable_attn_tp_input_scattered=False, gc_threshold=None, enable_nsa_prefill_context_parallel=False, nsa_prefill_cp_mode='round-robin-split', enable_fused_qk_norm_rope=False, enable_precise_embedding_interpolation=False, enable_fused_moe_sum_all_reduce=False, enable_prefill_context_parallel=False, prefill_cp_mode='in-seq-split', enable_dynamic_batch_tokenizer=False, dynamic_batch_tokenizer_batch_size=32, dynamic_batch_tokenizer_batch_timeout=0.002, debug_tensor_dump_output_folder=None, debug_tensor_dump_layers=None, debug_tensor_dump_input_file=None, debug_tensor_dump_inject=False, disaggregation_mode='decode', disaggregation_transfer_backend='mooncake', disaggregation_bootstrap_port=8998, disaggregation_ib_device=None, disaggregation_decode_enable_offload_kvcache=False, num_reserved_decode_tokens=512, disaggregation_decode_polling_interval=1, encoder_only=False, language_only=False, encoder_transfer_backend='zmq_to_scheduler', encoder_urls=[], enable_adaptive_dispatch_to_encoder=False, custom_weight_loader=[], weight_loader_disable_mmap=False, remote_instance_weight_loader_seed_instance_ip=None, remote_instance_weight_loader_seed_instance_service_port=None, remote_instance_weight_loader_send_weights_group_ports=None, remote_instance_weight_loader_backend='nccl', remote_instance_weight_loader_start_seed_via_transfer_engine=False, engine_info_bootstrap_port=6789, modelexpress_config=None, enable_pdmux=False, pdmux_config_path=None, sm_group_num=8, enable_broadcast_mm_inputs_process=False, enable_prefix_mm_cache=False, mm_enable_dp_encoder=False, mm_process_config={}, limit_mm_data_per_request=None, enable_mm_global_cache=False, decrypted_config_file=None, decrypted_draft_config_file=None, forward_hooks=None)
+[2026-04-28 02:29:56] mp.set_executable /usr/bin/python -> /tmp/sglang_temp_file_1777343396.8190074_2457454.sh (script='#!/bin/sh\nexec numactl --cpunodebind=0 --membind=0 /usr/bin/python "$@"')
+[2026-04-28 02:29:56] mp.set_executable revert to /usr/bin/python
+[2026-04-28 02:29:56] mp.set_executable /usr/bin/python -> /tmp/sglang_temp_file_1777343396.821311_1387605.sh (script='#!/bin/sh\nexec numactl --cpunodebind=0 --membind=0 /usr/bin/python "$@"')
+[2026-04-28 02:29:56] mp.set_executable revert to /usr/bin/python
+[2026-04-28 02:29:58] Using default HuggingFace chat template with detected content format: string
+[2026-04-28 02:30:06 TP0] NUMA affinity is already constrained for process, skipping NUMA node configuration for GPU. Remove your constraints to allow automatic configuration.
+[2026-04-28 02:30:07 TP1] NUMA affinity is already constrained for process, skipping NUMA node configuration for GPU. Remove your constraints to allow automatic configuration.
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+W20260428 02:30:07.799516 68279 transfer_engine_py.cpp:77] Using default malloc/free for protocol: rdma
+I20260428 02:30:07.799587 68279 transfer_engine_impl.cpp:586] Metrics reporting is disabled (set MC_TE_METRIC=1 to enable)
+I20260428 02:30:07.799597 68279 transfer_engine_impl.cpp:105] Transfer Engine parseHostNameWithPort. server_name: 10.83.77.226 port: 12001
+I20260428 02:30:07.799623 68279 transfer_engine_impl.cpp:172] Transfer Engine RPC using P2P handshake, listening on 10.83.77.226:15433
+I20260428 02:30:07.799762 68279 transfer_engine_impl.cpp:217] Auto-discovering topology...
+I20260428 02:30:07.814798 68279 topology.cpp:120] Device mlx5_100 port 1 is available
+I20260428 02:30:07.831646 68279 topology.cpp:120] Device mlx5_101 port 1 is available
+I20260428 02:30:07.848608 68279 topology.cpp:120] Device mlx5_102 port 1 is available
+I20260428 02:30:07.865689 68279 topology.cpp:120] Device mlx5_103 port 1 is available
+I20260428 02:30:07.884423 68279 topology.cpp:120] Device mlx5_10 port 1 is available
+I20260428 02:30:07.892164 68279 topology.cpp:120] Device mlx5_0 port 1 is available
+I20260428 02:30:07.913447 68279 topology.cpp:120] Device mlx5_11 port 1 is available
+I20260428 02:30:07.934378 68279 topology.cpp:120] Device mlx5_12 port 1 is available
+I20260428 02:30:07.955396 68279 topology.cpp:120] Device mlx5_13 port 1 is available
+I20260428 02:30:07.976439 68279 topology.cpp:120] Device mlx5_14 port 1 is available
+I20260428 02:30:07.996793 68279 topology.cpp:120] Device mlx5_1 port 1 is available
+I20260428 02:30:08.005293 68279 topology.cpp:120] Device mlx5_15 port 1 is available
+I20260428 02:30:08.014020 68279 topology.cpp:120] Device mlx5_16 port 1 is available
+I20260428 02:30:08.035429 68279 topology.cpp:120] Device mlx5_17 port 1 is available
+I20260428 02:30:08.037810 68279 transfer_engine_impl.cpp:232] Topology discovery complete. Found 14 HCAs.
+I20260428 02:30:08.037822 68279 rdma_transport.cpp:63] [RDMA] Relaxed ordering disabled via MC_IB_PCI_RELAXED_ORDERING=0. Falling back to strict ordering.
+I20260428 02:30:08.037855 68279 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:08.043565 68279 rdma_context.cpp:575] Find best gid index: 3 on mlx5_13/ (network state: with network device)
+I20260428 02:30:08.044629 68279 rdma_context.cpp:140] RDMA device: mlx5_13, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0d:c2
+I20260428 02:30:08.044648 68279 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:08.061226 68279 rdma_context.cpp:575] Find best gid index: 0 on mlx5_100/ (network state: without network device)
+I20260428 02:30:08.063230 68279 rdma_context.cpp:140] RDMA device: mlx5_100, LID: 1, GID: (GID_Index 0) fe:80:00:00:00:00:00:00:08:20:e7:03:00:54:47:4c
+I20260428 02:30:08.063251 68279 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:08.081007 68279 rdma_context.cpp:575] Find best gid index: 0 on mlx5_101/ (network state: without network device)
+I20260428 02:30:08.081744 68279 rdma_context.cpp:140] RDMA device: mlx5_101, LID: 3, GID: (GID_Index 0) fe:80:00:00:00:00:00:00:08:20:e7:03:00:54:47:4d
+I20260428 02:30:08.081761 68279 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:08.099061 68279 rdma_context.cpp:575] Find best gid index: 0 on mlx5_102/ (network state: without network device)
+I20260428 02:30:08.099821 68279 rdma_context.cpp:140] RDMA device: mlx5_102, LID: 5, GID: (GID_Index 0) fe:80:00:00:00:00:00:00:08:20:e7:03:00:54:47:4e
+I20260428 02:30:08.099846 68279 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:08.117048 68279 rdma_context.cpp:575] Find best gid index: 0 on mlx5_103/ (network state: without network device)
+I20260428 02:30:08.117782 68279 rdma_context.cpp:140] RDMA device: mlx5_103, LID: 6, GID: (GID_Index 0) fe:80:00:00:00:00:00:00:08:20:e7:03:00:54:47:4f
+I20260428 02:30:08.117798 68279 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:08.136291 68279 rdma_context.cpp:575] Find best gid index: 3 on mlx5_10/ (network state: with network device)
+I20260428 02:30:08.137229 68279 rdma_context.cpp:140] RDMA device: mlx5_10, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0c:42
+I20260428 02:30:08.137245 68279 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:08.155328 68279 rdma_context.cpp:575] Find best gid index: 3 on mlx5_0/ (network state: with network device)
+I20260428 02:30:08.156219 68279 rdma_context.cpp:140] RDMA device: mlx5_0, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:0a:53:4d:e2
+I20260428 02:30:08.156232 68279 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:08.174659 68279 rdma_context.cpp:575] Find best gid index: 3 on mlx5_11/ (network state: with network device)
+I20260428 02:30:08.175665 68279 rdma_context.cpp:140] RDMA device: mlx5_11, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0c:c2
+I20260428 02:30:08.175684 68279 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:08.194433 68279 rdma_context.cpp:575] Find best gid index: 3 on mlx5_12/ (network state: with network device)
+I20260428 02:30:08.195397 68279 rdma_context.cpp:140] RDMA device: mlx5_12, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0d:42
+I20260428 02:30:08.195415 68279 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:08.201529 68279 rdma_context.cpp:575] Find best gid index: 3 on mlx5_14/ (network state: with network device)
+I20260428 02:30:08.202553 68279 rdma_context.cpp:140] RDMA device: mlx5_14, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0e:42
+I20260428 02:30:08.202569 68279 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:08.220460 68279 rdma_context.cpp:575] Find best gid index: 3 on mlx5_1/ (network state: with network device)
+I20260428 02:30:08.221365 68279 rdma_context.cpp:140] RDMA device: mlx5_1, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:0a:53:4d:e2
+I20260428 02:30:08.221379 68279 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:08.239467 68279 rdma_context.cpp:575] Find best gid index: 3 on mlx5_15/ (network state: with network device)
+I20260428 02:30:08.240440 68279 rdma_context.cpp:140] RDMA device: mlx5_15, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0e:c2
+I20260428 02:30:08.240460 68279 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:08.246325 68279 rdma_context.cpp:575] Find best gid index: 3 on mlx5_16/ (network state: with network device)
+I20260428 02:30:08.247284 68279 rdma_context.cpp:140] RDMA device: mlx5_16, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0f:42
+I20260428 02:30:08.247300 68279 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:08.265379 68279 rdma_context.cpp:575] Find best gid index: 3 on mlx5_17/ (network state: with network device)
+I20260428 02:30:08.285688 68279 rdma_context.cpp:140] RDMA device: mlx5_17, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0f:c2
+I20260428 02:30:08.285795 68279 transfer_engine_impl.cpp:271] Using RDMA transport (RoCE/iWARP)
+[2026-04-28 02:30:08 TP0] Init torch distributed begin.
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+W20260428 02:30:08.404193 68280 transfer_engine_py.cpp:77] Using default malloc/free for protocol: rdma
+I20260428 02:30:08.404268 68280 transfer_engine_impl.cpp:586] Metrics reporting is disabled (set MC_TE_METRIC=1 to enable)
+I20260428 02:30:08.404285 68280 transfer_engine_impl.cpp:105] Transfer Engine parseHostNameWithPort. server_name: 10.83.77.226 port: 12001
+I20260428 02:30:08.404311 68280 transfer_engine_impl.cpp:172] Transfer Engine RPC using P2P handshake, listening on 10.83.77.226:16246
+I20260428 02:30:08.404376 68280 transfer_engine_impl.cpp:217] Auto-discovering topology...
+I20260428 02:30:08.424862 68280 topology.cpp:120] Device mlx5_100 port 1 is available
+I20260428 02:30:08.442696 68280 topology.cpp:120] Device mlx5_101 port 1 is available
+I20260428 02:30:08.447371 68280 topology.cpp:120] Device mlx5_102 port 1 is available
+I20260428 02:30:08.464684 68280 topology.cpp:120] Device mlx5_103 port 1 is available
+I20260428 02:30:08.482249 68280 topology.cpp:120] Device mlx5_10 port 1 is available
+I20260428 02:30:08.486991 68280 topology.cpp:120] Device mlx5_0 port 1 is available
+I20260428 02:30:08.491921 68280 topology.cpp:120] Device mlx5_11 port 1 is available
+I20260428 02:30:08.497332 68280 topology.cpp:120] Device mlx5_12 port 1 is available
+I20260428 02:30:08.515249 68280 topology.cpp:120] Device mlx5_13 port 1 is available
+I20260428 02:30:08.520704 68280 topology.cpp:120] Device mlx5_14 port 1 is available
+I20260428 02:30:08.525499 68280 topology.cpp:120] Device mlx5_1 port 1 is available
+I20260428 02:30:08.543308 68280 topology.cpp:120] Device mlx5_15 port 1 is available
+I20260428 02:30:08.561318 68280 topology.cpp:120] Device mlx5_16 port 1 is available
+I20260428 02:30:08.566805 68280 topology.cpp:120] Device mlx5_17 port 1 is available
+I20260428 02:30:08.568321 68280 transfer_engine_impl.cpp:232] Topology discovery complete. Found 14 HCAs.
+I20260428 02:30:08.568331 68280 rdma_transport.cpp:63] [RDMA] Relaxed ordering disabled via MC_IB_PCI_RELAXED_ORDERING=0. Falling back to strict ordering.
+I20260428 02:30:08.568363 68280 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:08.586262 68280 rdma_context.cpp:575] Find best gid index: 3 on mlx5_13/ (network state: with network device)
+I20260428 02:30:08.586911 68280 rdma_context.cpp:140] RDMA device: mlx5_13, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0d:c2
+I20260428 02:30:08.586926 68280 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:08.592010 68280 rdma_context.cpp:575] Find best gid index: 0 on mlx5_100/ (network state: without network device)
+I20260428 02:30:08.605016 68280 rdma_context.cpp:140] RDMA device: mlx5_100, LID: 1, GID: (GID_Index 0) fe:80:00:00:00:00:00:00:08:20:e7:03:00:54:47:4c
+I20260428 02:30:08.605033 68280 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:08.610080 68280 rdma_context.cpp:575] Find best gid index: 0 on mlx5_101/ (network state: without network device)
+I20260428 02:30:08.610680 68280 rdma_context.cpp:140] RDMA device: mlx5_101, LID: 3, GID: (GID_Index 0) fe:80:00:00:00:00:00:00:08:20:e7:03:00:54:47:4d
+I20260428 02:30:08.610693 68280 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:08.627997 68280 rdma_context.cpp:575] Find best gid index: 0 on mlx5_102/ (network state: without network device)
+I20260428 02:30:08.628594 68280 rdma_context.cpp:140] RDMA device: mlx5_102, LID: 5, GID: (GID_Index 0) fe:80:00:00:00:00:00:00:08:20:e7:03:00:54:47:4e
+I20260428 02:30:08.628607 68280 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:08.645977 68280 rdma_context.cpp:575] Find best gid index: 0 on mlx5_103/ (network state: without network device)
+I20260428 02:30:08.646601 68280 rdma_context.cpp:140] RDMA device: mlx5_103, LID: 6, GID: (GID_Index 0) fe:80:00:00:00:00:00:00:08:20:e7:03:00:54:47:4f
+I20260428 02:30:08.646615 68280 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:08.651484 68280 rdma_context.cpp:575] Find best gid index: 3 on mlx5_10/ (network state: with network device)
+I20260428 02:30:08.652077 68280 rdma_context.cpp:140] RDMA device: mlx5_10, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0c:42
+I20260428 02:30:08.652088 68280 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:08.656491 68280 rdma_context.cpp:575] Find best gid index: 3 on mlx5_0/ (network state: with network device)
+I20260428 02:30:08.657163 68280 rdma_context.cpp:140] RDMA device: mlx5_0, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:0a:53:4d:e2
+I20260428 02:30:08.657176 68280 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:08.674299 68280 rdma_context.cpp:575] Find best gid index: 3 on mlx5_11/ (network state: with network device)
+I20260428 02:30:08.674911 68280 rdma_context.cpp:140] RDMA device: mlx5_11, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0c:c2
+I20260428 02:30:08.674922 68280 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:08.679831 68280 rdma_context.cpp:575] Find best gid index: 3 on mlx5_12/ (network state: with network device)
+I20260428 02:30:08.680433 68280 rdma_context.cpp:140] RDMA device: mlx5_12, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0d:42
+I20260428 02:30:08.680444 68280 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:08.685369 68280 rdma_context.cpp:575] Find best gid index: 3 on mlx5_14/ (network state: with network device)
+I20260428 02:30:08.685998 68280 rdma_context.cpp:140] RDMA device: mlx5_14, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0e:42
+I20260428 02:30:08.686010 68280 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:08.690438 68280 rdma_context.cpp:575] Find best gid index: 3 on mlx5_1/ (network state: with network device)
+I20260428 02:30:08.691084 68280 rdma_context.cpp:140] RDMA device: mlx5_1, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:0a:53:4d:e2
+I20260428 02:30:08.691097 68280 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:08.708303 68280 rdma_context.cpp:575] Find best gid index: 3 on mlx5_15/ (network state: with network device)
+I20260428 02:30:08.708909 68280 rdma_context.cpp:140] RDMA device: mlx5_15, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0e:c2
+I20260428 02:30:08.708922 68280 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:08.726380 68280 rdma_context.cpp:575] Find best gid index: 3 on mlx5_16/ (network state: with network device)
+I20260428 02:30:08.727036 68280 rdma_context.cpp:140] RDMA device: mlx5_16, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0f:42
+I20260428 02:30:08.727053 68280 rdma_context.cpp:77] Using SIEVE endpoint store
+I20260428 02:30:08.731976 68280 rdma_context.cpp:575] Find best gid index: 3 on mlx5_17/ (network state: with network device)
+I20260428 02:30:08.732605 68280 rdma_context.cpp:140] RDMA device: mlx5_17, LID: 0, GID: (GID_Index 3) 00:00:00:00:00:00:00:00:00:00:ff:ff:1a:04:0f:c2
+I20260428 02:30:08.732681 68280 transfer_engine_impl.cpp:271] Using RDMA transport (RoCE/iWARP)
+[2026-04-28 02:30:08 TP1] Init torch distributed begin.
+[Gloo] Rank 1 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+[Gloo] Rank 0 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+[Gloo] Rank 0 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+[Gloo] Rank 1 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+[2026-04-28 02:30:09 TP0] sglang is using nccl==2.28.3
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[2026-04-28 02:30:10 TP0] Init torch distributed ends. elapsed=1.91 s, mem usage=1.16 GB
+[2026-04-28 02:30:10 TP1] Init torch distributed ends. elapsed=1.47 s, mem usage=1.16 GB
+[2026-04-28 02:30:10 TP1] Load weight begin. avail mem=176.58 GB
+[2026-04-28 02:30:10 TP0] Load weight begin. avail mem=176.58 GB
+Multi-thread loading shards:   0% Completed | 0/17 [00:00<?, ?it/s]Multi-thread loading shards:   6% Completed | 1/17 [00:00<00:09,  1.75it/s]Multi-thread loading shards:  12% Completed | 2/17 [00:01<00:10,  1.43it/s]Multi-thread loading shards:  18% Completed | 3/17 [00:02<00:10,  1.37it/s]Multi-thread loading shards:  24% Completed | 4/17 [00:02<00:09,  1.34it/s]Multi-thread loading shards:  29% Completed | 5/17 [00:03<00:08,  1.33it/s]Multi-thread loading shards:  35% Completed | 6/17 [00:04<00:08,  1.35it/s]Multi-thread loading shards:  41% Completed | 7/17 [00:05<00:07,  1.36it/s]Multi-thread loading shards:  47% Completed | 8/17 [00:05<00:06,  1.37it/s]Multi-thread loading shards:  53% Completed | 9/17 [00:06<00:05,  1.38it/s]Multi-thread loading shards:  59% Completed | 10/17 [00:07<00:05,  1.39it/s]Multi-thread loading shards:  65% Completed | 11/17 [00:07<00:04,  1.40it/s]Multi-thread loading shards:  71% Completed | 12/17 [00:08<00:03,  1.40it/s]Multi-thread loading shards:  76% Completed | 13/17 [00:09<00:02,  1.41it/s]Multi-thread loading shards:  82% Completed | 14/17 [00:10<00:02,  1.41it/s]Multi-thread loading shards:  88% Completed | 15/17 [00:10<00:01,  1.42it/s]Multi-thread loading shards:  94% Completed | 16/17 [00:11<00:00,  1.42it/s][2026-04-28 02:30:22 TP1] Load weight end. elapsed=12.01 s, type=Qwen3ForCausalLM, avail mem=145.99 GB, mem usage=30.59 GB.
+Multi-thread loading shards: 100% Completed | 17/17 [00:11<00:00,  1.59it/s]Multi-thread loading shards: 100% Completed | 17/17 [00:11<00:00,  1.43it/s]
+[2026-04-28 02:30:23 TP0] Load weight end. elapsed=12.12 s, type=Qwen3ForCausalLM, avail mem=145.99 GB, mem usage=30.59 GB.
+[2026-04-28 02:30:23 TP0] Using KV cache dtype: torch.bfloat16
+[2026-04-28 02:30:23 TP0] KV Cache is allocated. #tokens: 65536, K size: 4.00 GB, V size: 4.00 GB
+[2026-04-28 02:30:23 TP1] KV Cache is allocated. #tokens: 65536, K size: 4.00 GB, V size: 4.00 GB
+[2026-04-28 02:30:23 TP0] Memory pool end. avail mem=137.71 GB
+[2026-04-28 02:30:23 TP1] Memory pool end. avail mem=137.71 GB
+[2026-04-28 02:30:23 TP1] Capture cuda graph begin. This can take up to several minutes. avail mem=136.61 GB
+[2026-04-28 02:30:23 TP0] Capture cuda graph begin. This can take up to several minutes. avail mem=136.61 GB
+[2026-04-28 02:30:23 TP0] Capture cuda graph bs [1, 2, 4, 8, 12, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128]
+  0%|          | 0/20 [00:00<?, ?it/s]Capturing batches (bs=128 avail_mem=136.54 GB):   0%|          | 0/20 [00:00<?, ?it/s]2026-04-28 02:30:24,592 - CUTE_DSL - WARNING - [handle_import_error] - Unexpected error during package walk: cutlass.cute.experimental
+[2026-04-28 02:30:24 TP0] Unexpected error during package walk: cutlass.cute.experimental
+2026-04-28 02:30:24,600 - CUTE_DSL - WARNING - [handle_import_error] - Unexpected error during package walk: cutlass.cute.experimental
+[2026-04-28 02:30:24 TP1] Unexpected error during package walk: cutlass.cute.experimental
+Capturing batches (bs=128 avail_mem=136.54 GB):   5%|▌         | 1/20 [00:02<00:40,  2.11s/it]Capturing batches (bs=120 avail_mem=136.39 GB):   5%|▌         | 1/20 [00:02<00:40,  2.11s/it]Capturing batches (bs=120 avail_mem=136.39 GB):  10%|█         | 2/20 [00:02<00:17,  1.02it/s]Capturing batches (bs=112 avail_mem=136.39 GB):  10%|█         | 2/20 [00:02<00:17,  1.02it/s]Capturing batches (bs=112 avail_mem=136.39 GB):  15%|█▌        | 3/20 [00:02<00:09,  1.73it/s]Capturing batches (bs=104 avail_mem=136.39 GB):  15%|█▌        | 3/20 [00:02<00:09,  1.73it/s]Capturing batches (bs=104 avail_mem=136.39 GB):  20%|██        | 4/20 [00:02<00:06,  2.56it/s]Capturing batches (bs=96 avail_mem=136.39 GB):  20%|██        | 4/20 [00:02<00:06,  2.56it/s] Capturing batches (bs=96 avail_mem=136.39 GB):  25%|██▌       | 5/20 [00:02<00:04,  3.45it/s]Capturing batches (bs=88 avail_mem=136.38 GB):  25%|██▌       | 5/20 [00:02<00:04,  3.45it/s]Capturing batches (bs=88 avail_mem=136.38 GB):  30%|███       | 6/20 [00:02<00:03,  3.76it/s]Capturing batches (bs=80 avail_mem=136.37 GB):  30%|███       | 6/20 [00:02<00:03,  3.76it/s]Capturing batches (bs=80 avail_mem=136.37 GB):  35%|███▌      | 7/20 [00:03<00:03,  3.99it/s]Capturing batches (bs=72 avail_mem=136.37 GB):  35%|███▌      | 7/20 [00:03<00:03,  3.99it/s]Capturing batches (bs=72 avail_mem=136.37 GB):  40%|████      | 8/20 [00:03<00:02,  4.91it/s]Capturing batches (bs=64 avail_mem=136.37 GB):  40%|████      | 8/20 [00:03<00:02,  4.91it/s]Capturing batches (bs=56 avail_mem=136.36 GB):  40%|████      | 8/20 [00:03<00:02,  4.91it/s]Capturing batches (bs=56 avail_mem=136.36 GB):  50%|█████     | 10/20 [00:03<00:01,  6.58it/s]Capturing batches (bs=48 avail_mem=136.36 GB):  50%|█████     | 10/20 [00:03<00:01,  6.58it/s]Capturing batches (bs=40 avail_mem=136.35 GB):  50%|█████     | 10/20 [00:03<00:01,  6.58it/s]Capturing batches (bs=40 avail_mem=136.35 GB):  60%|██████    | 12/20 [00:03<00:01,  7.69it/s]Capturing batches (bs=32 avail_mem=136.35 GB):  60%|██████    | 12/20 [00:03<00:01,  7.69it/s]Capturing batches (bs=24 avail_mem=136.34 GB):  60%|██████    | 12/20 [00:03<00:01,  7.69it/s]Capturing batches (bs=24 avail_mem=136.34 GB):  70%|███████   | 14/20 [00:03<00:00,  8.51it/s]Capturing batches (bs=16 avail_mem=136.34 GB):  70%|███████   | 14/20 [00:03<00:00,  8.51it/s]Capturing batches (bs=12 avail_mem=136.34 GB):  70%|███████   | 14/20 [00:03<00:00,  8.51it/s]Capturing batches (bs=12 avail_mem=136.34 GB):  80%|████████  | 16/20 [00:03<00:00,  9.20it/s]Capturing batches (bs=8 avail_mem=136.34 GB):  80%|████████  | 16/20 [00:03<00:00,  9.20it/s] Capturing batches (bs=4 avail_mem=136.33 GB):  80%|████████  | 16/20 [00:04<00:00,  9.20it/s]Capturing batches (bs=4 avail_mem=136.33 GB):  90%|█████████ | 18/20 [00:04<00:00,  9.73it/s]Capturing batches (bs=2 avail_mem=136.33 GB):  90%|█████████ | 18/20 [00:04<00:00,  9.73it/s]Capturing batches (bs=1 avail_mem=136.33 GB):  90%|█████████ | 18/20 [00:04<00:00,  9.73it/s]Capturing batches (bs=1 avail_mem=136.33 GB): 100%|██████████| 20/20 [00:04<00:00,  9.26it/s]Capturing batches (bs=1 avail_mem=136.33 GB): 100%|██████████| 20/20 [00:04<00:00,  4.61it/s]
+[2026-04-28 02:30:27 TP0] Registering 2580 cuda graph addresses
+[2026-04-28 02:30:28 TP0] Capture cuda graph end. Time elapsed: 4.97 s. mem usage=0.29 GB. avail mem=136.32 GB.
+[2026-04-28 02:30:28 TP0] Disable piecewise CUDA graph because --disable-piecewise-cuda-graph is set
+[2026-04-28 02:30:28 TP1] Capture cuda graph end. Time elapsed: 4.97 s. mem usage=0.29 GB. avail mem=136.32 GB.
+[2026-04-28 02:30:28 TP1] Disable piecewise CUDA graph because --disable-piecewise-cuda-graph is set
+[2026-04-28 02:30:29 TP0] max_total_num_tokens=65536, chunked_prefill_size=8192, max_prefill_tokens=32768, max_running_requests=128, context_len=40960, available_gpu_mem=136.32 GB
+[2026-04-28 02:30:30] INFO:     Started server process [68001]
+[2026-04-28 02:30:30] INFO:     Waiting for application startup.
+[2026-04-28 02:30:30] Using default chat sampling params from model generation config: {'temperature': 0.6, 'top_k': 20, 'top_p': 0.95}
+[2026-04-28 02:30:30] INFO:     Application startup complete.
+[2026-04-28 02:30:30] INFO:     Uvicorn running on http://127.0.0.1:31001 (Press CTRL+C to quit)
+[2026-04-28 02:30:31] INFO:     127.0.0.1:58516 - "GET /model_info HTTP/1.1" 200 OK
+[2026-04-28 02:30:31] Start of pd disaggregation warmup ...
+[2026-04-28 02:30:31] INFO:     127.0.0.1:58534 - "GET /health HTTP/1.1" 503 Service Unavailable
+[2026-04-28 02:30:31 TP0] Req Time Stats(rid=55f24b7b71b043d79f9596e3292bc8ba, bootstrap_room=0, input len=4, output len=8, type=decode): prealloc_queue_duration(28.10ms) = bootstrap(1.13ms) + alloc_wait(26.97ms); transfer_duration=0.74ms; queue_duration=0.48ms, forward_duration=224.49ms, start=1020240.994
+[2026-04-28 02:30:31] INFO:     127.0.0.1:58526 - "POST /generate HTTP/1.1" 200 OK
+[2026-04-28 02:30:31] End of prefill disaggregation mode warmup with status 200, resp: [{'text': '!: 1.0\n   ', 'output_ids': [0, 25, 220, 16, 13, 15, 198, 262], 'meta_info': {'id': '55f24b7b71b043d79f9596e3292bc8ba', 'finish_reason': {'type': 'length', 'length': 8}, 'prompt_tokens': 4, 'weight_version': 'default', 'total_retractions': 0, 'forward_entry_time': 1777343431.68929, 'prefill_finished_time': 1776323190.6660163, 'queue_time': 0.0004825592041015625, 'prefill_waiting_latency': -1020241.0232737064, 'prefill_launch_latency': 0.0, 'running_requests_on_arrival': 0, 'waiting_requests_on_arrival': 0, 'running_decode_tokens_on_arrival': 0, 'remaining_prefill_chunks_on_arrival': 0, 'waiting_queue_total_chunks_on_arrival': 0, 'reasoning_tokens': 0, 'completion_tokens': 8, 'cached_tokens': 0, 'cached_tokens_details': None, 'dp_rank': None, 'e2e_latency': 0.38921643199864775, 'request_received_ts': 1777343431.5252118, 'api_server_dispatch_finish_ts': 1777343431.525625, 'request_finished_ts': 1777343431.9144282, 'inference_time': 0.22513819974847138, 'decode_throughput': 1080494.9172327043, 'ttft': 0.38920902798417956, 'extend_tokens': 4, 'response_sent_to_client_ts': 1777343431.9156976}}]
+[2026-04-28 02:30:31] The server is fired up and ready to roll!
+[2026-04-28 02:30:36 TP0] Req Time Stats(rid=HEALTH_CHECK_1777343436.7280703, bootstrap_room=0, input len=1, output len=1, type=decode): prealloc_queue_duration(2.62ms) = bootstrap(0.29ms) + alloc_wait(2.33ms); transfer_duration=0.24ms; queue_duration=0.51ms, forward_duration=0.00ms, start=1020246.063
+[2026-04-28 02:30:37] INFO:     127.0.0.1:59978 - "GET /health HTTP/1.1" 200 OK
+[2026-04-28 02:30:38] INFO:     127.0.0.1:59986 - "PRI %2A HTTP/2.0" 404 Not Found
+[2026-04-28 02:30:38] WARNING:  Invalid HTTP request received.
+[2026-04-28 02:30:38] INFO:     127.0.0.1:60002 - "PRI %2A HTTP/2.0" 404 Not Found
+[2026-04-28 02:30:38] WARNING:  Invalid HTTP request received.
+[2026-04-28 02:30:38 TP0] Req Time Stats(rid=HEALTH_CHECK_1777343438.201216, bootstrap_room=0, input len=1, output len=1, type=decode): prealloc_queue_duration(0.88ms) = bootstrap(0.27ms) + alloc_wait(0.61ms); transfer_duration=0.19ms; queue_duration=0.45ms, forward_duration=0.00ms, start=1020247.536
+[2026-04-28 02:30:39] INFO:     127.0.0.1:59980 - "GET /health HTTP/1.1" 200 OK
+[2026-04-28 02:30:39] INFO:     127.0.0.1:60014 - "GET /server_info HTTP/1.1" 200 OK
+[2026-04-28 02:30:39] INFO:     127.0.0.1:60014 - "GET /model_info HTTP/1.1" 200 OK
+/sglang/python/sglang/srt/entrypoints/openai/serving_chat.py:619: FastAPIDeprecationWarning: ORJSONResponse is deprecated, FastAPI now serializes data directly to JSON bytes via Pydantic when a return type or response model is set, which is faster and doesn't need a custom response class. Read more in the FastAPI docs: https://fastapi.tiangolo.com/advanced/custom-response/#orjson-or-response-model and https://fastapi.tiangolo.com/tutorial/response-model/
+  return self.create_error_response(str(e))
+[2026-04-28 02:31:13] INFO:     127.0.0.1:51320 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:31:13] INFO:     127.0.0.1:51352 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:31:13] INFO:     127.0.0.1:51378 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:31:13] INFO:     127.0.0.1:51352 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:31:13] INFO:     127.0.0.1:51378 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:31:13] INFO:     127.0.0.1:51352 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:31:13] INFO:     127.0.0.1:51410 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:31:13] INFO:     127.0.0.1:51454 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:31:13] INFO:     127.0.0.1:51466 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:31:14] INFO:     127.0.0.1:51514 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:31:14] INFO:     127.0.0.1:51532 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+E20260428 02:31:14.238477 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Connection timed out [110]
+E20260428 02:31:14.244104 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:14.245466 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:14.246598 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:14.251482 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Connection timed out [110]
+E20260428 02:31:14.254377 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+[2026-04-28 02:31:14] INFO:     127.0.0.1:51542 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:31:14] INFO:     127.0.0.1:51544 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:31:14] INFO:     127.0.0.1:51542 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+E20260428 02:31:15.358476 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Connection timed out [110]
+E20260428 02:31:15.422477 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Connection timed out [110]
+E20260428 02:31:29.241813 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:29.251538 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:29.260987 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:29.282445 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:29.288870 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:30.398514 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Connection timed out [110]
+E20260428 02:31:30.422441 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:32.999622 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:33.009315 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:33.018941 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:33.028699 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:34.046480 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Connection timed out [110]
+E20260428 02:31:34.047724 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+[2026-04-28 02:31:43 TP0] Decode transfer failed for request rank=0 decode_req.req.rid='ace21cf6685641619cc14c4d62fbcffa' decode_req.req.bootstrap_room=963263204282719081 with exception KVTransferError(bootstrap_room=963263204282719081): Failed to get kvcache from prefill instance, it might be dead
+[2026-04-28 02:31:43 TP1] Decode transfer failed for request rank=1 decode_req.req.rid='ace21cf6685641619cc14c4d62fbcffa' decode_req.req.bootstrap_room=963263204282719081 with exception KVTransferError(bootstrap_room=963263204282719081): Failed due to an unknown reason from another rank
+[2026-04-28 02:31:43 TP0] Req Time Stats(rid=ace21cf6685641619cc14c4d62fbcffa, bootstrap_room=963263204282719081, input len=9, output len=0, type=decode): prealloc_queue_duration(6.19ms) = bootstrap(5.48ms) + alloc_wait(0.70ms); transfer_duration=-1020282414.03ms; queue_duration=0.00ms, forward_duration=0.00ms, start=1020282.408
+[2026-04-28 02:31:43] INFO:     127.0.0.1:51298 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:31:43] INFO:     127.0.0.1:51298 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+E20260428 02:31:43.348356 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+[2026-04-28 02:31:43] INFO:     127.0.0.1:51298 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+E20260428 02:31:45.365738 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:45.375666 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:45.386842 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:45.391420 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:31:49.130198 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:00.381480 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:00.414741 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:00.417469 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+[2026-04-28 02:32:00 TP1] Decode transfer failed for request rank=1 decode_req.req.rid='8b711633fcf24a71b9673db8eb152968' decode_req.req.bootstrap_room=1007830829382134386 with exception KVTransferError(bootstrap_room=1007830829382134386): Failed to get kvcache from prefill instance, it might be dead
+[2026-04-28 02:32:00 TP0] Decode transfer failed for request rank=0 decode_req.req.rid='8b711633fcf24a71b9673db8eb152968' decode_req.req.bootstrap_room=1007830829382134386 with exception KVTransferError(bootstrap_room=1007830829382134386): Failed due to an unknown reason from another rank
+[2026-04-28 02:32:00 TP0] Req Time Stats(rid=8b711633fcf24a71b9673db8eb152968, bootstrap_room=1007830829382134386, input len=2963, output len=0, type=decode): prealloc_queue_duration(0.80ms) = bootstrap(0.31ms) + alloc_wait(0.49ms); transfer_duration=-1020282420.81ms; queue_duration=0.00ms, forward_duration=0.00ms, start=1020282.420
+[2026-04-28 02:32:00] INFO:     127.0.0.1:51306 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:32:00] INFO:     127.0.0.1:51306 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+E20260428 02:32:01.502478 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Connection timed out [110]
+E20260428 02:32:01.686048 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:01.709261 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:01.992488 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+[2026-04-28 02:32:02 TP0] Decode transfer failed for request rank=0 decode_req.req.rid='92fabb25492140c4b419819edb5e22ed' decode_req.req.bootstrap_room=4526482062301487626 with exception KVTransferError(bootstrap_room=4526482062301487626): Failed to get kvcache from prefill instance, it might be dead
+[2026-04-28 02:32:02 TP1] Decode transfer failed for request rank=1 decode_req.req.rid='92fabb25492140c4b419819edb5e22ed' decode_req.req.bootstrap_room=4526482062301487626 with exception KVTransferError(bootstrap_room=4526482062301487626): Failed due to an unknown reason from another rank
+[2026-04-28 02:32:02 TP0] Req Time Stats(rid=92fabb25492140c4b419819edb5e22ed, bootstrap_room=4526482062301487626, input len=4724, output len=0, type=decode): prealloc_queue_duration(0.81ms) = bootstrap(0.33ms) + alloc_wait(0.48ms); transfer_duration=-1020282447.87ms; queue_duration=0.00ms, forward_duration=0.00ms, start=1020282.447
+[2026-04-28 02:32:02] INFO:     127.0.0.1:51328 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:32:02 TP0] Decode transfer failed for request rank=0 decode_req.req.rid='3f5d922656234e8bb36faf43845eda38' decode_req.req.bootstrap_room=6756706063912519709 with exception KVTransferError(bootstrap_room=6756706063912519709): Failed to get kvcache from prefill instance, it might be dead
+[2026-04-28 02:32:02 TP1] Decode transfer failed for request rank=1 decode_req.req.rid='3f5d922656234e8bb36faf43845eda38' decode_req.req.bootstrap_room=6756706063912519709 with exception KVTransferError(bootstrap_room=6756706063912519709): Failed due to an unknown reason from another rank
+[2026-04-28 02:32:02 TP0] Req Time Stats(rid=3f5d922656234e8bb36faf43845eda38, bootstrap_room=6756706063912519709, input len=4687, output len=0, type=decode): prealloc_queue_duration(0.75ms) = bootstrap(0.29ms) + alloc_wait(0.46ms); transfer_duration=-1020282533.60ms; queue_duration=0.00ms, forward_duration=0.00ms, start=1020282.533
+[2026-04-28 02:32:02] INFO:     127.0.0.1:51334 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+E20260428 02:32:02.059660 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:02.066215 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:03.102479 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Connection timed out [110]
+E20260428 02:32:03.119364 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:04.254485 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Connection timed out [110]
+E20260428 02:32:07.950315 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:07.951282 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:07.957470 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+[2026-04-28 02:32:15 TP0] Decode transfer failed for request rank=0 decode_req.req.rid='b87ff023d4154e4d81f73a132df626c1' decode_req.req.bootstrap_room=5059005006301990323 with exception KVTransferError(bootstrap_room=5059005006301990323): Failed to get kvcache from prefill instance, it might be dead
+[2026-04-28 02:32:15 TP1] Decode transfer failed for request rank=1 decode_req.req.rid='b87ff023d4154e4d81f73a132df626c1' decode_req.req.bootstrap_room=5059005006301990323 with exception KVTransferError(bootstrap_room=5059005006301990323): Failed due to an unknown reason from another rank
+[2026-04-28 02:32:15 TP0] Req Time Stats(rid=b87ff023d4154e4d81f73a132df626c1, bootstrap_room=5059005006301990323, input len=4888, output len=0, type=decode): prealloc_queue_duration(0.84ms) = bootstrap(0.32ms) + alloc_wait(0.52ms); transfer_duration=-1020282592.53ms; queue_duration=0.00ms, forward_duration=0.00ms, start=1020282.592
+[2026-04-28 02:32:15] INFO:     127.0.0.1:51370 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+E20260428 02:32:15.507860 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:15.508829 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:16.670490 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Connection timed out [110]
+E20260428 02:32:16.765419 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:16.778563 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:16.779661 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:16.783128 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:16.963865 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:17.798478 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Connection timed out [110]
+E20260428 02:32:17.799623 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:17.814747 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:19.166483 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Connection timed out [110]
+E20260428 02:32:21.337513 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:21.343819 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:40.111956 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:41.310467 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Connection timed out [110]
+[2026-04-28 02:32:43] INFO:     127.0.0.1:51340 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+E20260428 02:32:43.885913 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:43.892287 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:43.898692 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+[2026-04-28 02:32:44 TP0] Decode batch, #running-req: 1, #token: 43136, token usage: 0.66, pre-allocated usage: 0.60, #prealloc-req: 27, #transfer-req: 4, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 0.25, #queue-req: 0
+[2026-04-28 02:32:44 TP0] Decode batch, #running-req: 1, #token: 43136, token usage: 0.66, pre-allocated usage: 0.60, #prealloc-req: 27, #transfer-req: 4, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 115.38, #queue-req: 0
+[2026-04-28 02:32:44 TP0] Decode batch, #running-req: 1, #token: 43200, token usage: 0.66, pre-allocated usage: 0.60, #prealloc-req: 27, #transfer-req: 4, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 115.30, #queue-req: 0
+[2026-04-28 02:32:45 TP0] Decode batch, #running-req: 1, #token: 43200, token usage: 0.66, pre-allocated usage: 0.60, #prealloc-req: 27, #transfer-req: 4, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 115.25, #queue-req: 0
+[2026-04-28 02:32:45 TP0] Decode batch, #running-req: 1, #token: 43264, token usage: 0.66, pre-allocated usage: 0.60, #prealloc-req: 27, #transfer-req: 4, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 115.03, #queue-req: 0
+[2026-04-28 02:32:45 TP0] Decode batch, #running-req: 1, #token: 43328, token usage: 0.66, pre-allocated usage: 0.60, #prealloc-req: 27, #transfer-req: 4, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 114.98, #queue-req: 0
+[2026-04-28 02:32:46 TP0] Decode batch, #running-req: 1, #token: 43328, token usage: 0.66, pre-allocated usage: 0.60, #prealloc-req: 27, #transfer-req: 4, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 114.92, #queue-req: 0
+[2026-04-28 02:32:46 TP0] Decode batch, #running-req: 1, #token: 43392, token usage: 0.66, pre-allocated usage: 0.60, #prealloc-req: 27, #transfer-req: 4, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 114.95, #queue-req: 0
+[2026-04-28 02:32:46 TP0] Decode batch, #running-req: 1, #token: 43456, token usage: 0.66, pre-allocated usage: 0.60, #prealloc-req: 27, #transfer-req: 4, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 114.92, #queue-req: 0
+[2026-04-28 02:32:47 TP0] Decode batch, #running-req: 1, #token: 43456, token usage: 0.66, pre-allocated usage: 0.60, #prealloc-req: 27, #transfer-req: 4, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 114.87, #queue-req: 0
+[2026-04-28 02:32:47 TP0] Decode batch, #running-req: 1, #token: 43520, token usage: 0.66, pre-allocated usage: 0.60, #prealloc-req: 27, #transfer-req: 4, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 114.78, #queue-req: 0
+[2026-04-28 02:32:47 TP0] Decode transfer failed for request rank=0 decode_req.req.rid='7dde63c2bc5d42f3bf9ad0212a1f913d' decode_req.req.bootstrap_room=2189352915222827285 with exception KVTransferError(bootstrap_room=2189352915222827285): Failed due to an unknown reason from another rank
+[2026-04-28 02:32:47 TP1] Decode transfer failed for request rank=1 decode_req.req.rid='7dde63c2bc5d42f3bf9ad0212a1f913d' decode_req.req.bootstrap_room=2189352915222827285 with exception KVTransferError(bootstrap_room=2189352915222827285): Failed to get kvcache from prefill instance, it might be dead
+[2026-04-28 02:32:47 TP0] Req Time Stats(rid=7dde63c2bc5d42f3bf9ad0212a1f913d, bootstrap_room=2189352915222827285, input len=4542, output len=0, type=decode): prealloc_queue_duration(0.86ms) = bootstrap(0.35ms) + alloc_wait(0.51ms); transfer_duration=-1020282579.47ms; queue_duration=0.00ms, forward_duration=0.00ms, start=1020282.579
+[2026-04-28 02:32:47] INFO:     127.0.0.1:51360 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:32:47 TP0] Decode transfer failed for request rank=0 decode_req.req.rid='bd155ee6fc5b4b789584bcc0a4afff38' decode_req.req.bootstrap_room=1961173865971327758 with exception KVTransferError(bootstrap_room=1961173865971327758): Failed due to an unknown reason from another rank
+[2026-04-28 02:32:47 TP1] Decode transfer failed for request rank=1 decode_req.req.rid='bd155ee6fc5b4b789584bcc0a4afff38' decode_req.req.bootstrap_room=1961173865971327758 with exception KVTransferError(bootstrap_room=1961173865971327758): Failed to get kvcache from prefill instance, it might be dead
+[2026-04-28 02:32:47 TP0] Req Time Stats(rid=bd155ee6fc5b4b789584bcc0a4afff38, bootstrap_room=1961173865971327758, input len=2781, output len=0, type=decode): prealloc_queue_duration(0.76ms) = bootstrap(0.25ms) + alloc_wait(0.51ms); transfer_duration=-1020282786.64ms; queue_duration=0.00ms, forward_duration=0.00ms, start=1020282.786
+[2026-04-28 02:32:47] INFO:     127.0.0.1:51390 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:32:47 TP0] Decode batch, #running-req: 1, #token: 36160, token usage: 0.55, pre-allocated usage: 0.48, #prealloc-req: 29, #transfer-req: 2, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 113.98, #queue-req: 0
+[2026-04-28 02:32:48 TP0] Req Time Stats(rid=1298f05642554258a4c326ce3ad224f9, bootstrap_room=2662885794867626239, input len=3937, output len=495, type=decode): prealloc_queue_duration(0.73ms) = bootstrap(0.27ms) + alloc_wait(0.46ms); transfer_duration=90656.00ms; queue_duration=0.18ms, forward_duration=4324.41ms, start=1020282.543
+E20260428 02:32:48.862481 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Connection timed out [110]
+[2026-04-28 02:32:48] INFO:     127.0.0.1:51320 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+E20260428 02:32:48.986661 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+[2026-04-28 02:32:49 TP0] Decode batch, #running-req: 1, #token: 59200, token usage: 0.90, pre-allocated usage: 0.48, #prealloc-req: 29, #transfer-req: 2, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 35.39, #queue-req: 0
+E20260428 02:32:49.438495 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Connection timed out [110]
+E20260428 02:32:49.455436 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:49.463450 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+[2026-04-28 02:32:49 TP0] Decode batch, #running-req: 1, #token: 59264, token usage: 0.90, pre-allocated usage: 0.48, #prealloc-req: 29, #transfer-req: 2, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 107.68, #queue-req: 0
+[2026-04-28 02:32:49 TP0] Decode transfer failed for request rank=0 decode_req.req.rid='6900479aa8b44f8ba44114788cee99a3' decode_req.req.bootstrap_room=3921416459452394676 with exception KVTransferError(bootstrap_room=3921416459452394676): Failed to get kvcache from prefill instance, it might be dead
+[2026-04-28 02:32:49 TP1] Decode transfer failed for request rank=1 decode_req.req.rid='6900479aa8b44f8ba44114788cee99a3' decode_req.req.bootstrap_room=3921416459452394676 with exception KVTransferError(bootstrap_room=3921416459452394676): Failed due to an unknown reason from another rank
+[2026-04-28 02:32:49 TP0] Req Time Stats(rid=6900479aa8b44f8ba44114788cee99a3, bootstrap_room=3921416459452394676, input len=27441, output len=0, type=decode): prealloc_queue_duration(94578.83ms) = bootstrap(1.06ms) + alloc_wait(94577.77ms); transfer_duration=-1020377548.96ms; queue_duration=0.00ms, forward_duration=0.00ms, start=1020282.970
+[2026-04-28 02:32:49] INFO:     127.0.0.1:51418 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:32:49 TP0] Decode batch, #running-req: 1, #token: 62080, token usage: 0.95, pre-allocated usage: 0.53, #prealloc-req: 28, #transfer-req: 3, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 107.64, #queue-req: 0
+E20260428 02:32:50.014498 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Connection timed out [110]
+E20260428 02:32:50.015904 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+[2026-04-28 02:32:50 TP0] Decode batch, #running-req: 1, #token: 62080, token usage: 0.95, pre-allocated usage: 0.53, #prealloc-req: 28, #transfer-req: 3, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 107.39, #queue-req: 0
+[2026-04-28 02:32:50 TP0] Decode batch, #running-req: 1, #token: 62144, token usage: 0.95, pre-allocated usage: 0.53, #prealloc-req: 28, #transfer-req: 3, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 107.65, #queue-req: 0
+E20260428 02:32:50.654480 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Connection timed out [110]
+E20260428 02:32:50.655592 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:50.663868 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+[2026-04-28 02:32:50 TP0] Decode batch, #running-req: 1, #token: 62208, token usage: 0.95, pre-allocated usage: 0.53, #prealloc-req: 28, #transfer-req: 3, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 107.63, #queue-req: 0
+E20260428 02:32:51.102481 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Connection timed out [110]
+[2026-04-28 02:32:51 TP0] Decode batch, #running-req: 1, #token: 62208, token usage: 0.95, pre-allocated usage: 0.53, #prealloc-req: 28, #transfer-req: 3, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 107.64, #queue-req: 0
+E20260428 02:32:51.678474 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Connection timed out [110]
+[2026-04-28 02:32:51 TP0] Decode batch, #running-req: 1, #token: 62272, token usage: 0.95, pre-allocated usage: 0.53, #prealloc-req: 28, #transfer-req: 3, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 107.61, #queue-req: 0
+[2026-04-28 02:32:52 TP0] Decode batch, #running-req: 1, #token: 62272, token usage: 0.95, pre-allocated usage: 0.53, #prealloc-req: 28, #transfer-req: 3, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 107.62, #queue-req: 0
+[2026-04-28 02:32:52 TP0] Decode batch, #running-req: 1, #token: 62336, token usage: 0.95, pre-allocated usage: 0.53, #prealloc-req: 28, #transfer-req: 3, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 107.60, #queue-req: 0
+E20260428 02:32:52.815896 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+[2026-04-28 02:32:52 TP0] Decode batch, #running-req: 1, #token: 62400, token usage: 0.95, pre-allocated usage: 0.53, #prealloc-req: 28, #transfer-req: 3, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 107.59, #queue-req: 0
+[2026-04-28 02:32:53 TP0] Decode batch, #running-req: 1, #token: 62400, token usage: 0.95, pre-allocated usage: 0.53, #prealloc-req: 28, #transfer-req: 3, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 107.59, #queue-req: 0
+[2026-04-28 02:32:53 TP0] Decode batch, #running-req: 1, #token: 62464, token usage: 0.95, pre-allocated usage: 0.53, #prealloc-req: 28, #transfer-req: 3, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 107.57, #queue-req: 0
+[2026-04-28 02:32:53 TP0] Decode batch, #running-req: 1, #token: 62528, token usage: 0.95, pre-allocated usage: 0.53, #prealloc-req: 28, #transfer-req: 3, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 107.54, #queue-req: 0
+E20260428 02:32:53.982481 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Connection timed out [110]
+[2026-04-28 02:32:54 TP0] Decode batch, #running-req: 1, #token: 62528, token usage: 0.95, pre-allocated usage: 0.53, #prealloc-req: 28, #transfer-req: 3, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 107.58, #queue-req: 0
+E20260428 02:32:54.353520 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+[2026-04-28 02:32:54 TP0] Decode batch, #running-req: 1, #token: 62592, token usage: 0.96, pre-allocated usage: 0.53, #prealloc-req: 28, #transfer-req: 3, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 107.48, #queue-req: 0
+[2026-04-28 02:32:55 TP0] Decode batch, #running-req: 1, #token: 62592, token usage: 0.96, pre-allocated usage: 0.53, #prealloc-req: 28, #transfer-req: 3, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 107.57, #queue-req: 0
+[2026-04-28 02:32:55 TP0] Decode batch, #running-req: 1, #token: 62656, token usage: 0.96, pre-allocated usage: 0.53, #prealloc-req: 28, #transfer-req: 3, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 107.53, #queue-req: 0
+E20260428 02:32:55.582499 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Connection timed out [110]
+[2026-04-28 02:32:55 TP0] Decode batch, #running-req: 1, #token: 62720, token usage: 0.96, pre-allocated usage: 0.53, #prealloc-req: 28, #transfer-req: 3, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 107.52, #queue-req: 0
+[2026-04-28 02:32:56 TP0] Decode batch, #running-req: 1, #token: 62720, token usage: 0.96, pre-allocated usage: 0.53, #prealloc-req: 28, #transfer-req: 3, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 107.54, #queue-req: 0
+[2026-04-28 02:32:56] INFO:     127.0.0.1:51398 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-04-28 02:32:56 TP0] Decode batch, #running-req: 2, #token: 62784, token usage: 0.96, pre-allocated usage: 0.46, #prealloc-req: 28, #transfer-req: 2, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 122.02, #queue-req: 0
+E20260428 02:32:56.613746 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:56.614619 69249 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Invalid argument [22]
+E20260428 02:32:56.734767 69205 rdma_endpoint.cpp:430] [Handshake] Failed to modify QP to RTR, check mtu, gid, peer lid, peer qp num: Connection timed out [110]
+[2026-04-28 02:32:56 TP0] Decode batch, #running-req: 2, #token: 62912, token usage: 0.96, pre-allocated usage: 0.46, #prealloc-req: 28, #transfer-req: 2, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 205.57, #queue-req: 0
+[2026-04-28 02:32:57 TP0] Decode batch, #running-req: 2, #token: 62976, token usage: 0.96, pre-allocated usage: 0.46, #prealloc-req: 28, #transfer-req: 2, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 206.19, #queue-req: 0
+[2026-04-28 02:32:57 TP0] Decode batch, #running-req: 2, #token: 63040, token usage: 0.96, pre-allocated usage: 0.46, #prealloc-req: 28, #transfer-req: 2, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 206.04, #queue-req: 0
+[2026-04-28 02:32:58 TP0] Decode batch, #running-req: 2, #token: 63104, token usage: 0.96, pre-allocated usage: 0.46, #prealloc-req: 28, #transfer-req: 2, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 205.98, #queue-req: 0
+[2026-04-28 02:32:58 TP0] Decode batch, #running-req: 2, #token: 63168, token usage: 0.96, pre-allocated usage: 0.46, #prealloc-req: 28, #transfer-req: 2, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 206.04, #queue-req: 0
+[2026-04-28 02:32:58 TP0] Req Time Stats(rid=a5a0671b54b94eb8b94b12cabac91551, bootstrap_room=6826494175313764459, input len=4269, output len=226, type=decode): prealloc_queue_duration(29744.17ms) = bootstrap(0.30ms) + alloc_wait(29743.87ms); transfer_duration=73267.80ms; queue_duration=0.15ms, forward_duration=2195.94ms, start=1020282.823
+[2026-04-28 02:32:58 TP0] Decode batch, #running-req: 1, #token: 63040, token usage: 0.96, pre-allocated usage: 0.52, #prealloc-req: 28, #transfer-req: 3, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 157.05, #queue-req: 0
+[2026-04-28 02:32:59 TP0] Decode batch, #running-req: 1, #token: 63040, token usage: 0.96, pre-allocated usage: 0.52, #prealloc-req: 28, #transfer-req: 3, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 107.37, #queue-req: 0
+[2026-04-28 02:32:59 TP0] Decode batch, #running-req: 1, #token: 63104, token usage: 0.96, pre-allocated usage: 0.52, #prealloc-req: 28, #transfer-req: 3, #retracted-req: 0, cuda graph: True, gen throughput (token/s): 107.38, #queue-req: 0
+[2026-04-28 02:32:59 TP0] Req Time Stats(rid=cb4e81613fdb4380be17b6b31c206e78, bootstrap_room=7985843268262778897, input len=27437, output len=1149, type=decode): prealloc_queue_duration(1.68ms) = bootstrap(0.99ms) + alloc_wait(0.69ms); transfer_duration=95777.86ms; queue_duration=0.47ms, forward_duration=10775.26ms, start=1020282.521
+[2026-04-28 02:32:59] INFO:     127.0.0.1:51320 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:32:59] INFO:     127.0.0.1:51320 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+Process Process-1:
+Process Process-2:
+Process Process-3:
+[2026-04-28 02:33:01] SIGTERM received. signum=None frame=None. Draining requests and shutting down...
+[2026-04-28 02:33:01] SIGTERM received. signum=None frame=None. Draining requests and shutting down...
+Traceback (most recent call last):
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/multiprocessing/process.py", line 314, in _bootstrap
+    self.run()
+  File "/usr/lib/python3.12/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/sglang/python/sglang/srt/managers/detokenizer_manager.py", line 403, in run_detokenizer_process
+    manager.event_loop()
+  File "/sglang/python/sglang/srt/managers/detokenizer_manager.py", line 141, in event_loop
+    recv_obj = self.recv_from_scheduler.recv_pyobj()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/zmq/sugar/socket.py", line 989, in recv_pyobj
+    msg = self.recv(flags)
+          ^^^^^^^^^^^^^^^^
+  File "zmq/backend/cython/_zmq.py", line 1218, in zmq.backend.cython._zmq.Socket.recv
+    def recv(self, flags=0, copy: bint = True, track: bint = False):
+    ^^^^^^^^^^^
+  File "zmq/backend/cython/_zmq.py", line 1253, in zmq.backend.cython._zmq.Socket.recv
+    return _recv_copy(self.handle, flags)
+    ^^^^^^^^^^^
+  File "zmq/backend/cython/_zmq.py", line 1408, in zmq.backend.cython._zmq._recv_copy
+    _check_rc(rc)
+    ^^^^^^^^^^^
+  File "zmq/backend/cython/_zmq.py", line 179, in zmq.backend.cython._zmq._check_rc
+    PyErr_CheckSignals()
+    ^^^^^^^^^^^
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/multiprocessing/process.py", line 314, in _bootstrap
+    self.run()
+  File "/usr/lib/python3.12/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/sglang/python/sglang/srt/managers/scheduler.py", line 3661, in run_scheduler_process
+    scheduler.run_event_loop()
+  File "/sglang/python/sglang/srt/managers/scheduler.py", line 1300, in run_event_loop
+    dispatch_event_loop(self)
+  File "/sglang/python/sglang/srt/managers/scheduler.py", line 3556, in dispatch_event_loop
+    scheduler.event_loop_overlap_disagg_decode()
+  File "/usr/local/lib/python3.12/dist-packages/torch/utils/_contextlib.py", line 120, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/sglang/python/sglang/srt/disaggregation/decode.py", line 1174, in event_loop_overlap_disagg_decode
+    self.process_decode_queue()
+  File "/sglang/python/sglang/srt/disaggregation/decode.py", line 1319, in process_decode_queue
+    self.disagg_decode_transfer_queue.pop_transferred()
+  File "/sglang/python/sglang/srt/disaggregation/decode.py", line 1056, in pop_transferred
+    polls = poll_and_all_reduce(
+            ^^^^^^^^^^^^^^^^^^^^
+  File "/sglang/python/sglang/srt/disaggregation/utils.py", line 59, in poll_and_all_reduce
+    dist.all_reduce(tensor_to_reduce, op=dist.ReduceOp.MIN, group=gloo_group)
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/c10d_logger.py", line 81, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/distributed_c10d.py", line 2942, in all_reduce
+    work.wait()
+KeyboardInterrupt
+  File "/usr/lib/python3.12/multiprocessing/process.py", line 314, in _bootstrap
+    self.run()
+  File "/usr/lib/python3.12/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/sglang/python/sglang/srt/managers/scheduler.py", line 3661, in run_scheduler_process
+    scheduler.run_event_loop()
+  File "/sglang/python/sglang/srt/managers/scheduler.py", line 1300, in run_event_loop
+    dispatch_event_loop(self)
+  File "/sglang/python/sglang/srt/managers/scheduler.py", line 3556, in dispatch_event_loop
+    scheduler.event_loop_overlap_disagg_decode()
+  File "/usr/local/lib/python3.12/dist-packages/torch/utils/_contextlib.py", line 120, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/sglang/python/sglang/srt/disaggregation/decode.py", line 1174, in event_loop_overlap_disagg_decode
+    self.process_decode_queue()
+  File "/sglang/python/sglang/srt/disaggregation/decode.py", line 1319, in process_decode_queue
+    self.disagg_decode_transfer_queue.pop_transferred()
+  File "/sglang/python/sglang/srt/disaggregation/decode.py", line 1056, in pop_transferred
+    polls = poll_and_all_reduce(
+            ^^^^^^^^^^^^^^^^^^^^
+  File "/sglang/python/sglang/srt/disaggregation/utils.py", line 59, in poll_and_all_reduce
+    dist.all_reduce(tensor_to_reduce, op=dist.ReduceOp.MIN, group=gloo_group)
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/c10d_logger.py", line 81, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/distributed_c10d.py", line 2942, in all_reduce
+    work.wait()
+KeyboardInterrupt
+[2026-04-28 02:33:01] INFO:     Shutting down
+[2026-04-28 02:33:01] INFO:     Waiting for connections to close. (CTRL+C to force quit)
+[2026-04-28 02:33:01] Gracefully exiting... Remaining number of requests 53. Remaining requests remaining_rids=['55f24b7b71b043d79f9596e3292bc8ba', '768a71ba00f9454e85767219c1ec3a21', 'cb4e81613fdb4380be17b6b31c206e78', '1298f05642554258a4c326ce3ad224f9', '7dd78d48a9734a8b8554cc3cd580e568', '2b9b844703d04ee89f30d38fa8b1f36d', '2cde69baf63f47fc891992a3eefef449', '06df6d7cab644bba86ef6c3f615eb150', 'a5a0671b54b94eb8b94b12cabac91551', '2943d5d52dac433ebd7675dc9fe68faa', 'dd0a84577365437180f090c5eb49ada7', '34e54603d57e4e13964e3274ce48470d', 'a34762e649594653ae7b390fca3e77f2', '28f14b6f328e41adb14da0b4448c7b1d', 'efe4fd9506d046179073d80fd62d83f0', '211aab1a4efe4988ae921ad10255bad7', 'e6d11526b32949338112a30515b88888', 'e617ee09f4004778b5d393c2d0904672', '8708ce54f7d8460a86071dd7d952d26a', '90ff72f7469d467a95774dd9370b8f69', '9da362342a6e4214b0b30fe1154bde15', '5d9e6289713b4d139a2cf55222b853ac', 'c6e659d6bede42348ea4ccb434988314', '536cfe602851455eb11816d2993fd748', '5791adfd99404086b95e6fb1717d3510', '89dffa52122f4c84ac195d926c5e1279', 'b9266427c74e4047a7bcb6b78cd3d095', '8b5c84f99e4243a69b9f18f853d9b24d', '650a1a62e99d49718f56a065be291e9e', '650c7212fd12466ea10f2b50ea137a14', '6459a5a92f8644f193851e980112a8ae', 'dbdac05eaffb4cf880204d0956674418', '13efd7f0fe8445879d4a581ca2821a25', '8e17ae46f3e44c93bc080a82c7d28047', '520f626c0a04475faceb6f07c177bee9', 'f8f3558b152141a098307ab4fa2c1de6', 'dbdc332084cf4a53a4eb48772a88f35b', '8b0e9504831d4d9d9ff372deada70b39', 'f07fa012107840deabee6107a4a14f11', '9a8343f915724b529d0679391f99a602', '0a292b30301c47969f9d2e09d40b59a3', 'a6ca5330d04c4d37b31eef049a614341', 'a37e21b4295248519da341e2558ff819', 'dafa1ce3ccfc4fe8a2ac1935e1fb2900', '5c568b91988b42f58afb320cd94e28de', '37883a9399e347ed80bf7a12988a4314', 'd18c7eb2ae1e4120a04b6103e9235fe5', 'fa43e04cc93f41bda8333a6782576f19', 'f9aca2bfca954da8ba61a6127189cfa1', 'f4e699a45dbf4089a3c60e50011854c9', '1e9af8cba9114e71a34849a1e311eeb9', '76aa506fb5be44829bdaa1a1b0cca095', 'fa71ccf3d95f4a85afcea8a2f7754581'].
+[2026-04-28 02:33:01] INFO:     127.0.0.1:51418 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:01] INFO:     127.0.0.1:51352 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:01] INFO:     127.0.0.1:51410 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:01] INFO:     127.0.0.1:51378 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+/sglang/python/sglang/srt/entrypoints/openai/serving_chat.py:929: FastAPIDeprecationWarning: ORJSONResponse is deprecated, FastAPI now serializes data directly to JSON bytes via Pydantic when a return type or response model is set, which is faster and doesn't need a custom response class. Read more in the FastAPI docs: https://fastapi.tiangolo.com/advanced/custom-response/#orjson-or-response-model and https://fastapi.tiangolo.com/tutorial/response-model/
+  return self.create_error_response(str(e))
+[2026-04-28 02:33:01] INFO:     127.0.0.1:51424 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:01] INFO:     127.0.0.1:51434 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:01] INFO:     127.0.0.1:51444 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:01] INFO:     127.0.0.1:51458 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:01] INFO:     127.0.0.1:51460 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:01] INFO:     127.0.0.1:51454 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:01] INFO:     127.0.0.1:51482 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:01] INFO:     127.0.0.1:51498 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:01] INFO:     127.0.0.1:51510 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:01] INFO:     127.0.0.1:51466 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:02] INFO:     127.0.0.1:51328 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:02] INFO:     127.0.0.1:51334 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:02] INFO:     127.0.0.1:51528 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:02] INFO:     127.0.0.1:51540 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:02] INFO:     127.0.0.1:51532 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:02] INFO:     127.0.0.1:51514 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:02] INFO:     127.0.0.1:51544 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:02] INFO:     127.0.0.1:51398 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:02] INFO:     127.0.0.1:51542 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:03] INFO:     127.0.0.1:51298 - "POST /v1/chat/completions HTTP/1.1" 400 Bad Request
+[2026-04-28 02:33:03] Subprocess detokenizer (pid=68281) crashed with exit code 1. Triggering SIGQUIT for cleanup...
+[2026-04-28 02:33:03] SIGQUIT received. signum=None, frame=None. It usually means one child failed.
