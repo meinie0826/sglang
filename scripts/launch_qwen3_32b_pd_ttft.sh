@@ -27,6 +27,8 @@ CHUNKED_PREFILL_SIZE="${CHUNKED_PREFILL_SIZE:-8192}"
 KV_CACHE_DTYPE="${KV_CACHE_DTYPE:-auto}"
 DISAGG_TRANSFER_BACKEND="${DISAGG_TRANSFER_BACKEND:-mooncake}"
 DISAGG_IB_DEVICE="${DISAGG_IB_DEVICE:-}"
+DISAGG_IB_DEVICE_AUTO="${DISAGG_IB_DEVICE_AUTO:-1}"
+FIND_BEST_NIC_URL="${FIND_BEST_NIC_URL:-http://bs3-hb1.internal/upload-infra-docs/liaoliang/find_best_nic.py}"
 
 WINDOW_SECONDS="${WINDOW_SECONDS:-60}"
 TRAINING_WINDOW_SECONDS="${TRAINING_WINDOW_SECONDS:-900}"
@@ -105,6 +107,22 @@ for module in ("xgboost", "sglang_router.launch_router"):
         sys.exit(1)
 PY
 
+if [[ -z "${DISAGG_IB_DEVICE}" && "${DISAGG_IB_DEVICE_AUTO}" == "1" ]]; then
+    NIC_CUDA_VISIBLE_DEVICES="${NIC_CUDA_VISIBLE_DEVICES:-${PREFILL_CUDA_VISIBLE_DEVICES},${DECODE_CUDA_VISIBLE_DEVICES}}"
+    echo "[nic] selecting disaggregation IB device for CUDA_VISIBLE_DEVICES=${NIC_CUDA_VISIBLE_DEVICES}"
+    if DISAGG_IB_DEVICE="$(curl -fsSL "${FIND_BEST_NIC_URL}" | python3 - "${NIC_CUDA_VISIBLE_DEVICES}")"; then
+        DISAGG_IB_DEVICE="$(echo "${DISAGG_IB_DEVICE}" | tr -d '[:space:]')"
+        if [[ -n "${DISAGG_IB_DEVICE}" ]]; then
+            echo "[nic] DISAGG_IB_DEVICE=${DISAGG_IB_DEVICE}"
+        else
+            echo "[warn] best NIC helper returned empty output; continuing without --disaggregation-ib-device"
+        fi
+    else
+        echo "[warn] failed to auto-select disaggregation IB device; continuing without --disaggregation-ib-device"
+        DISAGG_IB_DEVICE=""
+    fi
+fi
+
 DISAGG_IB_ARGS=()
 if [[ -n "${DISAGG_IB_DEVICE}" ]]; then
     DISAGG_IB_ARGS+=(--disaggregation-ib-device "${DISAGG_IB_DEVICE}")
@@ -136,6 +154,9 @@ echo "ARTIFACT_DIR=${ARTIFACT_DIR}"
 echo "PREFILL=${PREFILL_HOST}:${PREFILL_PORT} GPUs=${PREFILL_CUDA_VISIBLE_DEVICES} TP=${PREFILL_TP_SIZE}"
 echo "DECODE=${DECODE_HOST}:${DECODE_PORT} GPUs=${DECODE_CUDA_VISIBLE_DEVICES} TP=${DECODE_TP_SIZE}"
 echo "ROUTER=${ROUTER_HOST}:${ROUTER_PORT}"
+echo "DISAGG_TRANSFER_BACKEND=${DISAGG_TRANSFER_BACKEND}"
+echo "DISAGG_IB_DEVICE=${DISAGG_IB_DEVICE:-<unset>}"
+echo "DISAGG_IB_DEVICE_AUTO=${DISAGG_IB_DEVICE_AUTO}"
 echo "WINDOW_SECONDS=${WINDOW_SECONDS}"
 echo "FUTURE_QPS_VALUES=${FUTURE_QPS_VALUES}"
 echo "FUTURE_QPS_INTERVAL_SECONDS=${FUTURE_QPS_INTERVAL_SECONDS}"
