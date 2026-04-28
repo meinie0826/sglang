@@ -13,7 +13,7 @@ TRAINING_WINDOW_SECONDS="${TRAINING_WINDOW_SECONDS:-900}"
 RETRAIN_INTERVAL_SECONDS="${RETRAIN_INTERVAL_SECONDS:-30}"
 FUTURE_QPS_VALUES="${FUTURE_QPS_VALUES:-0.15,0.3,0.45,0.6,0.8,1.1,1.4}"
 FUTURE_QPS_INTERVAL_SECONDS="${FUTURE_QPS_INTERVAL_SECONDS:-10}"
-FUTURE_QPS_HORIZON_SECONDS="${FUTURE_QPS_HORIZON_SECONDS:-15}"
+FUTURE_QPS_HORIZON_SECONDS="${FUTURE_QPS_HORIZON_SECONDS:-15,30,60}"
 FUTURE_QPS_MATCH_TOLERANCE="${FUTURE_QPS_MATCH_TOLERANCE:-0.1}"
 
 MEM_FRACTION_STATIC="${MEM_FRACTION_STATIC:-0.78}"
@@ -83,6 +83,7 @@ echo "Predictor status:"
 echo "  GET  http://127.0.0.1:${PORT}/window_ttft_predictor_status"
 echo "What-if qps:"
 echo "  POST http://127.0.0.1:${PORT}/predict_window_ttft"
+echo "  body: {\"future_qps\": 0.45, \"horizon_seconds\": 30}"
 echo
 
 exec bash "${ROOT_DIR}/scripts/launch_glm5_nvfp4.sh" --host "${HOST}" --port "${PORT}" "$@"

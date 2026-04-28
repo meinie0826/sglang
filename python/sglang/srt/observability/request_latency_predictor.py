@@ -48,11 +48,22 @@ class FutureQpsPredictionRecord:
     prediction_ts: float
     target_ts: float
     future_qps: float
+    horizon_seconds: float
     predicted_p50_ttft_ms: float
     model_version: int
+    model_type: str
     base_window_p50_ttft_ms: float
     base_features: Dict[str, float]
     scenario_features: Dict[str, float]
+
+
+@dataclass
+class FutureTrainingSeed:
+    ts: float
+    target_ts: float
+    horizon_seconds: float
+    base_window_p50_ttft_ms: float
+    base_features: Dict[str, float]
 
 
 class OnlineRequestLatencyPredictor:
@@ -71,6 +82,8 @@ class OnlineRequestLatencyPredictor:
         "arrival_qps_60s",
         "finished_qps_60s",
         "backlog_growth_qps_60s",
+        "active_per_finished_qps_60s",
+        "finished_to_arrival_qps_ratio_60s",
         "finished_count_60s",
         "window_mean_seqlen_60s",
         "window_p90_seqlen_60s",
@@ -80,6 +93,7 @@ class OnlineRequestLatencyPredictor:
         "window_p90_extend_tokens_60s",
         "window_mean_ttft_ms_60s",
         "window_p90_ttft_ms_60s",
+        "window_ttft_tail_ratio_60s",
         "delta_active_requests",
         "delta_arrival_qps_60s",
         "delta_finished_qps_60s",
@@ -87,6 +101,11 @@ class OnlineRequestLatencyPredictor:
         "delta_finished_count_60s",
         "delta_window_mean_ttft_ms_60s",
         "delta_window_p90_ttft_ms_60s",
+    ]
+    FUTURE_FEATURE_NAMES = [
+        *FEATURE_NAMES,
+        "future_qps",
+        "horizon_seconds",
     ]
 
     def __init__(
@@ -146,17 +165,18 @@ class OnlineRequestLatencyPredictor:
             )
         else:
             self.future_qps_log_path = DEFAULT_FUTURE_QPS_LOG_PATH
+        self.future_model_path = self.model_path.with_name(
+            f"{self.model_path.stem}_future{self.model_path.suffix}"
+        )
         self.future_qps_values = self._parse_future_qps_values(
             envs.SGLANG_WINDOW_TTFT_PREDICTOR_FUTURE_QPS_VALUES.get()
         )
         self.future_qps_interval_seconds = (
             envs.SGLANG_WINDOW_TTFT_PREDICTOR_FUTURE_QPS_INTERVAL_SECONDS.get()
         )
-        self.future_qps_horizon_seconds = max(
-            0.0,
-            float(
-                envs.SGLANG_WINDOW_TTFT_PREDICTOR_FUTURE_QPS_HORIZON_SECONDS.get()
-            ),
+        self.future_qps_horizon_seconds = self._parse_positive_float_values(
+            envs.SGLANG_WINDOW_TTFT_PREDICTOR_FUTURE_QPS_HORIZON_SECONDS.get(),
+            default=(15.0, 30.0, 60.0),
         )
         self.future_qps_match_tolerance = max(
             0.0,
@@ -173,13 +193,19 @@ class OnlineRequestLatencyPredictor:
         self._arrival_times: Deque[float] = deque()
         self._completed_records: Deque[CompletedRequestRecord] = deque()
         self._training_samples: Deque[dict] = deque()
+        self._future_training_samples: Deque[dict] = deque()
+        self._pending_future_training: Deque[FutureTrainingSeed] = deque()
         self._prediction_history: Deque[WindowPredictionRecord] = deque()
         self._pending_future_predictions: Deque[FutureQpsPredictionRecord] = deque()
 
         self._model: Optional[XGBRegressor] = None
+        self._future_model: Optional[XGBRegressor] = None
         self._model_version: int = 0
+        self._future_model_version: int = 0
         self._last_retrain_time: float = 0.0
+        self._last_future_retrain_time: float = 0.0
         self._last_retrain_sample_count: int = 0
+        self._last_future_retrain_sample_count: int = 0
         self._last_future_prediction_emit_time: float = 0.0
         self._latest_window_summary: Optional[dict] = None
         self._lock = threading.Lock()
@@ -192,6 +218,7 @@ class OnlineRequestLatencyPredictor:
         )
 
         self._load_model()
+        self._load_future_model()
         self._retrain_thread.start()
 
     @staticmethod
@@ -223,8 +250,14 @@ class OnlineRequestLatencyPredictor:
 
     @staticmethod
     def _parse_future_qps_values(raw: str) -> Tuple[float, ...]:
+        return OnlineRequestLatencyPredictor._parse_positive_float_values(raw)
+
+    @staticmethod
+    def _parse_positive_float_values(
+        raw: str, default: Tuple[float, ...] = tuple()
+    ) -> Tuple[float, ...]:
         if not raw:
-            return tuple()
+            return default
         values = []
         for part in raw.split(","):
             part = part.strip()
@@ -234,15 +267,16 @@ class OnlineRequestLatencyPredictor:
                 values.append(max(0.0, float(part)))
             except ValueError:
                 logger.warning(
-                    "[WindowTTFTPredictor] invalid future qps value %r, skipping",
+                    "[WindowTTFTPredictor] invalid float value %r, skipping",
                     part,
                 )
-        return tuple(values)
+        return tuple(values) or default
 
     def _retrain_loop(self) -> None:
         while not self._stop_event.wait(self.retrain_interval_seconds):
             try:
                 self.maybe_retrain()
+                self.maybe_retrain_future()
             except Exception:
                 logger.exception("[WindowTTFTPredictor] periodic retrain failed")
 
@@ -271,13 +305,13 @@ class OnlineRequestLatencyPredictor:
                     feature_names,
                 )
                 return
-            if label_transform and label_transform != DEFAULT_LABEL_TRANSFORM:
+            if label_transform != DEFAULT_LABEL_TRANSFORM:
                 logger.warning(
                     "[WindowTTFTPredictor] label transform mismatch while loading %s; "
                     "expected=%s loaded=%s",
                     self.model_path,
                     DEFAULT_LABEL_TRANSFORM,
-                    label_transform,
+                    label_transform or "<missing>",
                 )
                 return
             self._model = model
@@ -287,6 +321,51 @@ class OnlineRequestLatencyPredictor:
             logger.exception(
                 "[WindowTTFTPredictor] failed to load XGBoost model from %s",
                 self.model_path,
+            )
+
+    def _load_future_model(self) -> None:
+        if not self.future_model_path.exists():
+            return
+        if XGBRegressor is None:
+            logger.warning(
+                "[WindowTTFTPredictor] xgboost unavailable, skipping future model load from %s",
+                self.future_model_path,
+            )
+            return
+        try:
+            model = self._make_regressor()
+            model.load_model(str(self.future_model_path))
+            booster = model.get_booster()
+            attrs = booster.attributes()
+            feature_names = json.loads(attrs.get("feature_names", "[]"))
+            label_transform = attrs.get("label_transform", "")
+            if feature_names and feature_names != self.FUTURE_FEATURE_NAMES:
+                logger.warning(
+                    "[WindowTTFTPredictor] future feature name mismatch while loading %s; "
+                    "expected=%s loaded=%s",
+                    self.future_model_path,
+                    self.FUTURE_FEATURE_NAMES,
+                    feature_names,
+                )
+                return
+            if label_transform != DEFAULT_LABEL_TRANSFORM:
+                logger.warning(
+                    "[WindowTTFTPredictor] future label transform mismatch while loading %s; "
+                    "expected=%s loaded=%s",
+                    self.future_model_path,
+                    DEFAULT_LABEL_TRANSFORM,
+                    label_transform or "<missing>",
+                )
+                return
+            self._future_model = model
+            self._future_model_version = int(attrs.get("model_version", "0"))
+            self._last_future_retrain_time = float(
+                attrs.get("last_retrain_time", "0.0")
+            )
+        except Exception:
+            logger.exception(
+                "[WindowTTFTPredictor] failed to load future XGBoost model from %s",
+                self.future_model_path,
             )
 
     def _persist_model(self, sample_count: int) -> None:
@@ -305,6 +384,26 @@ class OnlineRequestLatencyPredictor:
             label_transform=DEFAULT_LABEL_TRANSFORM,
         )
         self._model.save_model(str(self.model_path))
+
+    def _persist_future_model(self, sample_count: int) -> None:
+        if self._future_model is None:
+            return
+        self.future_model_path.parent.mkdir(parents=True, exist_ok=True)
+        booster = self._future_model.get_booster()
+        booster.set_attr(
+            model_type="xgboost_future",
+            model_version=str(self._future_model_version),
+            last_retrain_time=str(self._last_future_retrain_time),
+            sample_count=str(sample_count),
+            aggregation_window_seconds=str(self.aggregation_window_seconds),
+            training_window_seconds=str(self.training_window_seconds),
+            future_qps_horizon_seconds=json.dumps(
+                list(self.future_qps_horizon_seconds)
+            ),
+            feature_names=json.dumps(self.FUTURE_FEATURE_NAMES),
+            label_transform=DEFAULT_LABEL_TRANSFORM,
+        )
+        self._future_model.save_model(str(self.future_model_path))
 
     @staticmethod
     def _append_jsonl(path: Path, record: dict) -> None:
@@ -333,8 +432,18 @@ class OnlineRequestLatencyPredictor:
         training_cutoff = now - self.training_window_seconds
         while self._training_samples and self._training_samples[0]["ts"] < training_cutoff:
             self._training_samples.popleft()
+        while (
+            self._future_training_samples
+            and self._future_training_samples[0]["ts"] < training_cutoff
+        ):
+            self._future_training_samples.popleft()
         while self._prediction_history and self._prediction_history[0].ts < training_cutoff:
             self._prediction_history.popleft()
+        while (
+            self._pending_future_training
+            and self._pending_future_training[0].target_ts < training_cutoff
+        ):
+            self._pending_future_training.popleft()
         while (
             self._pending_future_predictions
             and self._pending_future_predictions[0].target_ts < training_cutoff
@@ -366,6 +475,8 @@ class OnlineRequestLatencyPredictor:
             "arrival_qps_60s": len(self._arrival_times) / self.aggregation_window_seconds,
             "finished_qps_60s": finished_count / self.aggregation_window_seconds,
             "backlog_growth_qps_60s": 0.0,
+            "active_per_finished_qps_60s": 0.0,
+            "finished_to_arrival_qps_ratio_60s": 0.0,
             "finished_count_60s": float(finished_count),
             "window_mean_seqlen_60s": float(seqlens.mean()),
             "window_p90_seqlen_60s": self._percentile(seqlens, 90),
@@ -375,6 +486,7 @@ class OnlineRequestLatencyPredictor:
             "window_p90_extend_tokens_60s": self._percentile(extend_tokens, 90),
             "window_mean_ttft_ms_60s": float(ttfts.mean()),
             "window_p90_ttft_ms_60s": self._percentile(ttfts, 90),
+            "window_ttft_tail_ratio_60s": 0.0,
             "delta_active_requests": 0.0,
             "delta_arrival_qps_60s": 0.0,
             "delta_finished_qps_60s": 0.0,
@@ -405,6 +517,18 @@ class OnlineRequestLatencyPredictor:
         enriched["backlog_growth_qps_60s"] = float(
             enriched.get("arrival_qps_60s", 0.0)
             - enriched.get("finished_qps_60s", 0.0)
+        )
+        enriched["active_per_finished_qps_60s"] = float(
+            enriched.get("active_requests", 0.0)
+            / max(enriched.get("finished_qps_60s", 0.0), 1e-6)
+        )
+        enriched["finished_to_arrival_qps_ratio_60s"] = float(
+            enriched.get("finished_qps_60s", 0.0)
+            / max(enriched.get("arrival_qps_60s", 0.0), 1e-6)
+        )
+        enriched["window_ttft_tail_ratio_60s"] = float(
+            enriched.get("window_p90_ttft_ms_60s", 0.0)
+            / max(enriched.get("window_mean_ttft_ms_60s", 0.0), 1e-6)
         )
         if reference_features is None:
             return enriched
@@ -445,6 +569,12 @@ class OnlineRequestLatencyPredictor:
             dtype=np.float32,
         )
 
+    def _future_feature_vector(self, features: Dict[str, float]) -> np.ndarray:
+        return np.array(
+            [float(features.get(name, 0.0)) for name in self.FUTURE_FEATURE_NAMES],
+            dtype=np.float32,
+        )
+
     def _predict_locked(self, features: Dict[str, float]) -> float:
         if self._model is None:
             return max(0.0, float(features.get("window_mean_ttft_ms_60s", 0.0)))
@@ -452,15 +582,29 @@ class OnlineRequestLatencyPredictor:
         encoded_pred = float(self._model.predict(x)[0])
         return max(0.0, float(self._decode_label(encoded_pred)))
 
+    def _predict_future_locked(self, features: Dict[str, float]) -> Tuple[float, str, int]:
+        if self._future_model is not None:
+            x = self._future_feature_vector(features).reshape(1, -1)
+            encoded_pred = float(self._future_model.predict(x)[0])
+            return (
+                max(0.0, float(self._decode_label(encoded_pred))),
+                "future_xgboost",
+                int(self._future_model_version),
+            )
+        return self._predict_locked(features), "current_fallback", int(self._model_version)
+
     def _build_future_qps_features_locked(
         self,
         base_features: Dict[str, float],
         future_qps: float,
+        horizon_seconds: float,
         feature_overrides: Optional[Dict[str, float]] = None,
     ) -> Dict[str, float]:
         scenario = dict(base_features)
         scenario["arrival_qps_60s"] = float(max(future_qps, 0.0))
         scenario["finished_qps_60s"] = float(max(future_qps, 0.0))
+        scenario["future_qps"] = float(max(future_qps, 0.0))
+        scenario["horizon_seconds"] = float(max(horizon_seconds, 0.0))
         if feature_overrides:
             for key, value in feature_overrides.items():
                 if key in self.FEATURE_NAMES:
@@ -518,29 +662,73 @@ class OnlineRequestLatencyPredictor:
         base_window_p50_ttft_ms = float(
             self._latest_window_summary["observed_p50_ttft_ms"]
         )
-        target_ts = now + self.future_qps_horizon_seconds
         records = []
-        for future_qps in self.future_qps_values:
-            scenario_features = self._build_future_qps_features_locked(
-                base_features=base_features,
-                future_qps=future_qps,
+        for horizon_seconds in self.future_qps_horizon_seconds:
+            target_ts = now + horizon_seconds
+            self._pending_future_training.append(
+                FutureTrainingSeed(
+                    ts=now,
+                    target_ts=target_ts,
+                    horizon_seconds=float(horizon_seconds),
+                    base_window_p50_ttft_ms=base_window_p50_ttft_ms,
+                    base_features=base_features,
+                )
             )
-            predicted_ms = self._predict_locked(scenario_features)
-            record = FutureQpsPredictionRecord(
-                prediction_ts=now,
-                target_ts=target_ts,
-                future_qps=float(future_qps),
-                predicted_p50_ttft_ms=float(predicted_ms),
-                model_version=int(self._model_version),
-                base_window_p50_ttft_ms=base_window_p50_ttft_ms,
-                base_features=base_features,
-                scenario_features=scenario_features,
-            )
-            self._pending_future_predictions.append(record)
-            records.append(record)
+            for future_qps in self.future_qps_values:
+                scenario_features = self._build_future_qps_features_locked(
+                    base_features=base_features,
+                    future_qps=future_qps,
+                    horizon_seconds=horizon_seconds,
+                )
+                predicted_ms, model_type, model_version = self._predict_future_locked(
+                    scenario_features
+                )
+                record = FutureQpsPredictionRecord(
+                    prediction_ts=now,
+                    target_ts=target_ts,
+                    future_qps=float(future_qps),
+                    horizon_seconds=float(horizon_seconds),
+                    predicted_p50_ttft_ms=float(predicted_ms),
+                    model_version=int(model_version),
+                    model_type=model_type,
+                    base_window_p50_ttft_ms=base_window_p50_ttft_ms,
+                    base_features=base_features,
+                    scenario_features=scenario_features,
+                )
+                self._pending_future_predictions.append(record)
+                records.append(record)
 
         self._last_future_prediction_emit_time = now
         return records
+
+    def _resolve_future_training_locked(
+        self, now: float, actual_summary: dict
+    ) -> int:
+        resolved_count = 0
+        actual_qps = float(actual_summary["features"]["arrival_qps_60s"])
+        actual_p50_ttft_ms = float(actual_summary["observed_p50_ttft_ms"])
+        while (
+            self._pending_future_training
+            and self._pending_future_training[0].target_ts <= now
+        ):
+            seed = self._pending_future_training.popleft()
+            features = self._build_future_qps_features_locked(
+                base_features=seed.base_features,
+                future_qps=actual_qps,
+                horizon_seconds=seed.horizon_seconds,
+            )
+            self._future_training_samples.append(
+                {
+                    "ts": seed.ts,
+                    "target_ts": seed.target_ts,
+                    "features": features,
+                    "label": actual_p50_ttft_ms,
+                    "actual_future_qps": actual_qps,
+                    "horizon_seconds": float(seed.horizon_seconds),
+                }
+            )
+            resolved_count += 1
+        return resolved_count
 
     def _resolve_future_qps_predictions_locked(
         self, now: float, actual_summary: dict
@@ -564,9 +752,7 @@ class OnlineRequestLatencyPredictor:
                     "prediction_monotonic_ts": record.prediction_ts,
                     "target_monotonic_ts": record.target_ts,
                     "future_qps": float(record.future_qps),
-                    "future_qps_horizon_seconds": float(
-                        self.future_qps_horizon_seconds
-                    ),
+                    "future_qps_horizon_seconds": float(record.horizon_seconds),
                     "actual_arrival_qps_60s": actual_qps,
                     "actual_finished_qps_60s": float(
                         actual_summary["features"]["finished_qps_60s"]
@@ -583,6 +769,7 @@ class OnlineRequestLatencyPredictor:
                     "qps_match": qps_match,
                     "qps_match_tolerance": float(self.future_qps_match_tolerance),
                     "model_version": int(record.model_version),
+                    "model_type": record.model_type,
                 }
             )
         return resolved
@@ -642,6 +829,9 @@ class OnlineRequestLatencyPredictor:
                 "features": dict(summary["features"]),
                 "observed_p50_ttft_ms": float(summary["observed_p50_ttft_ms"]),
             }
+            future_training_resolved_count = self._resolve_future_training_locked(
+                finish_ts, summary
+            )
             future_qps_evaluations = self._resolve_future_qps_predictions_locked(
                 finish_ts, summary
             )
@@ -667,11 +857,20 @@ class OnlineRequestLatencyPredictor:
             "backlog_growth_qps_60s": float(
                 summary["features"]["backlog_growth_qps_60s"]
             ),
+            "active_per_finished_qps_60s": float(
+                summary["features"]["active_per_finished_qps_60s"]
+            ),
+            "finished_to_arrival_qps_ratio_60s": float(
+                summary["features"]["finished_to_arrival_qps_ratio_60s"]
+            ),
             "window_finished_count_60s": float(summary["features"]["finished_count_60s"]),
             "window_mean_seqlen_60s": float(summary["features"]["window_mean_seqlen_60s"]),
             "window_mean_cachelen_60s": float(summary["features"]["window_mean_cachelen_60s"]),
             "window_mean_ttft_ms_60s": float(summary["features"]["window_mean_ttft_ms_60s"]),
             "window_p90_ttft_ms_60s": float(summary["features"]["window_p90_ttft_ms_60s"]),
+            "window_ttft_tail_ratio_60s": float(
+                summary["features"]["window_ttft_tail_ratio_60s"]
+            ),
             "delta_active_requests": float(summary["features"]["delta_active_requests"]),
             "delta_arrival_qps_60s": float(summary["features"]["delta_arrival_qps_60s"]),
             "delta_finished_qps_60s": float(
@@ -686,6 +885,8 @@ class OnlineRequestLatencyPredictor:
             "window_ttft_recent_eval_count": int(accuracy_summary["count"]),
             "window_ttft_recent_mae_ms": accuracy_summary["mae_ms"],
             "window_ttft_recent_mape_pct": accuracy_summary["mape_pct"],
+            "future_training_sample_count": int(len(self._future_training_samples)),
+            "future_training_resolved_count": int(future_training_resolved_count),
         }
         self._log_event(
             {
@@ -702,14 +903,13 @@ class OnlineRequestLatencyPredictor:
                     "prediction_monotonic_ts": record.prediction_ts,
                     "target_monotonic_ts": record.target_ts,
                     "future_qps": float(record.future_qps),
-                    "future_qps_horizon_seconds": float(
-                        self.future_qps_horizon_seconds
-                    ),
+                    "future_qps_horizon_seconds": float(record.horizon_seconds),
                     "predicted_window_p50_ttft_ms": float(
                         record.predicted_p50_ttft_ms
                     ),
                     "base_window_p50_ttft_ms": float(record.base_window_p50_ttft_ms),
                     "model_version": int(record.model_version),
+                    "model_type": record.model_type,
                     "base_features": record.base_features,
                     "scenario_features": record.scenario_features,
                 }
@@ -717,6 +917,7 @@ class OnlineRequestLatencyPredictor:
         for record in future_qps_evaluations:
             self._log_future_qps_event(record)
         self.maybe_retrain()
+        self.maybe_retrain_future()
         return snapshot
 
     def maybe_retrain(self) -> None:
@@ -768,9 +969,59 @@ class OnlineRequestLatencyPredictor:
             }
         )
 
+    def maybe_retrain_future(self) -> None:
+        now = time.perf_counter()
+        with self._lock:
+            self._prune_locked(now)
+            sample_count = len(self._future_training_samples)
+            if sample_count < self.min_train_samples:
+                return
+            if sample_count == self._last_future_retrain_sample_count:
+                return
+            if now - self._last_future_retrain_time < self.retrain_interval_seconds:
+                return
+
+            x = np.array(
+                [
+                    self._future_feature_vector(sample["features"])
+                    for sample in self._future_training_samples
+                ],
+                dtype=np.float32,
+            )
+            y = np.array(
+                [float(sample["label"]) for sample in self._future_training_samples],
+                dtype=np.float32,
+            )
+            y_encoded = self._encode_label(y).astype(np.float32)
+            model = self._make_regressor()
+            model.fit(x, y_encoded, verbose=False)
+            preds = self._decode_label(model.predict(x))
+            mae_ms = float(np.mean(np.abs(preds - y)))
+            mape_pct = float(
+                np.mean(np.abs(preds - y) / np.maximum(y, 1e-6)) * 100.0
+            )
+            self._future_model = model
+            self._future_model_version += 1
+            self._last_future_retrain_time = now
+            self._last_future_retrain_sample_count = sample_count
+            self._persist_future_model(sample_count)
+
+        self._log_event(
+            {
+                "event": "future_retrain",
+                "time": time.time(),
+                "model_type": "xgboost_future",
+                "model_version": self._future_model_version,
+                "sample_count": sample_count,
+                "mae_ms": mae_ms,
+                "mape_pct": mape_pct,
+            }
+        )
+
     def predict_with_future_qps(
         self,
         future_qps: float,
+        horizon_seconds: Optional[float] = None,
         feature_overrides: Optional[Dict[str, float]] = None,
     ) -> Dict[str, float]:
         with self._lock:
@@ -780,21 +1031,32 @@ class OnlineRequestLatencyPredictor:
                     "reason": "no_window_summary",
                 }
 
+            resolved_horizon_seconds = (
+                float(horizon_seconds)
+                if horizon_seconds is not None
+                else float(self.future_qps_horizon_seconds[0])
+            )
             scenario_features = self._build_future_qps_features_locked(
                 base_features=self._latest_window_summary["features"],
                 future_qps=future_qps,
+                horizon_seconds=resolved_horizon_seconds,
                 feature_overrides=feature_overrides,
             )
-            predicted_ms = self._predict_locked(scenario_features)
+            predicted_ms, model_type, model_version = self._predict_future_locked(
+                scenario_features
+            )
             accuracy_summary = self._accuracy_summary_locked()
             latest_actual = float(self._latest_window_summary["observed_p50_ttft_ms"])
-            model_ready = self._model is not None
-            model_version = self._model_version
+            model_ready = self._future_model is not None
+            current_model_ready = self._model is not None
 
         return {
             "window_ttft_predictor_ready": bool(model_ready),
+            "current_window_predictor_ready": bool(current_model_ready),
             "window_ttft_model_version": int(model_version),
             "future_qps": float(max(future_qps, 0.0)),
+            "horizon_seconds": float(max(resolved_horizon_seconds, 0.0)),
+            "model_type": model_type,
             "latest_window_p50_ttft_ms": latest_actual,
             "predicted_window_p50_ttft_ms": float(predicted_ms),
             "latest_window_features": scenario_features,
@@ -821,12 +1083,21 @@ class OnlineRequestLatencyPredictor:
                 "future_qps_interval_seconds": float(
                     self.future_qps_interval_seconds
                 ),
-                "future_qps_horizon_seconds": float(
-                    self.future_qps_horizon_seconds
-                ),
+                "future_qps_horizon_seconds": list(self.future_qps_horizon_seconds),
                 "future_qps_match_tolerance": float(
                     self.future_qps_match_tolerance
                 ),
+                "future_window_predictor_ready": bool(
+                    self._future_model is not None
+                ),
+                "future_window_model_version": int(self._future_model_version),
+                "future_training_sample_count": int(
+                    len(self._future_training_samples)
+                ),
+                "pending_future_training_count": int(
+                    len(self._pending_future_training)
+                ),
+                "future_model_path": str(self.future_model_path),
                 "latest_window_summary": latest_window_summary,
                 "recent_accuracy": accuracy_summary,
             }

@@ -197,6 +197,7 @@ class _GlobalState:
 
 class WindowTTFTPredictionReq(BaseModel):
     future_qps: float = Field(..., ge=0.0)
+    horizon_seconds: Optional[float] = Field(default=None, ge=0.0)
     feature_overrides: Optional[Dict[str, float]] = None
 
 
@@ -645,6 +646,7 @@ async def predict_window_ttft(obj: WindowTTFTPredictionReq):
     """Predict window p50 TTFT from latest window features plus a caller-provided qps."""
     return _global_state.tokenizer_manager.request_latency_predictor.predict_with_future_qps(
         future_qps=obj.future_qps,
+        horizon_seconds=obj.horizon_seconds,
         feature_overrides=obj.feature_overrides,
     )
 
